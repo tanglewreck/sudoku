@@ -13,7 +13,7 @@ DEBUG = False
 def read_game_file(filename=None, debug=DEBUG):
     rows = []
     try:
-        with open("dn_2024-06-11_hard.sudoku", 'r') as f:
+        with open("../dn_2024-06-11_hard.sudoku", 'r') as f:
             while row := f.readline():
                 nrow = list(map(int, re.findall(r"\d+", row)))
                 rows.append(nrow)
