@@ -41,6 +41,7 @@ def parse_arguments():
                                       description="sudoku ftw utility"
     )
     parser.add_argument('-d', '--debug', default=False, action='store_true')
+    parser.add_argument('-g', '--geometry', default='500x500+10+10')
     parser.add_argument('filename')
     try:
         args = parser.parse_args()

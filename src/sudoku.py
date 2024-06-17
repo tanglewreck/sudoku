@@ -6,7 +6,8 @@ import numpy as np
 import os
 import re
 import sys
-from functions import *
+from sudokuutils import *
+import sudokuboard
 
 DEBUG = False
 
@@ -61,6 +62,10 @@ def main():
         if k % 3 == 0:
             print()
         print(block)
+
+    board = sudokuboard.SudokuGame(geometry=args.geometry, debug=args.debug)
+    board.mainloop()
+
 
 
 
