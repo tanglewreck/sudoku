@@ -14,7 +14,7 @@ import time
 
 from utils import debug_msg, err_msg, sys_msg
 from utils import ROOT_GEOMETRY
-import sudokuwidgets 
+import sudokuGUI 
 
 # import glob
 # import pathlib
@@ -43,7 +43,7 @@ class Sudoku():
             raise SystemExit(1)
 
         # Create and configure the tk widgets.
-        (self.root, self.content) = sudokuwidgets.create_widgets(geometry=geometry, debug=debug)
+        (self.root, self.content) = sudokuGUI.create_widgets(geometry=geometry, debug=debug)
 
 
     def __str__(self):
