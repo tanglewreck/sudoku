@@ -1,7 +1,11 @@
 __doc__ = """Utility functions"""
 __author__ = "mier"
 __version__ = "0.1"
-__all__ = ["debug_msg", "err_msg", "parse_arguments", "sys_msg"]
+__all__ = ["debug_msg",
+           "err_msg",
+           "sys_msg",
+           "parse_arguments", 
+           "ROOT_GEOMETRY"]
 
 import argparse
 import inspect
@@ -15,6 +19,16 @@ import time
 # import pathlib
 # import shlex
 # import shutil
+
+
+# Root window geometry
+R_HEIGHT = 500
+R_WIDTH = 500
+R_X = 1000
+R_Y = 0
+ROOT_GEOMETRY = f"{R_WIDTH}x{R_HEIGHT}+{R_X}+{R_Y}"
+
+
 
 def debug_msg(msg=None):
     """Utility function. Prints debugging info on stderr"""
