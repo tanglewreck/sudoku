@@ -1,17 +1,19 @@
 __doc__ = """sudoku graphics (tkinter) stuff"""
 __author__ = "mier"
 __version__ = "0.1"
-__all__ = ["SudokuGame"]
+__all__ = ["Sudoku"]
 
 import argparse
 import inspect
+import numpy as np
 import os
 import re
 import subprocess
 import sys
 import time
 
-from sudokuutils import *
+from utils import debug_msg, err_msg, sys_msg
+from utils import ROOT_GEOMETRY
 import sudokuwidgets 
 
 # import glob
@@ -19,43 +21,81 @@ import sudokuwidgets
 # import shlex
 # import shutil
 
-# Root geometry
-R_HEIGHT = 1000
-R_WIDTH = 1500
-R_X = 100
-R_Y = 0
-ROOT_GEOMETRY = f"{R_WIDTH}x{R_HEIGHT}+{R_X}+{R_Y}"
 
 def foo():
     """foo function"""
     pass
 
-class SudokuGame():
+class Sudoku():
 
-    def __init__(self, geometry=ROOT_GEOMETRY, debug=False):
+    def __init__(self, board=None, filename=None, geometry=ROOT_GEOMETRY, debug=False):
         self.debug = debug
 
-        # <Decode geometry>
-        regexp = r"^(\d+)x(\d+)\+(\d+)\+(\d+)$"
-        try:
-            (self.root_height,
-             self.root_width,
-             self.root_x,
-             self.root_y) = re.search(regexp, geometry).groups()
-        except AttributeError as e:
-            print("Unable to decode geometry argument")
-            sys.exit(1)
+        if board is None and filename is None:
+            self.board = np.zeros((9,9), dtype=int)
+        elif not board is None:
+            self.board = np.array(board, dtype=int)
+        elif not filename is None:
+            self.load_board(filename)
 
-        if self.debug:
-            print(f"({__name__}) geometry: {geometry}")
-            print(f"({__name__}) geometry (decoded): {self.root_height} x {self.root_width} + {self.root_x} + {self.root_y}")
+        if not self.validate_board(self.board, debug=debug):
+            err_msg("Invalid entry/entries found – aborting")
+            raise SystemExit(1)
 
         # Create and configure the tk widgets.
-        # The instance variables are used inside the sudoku class 
-        (self.root, self.content) = sudokuwidgets.create_widgets(geometry, debug)
+        (self.root, self.content) = sudokuwidgets.create_widgets(geometry=geometry, debug=debug)
+
+
+    def __str__(self):
+        return str(self.board)
+
+
+    def load_board(self, filename, debug=False):
+        if debug:
+            debug_msg(f"filename = {filename}")
+
+        try:
+            self.board = np.loadtxt(filename, delimiter=",", dtype=int)
+            if not self.validate_board(self.board):
+                err_msg(f"Failed to validate board (file = \"{filename}\")")
+        except ValueError:
+            err_msg(f"Unable to load game file ({filename}): invalid entries found")
+        except OSError as e:
+            err_msg(e)
+
+
+    def save_board(self, board, filename):
+        try:
+            np.savetxt(filename, board, delimiter=",", fmt='%d')
+        except OSError as e:
+            err_msg(e)
+
+
+    def validate_board(self, board, debug=False):
+        debug = False
+        valid = True
+        for row in range(9):
+            if debug:
+                print(board[row,])
+            for col in range(9):
+                if not 0 <= board[row, col] <=9:
+                    err_msg(f"Invalid entry ({row}, {col}): {board[row, col]}")
+                    valid = False
+        return valid
 
 
     def mainloop(self):
         """Start the mainloop of the tk root widget"""
         self.root.mainloop()
+
+
+    def set_value(self, row, col, value):
+        try:
+            if 1 <= value <= 9:
+                self.board[row, col] = 9
+                return True
+            else:
+                return False
+        except (IndexError, ValueError) as e:
+            err_msg(e)
 

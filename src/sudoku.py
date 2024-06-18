@@ -6,25 +6,23 @@ import numpy as np
 import os
 import re
 import sys
-from sudokuutils import *
-import sudokuboard
+
+import utils
+from utils import debug_msg, err_msg, sys_msg
+from utils import ROOT_GEOMETRY
+from sudokuboard import Sudoku
 
 DEBUG = False
 
 def read_game_file(filename=None, debug=DEBUG):
-    rows = []
     try:
-        # with open("../dn_2024-06-11_hard.sudoku", 'r') as f:
-        with open(filename, 'r') as f:
-            while row := f.readline():
-                nrow = list(map(int, re.findall(r"\d+", row)))
-                rows.append(nrow)
-            if debug:
-                for row in rows:
-                    debug_msg(row)
+        return np.loadtxt(filename, delimiter=",", dtype=int)
+    except ValueError as e:
+        err_msg(f"{e}")
+        return None
     except OSError as e:
         err_msg(e)
-    return np.array(rows)
+        return None
 
 
 def print_board(board):
@@ -41,30 +39,49 @@ def print_board(board):
             print(" – – – – – – – – – – – –")
 
 def main():
-    args = parse_arguments()
-    board = read_game_file(args.filename, debug=args.debug)
+    args = utils.parse_arguments()
+#     board = read_game_file(args.filename, debug=args.debug)
+#     if board is None:
+#        err_msg(f"Could not read board from {args.filename}")
+#        raise SystemExit(1)
 
-    blocks = []
-    blocks.append(board[0:3, 0:3])
-    blocks.append(board[0:3, 3:6])
-    blocks.append(board[0:3, 6:9])
+#    blocks = []
+#    for i in range(0,9,3):
+#        for j in range(0,9,3):
+#            blocks.append(board[i:i+3, j:j+3])
+#
+#     blocks.append(board[0:3, 0:3])
+#     blocks.append(board[0:3, 3:6])
+#     blocks.append(board[0:3, 6:9])
+# 
+#     blocks.append(board[3:6, 0:3])
+#     blocks.append(board[3:6, 3:6])
+#     blocks.append(board[3:6, 6:9])
+# 
+#     blocks.append(board[6:9, 0:3])
+#     blocks.append(board[6:9, 3:6])
+#     blocks.append(board[6:9, 6:9])
+#
+#    for k, block in enumerate(blocks): 
+#        # print(block, end='    ')
+#        if k % 3 == 0:
+#            print()
+#        print(block)
 
-    blocks.append(board[3:6, 0:3])
-    blocks.append(board[3:6, 3:6])
-    blocks.append(board[3:6, 6:9])
+    # sudoku = Sudoku(board=board, geometry=args.geometry, debug=args.debug)
+    sudoku = Sudoku(geometry=args.geometry, debug=args.debug)
+    sudoku.load_board(args.filename, debug=args.debug)
+    if sudoku.validate_board(sudoku.board):
+        print(sudoku)
+    else:
+        err_msg("Invalid board")
+        raise SystemExit(1)
 
-    blocks.append(board[6:9, 0:3])
-    blocks.append(board[6:9, 3:6])
-    blocks.append(board[6:9, 6:9])
-
-    for k, block in enumerate(blocks): 
-        # print(block, end='    ')
-        if k % 3 == 0:
-            print()
-        print(block)
-
-    board = sudokuboard.SudokuGame(geometry=args.geometry, debug=args.debug)
-    board.mainloop()
+    # root = Tk()
+    # root.title("sudoku ftw!")
+    # app = SudokuGUI(root, sudoku)
+    # root.mainloop()
+    sudoku.mainloop()
 
 
 
