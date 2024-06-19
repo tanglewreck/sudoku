@@ -11,6 +11,7 @@ import utils
 from utils import debug_msg, err_msg, sys_msg
 from utils import ROOT_GEOMETRY
 from sudokuboard import Sudoku
+from sudokuGUI import SudokuGUI
 
 DEBUG = False
 
@@ -40,36 +41,8 @@ def print_board(board):
 
 def main():
     args = utils.parse_arguments()
-#     board = read_game_file(args.filename, debug=args.debug)
-#     if board is None:
-#        err_msg(f"Could not read board from {args.filename}")
-#        raise SystemExit(1)
 
-#    blocks = []
-#    for i in range(0,9,3):
-#        for j in range(0,9,3):
-#            blocks.append(board[i:i+3, j:j+3])
-#
-#     blocks.append(board[0:3, 0:3])
-#     blocks.append(board[0:3, 3:6])
-#     blocks.append(board[0:3, 6:9])
-# 
-#     blocks.append(board[3:6, 0:3])
-#     blocks.append(board[3:6, 3:6])
-#     blocks.append(board[3:6, 6:9])
-# 
-#     blocks.append(board[6:9, 0:3])
-#     blocks.append(board[6:9, 3:6])
-#     blocks.append(board[6:9, 6:9])
-#
-#    for k, block in enumerate(blocks): 
-#        # print(block, end='    ')
-#        if k % 3 == 0:
-#            print()
-#        print(block)
-
-    # sudoku = Sudoku(board=board, geometry=args.geometry, debug=args.debug)
-    sudoku = Sudoku(geometry=args.geometry, debug=args.debug)
+    sudoku = Sudoku(debug=args.debug)
     sudoku.load_board(args.filename, debug=args.debug)
     if sudoku.validate_board(sudoku.board):
         print(sudoku)
@@ -79,9 +52,9 @@ def main():
 
     # root = Tk()
     # root.title("sudoku ftw!")
-    # app = SudokuGUI(root, sudoku)
-    # root.mainloop()
-    sudoku.mainloop()
+    app = SudokuGUI(sudoku, geometry=args.geometry, debug=args.debug)
+    app.populate(sudoku, debug=args.debug)
+    app.mainloop()
 
 
 

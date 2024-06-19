@@ -13,8 +13,6 @@ import sys
 import time
 
 from utils import debug_msg, err_msg, sys_msg
-from utils import ROOT_GEOMETRY
-import sudokuGUI 
 
 # import glob
 # import pathlib
@@ -22,13 +20,9 @@ import sudokuGUI
 # import shutil
 
 
-def foo():
-    """foo function"""
-    pass
-
 class Sudoku():
 
-    def __init__(self, board=None, filename=None, geometry=ROOT_GEOMETRY, debug=False):
+    def __init__(self, board=None, filename=None, debug=False):
         self.debug = debug
 
         if board is None and filename is None:
@@ -41,9 +35,6 @@ class Sudoku():
         if not self.validate_board(self.board, debug=debug):
             err_msg("Invalid entry/entries found – aborting")
             raise SystemExit(1)
-
-        # Create and configure the tk widgets.
-        (self.root, self.content) = sudokuGUI.create_widgets(geometry=geometry, debug=debug)
 
 
     def __str__(self):
@@ -82,11 +73,6 @@ class Sudoku():
                     err_msg(f"Invalid entry ({row}, {col}): {board[row, col]}")
                     valid = False
         return valid
-
-
-    def mainloop(self):
-        """Start the mainloop of the tk root widget"""
-        self.root.mainloop()
 
 
     def set_value(self, row, col, value):
