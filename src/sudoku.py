@@ -12,6 +12,7 @@ from utils import ROOT_GEOMETRY
 from utils import parse_arguments
 from sudokuboard import Sudoku
 from sudokuGUI import SudokuGUI
+from widgets import SudokuWidgets
 
 DEBUG = False
 
@@ -26,10 +27,12 @@ def main():
         err_msg("Invalid board")
         raise SystemExit(1)
 
-    app = SudokuGUI(sudoku, geometry=args.geometry, debug=args.debug)
+    app = SudokuGUI(sudoku_game=sudoku, geometry=args.geometry, debug=args.debug)
     app.populate(sudoku, debug=args.debug)
     app.mainloop()
 
+    # app2 = SudokuWidgets(sudoku_game=sudoku, geometry=args.geometry, debug=args.debug)
+    # app2.mainloop()
 
 if __name__ == "__main__":
     main()

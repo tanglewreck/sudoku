@@ -11,21 +11,25 @@ from tkinter import ttk
 from utils import debug_msg, err_msg, sys_msg
 from utils import ROOT_GEOMETRY
 
-import widgets 
+# import widgets 
+from sudokuWidgets import SudokuWidgets
 
 
 class SudokuGUI():
 
     def __init__(self, sudoku_game, geometry=ROOT_GEOMETRY, debug=False):
-        widgets.validate_geometry(geometry, debug=debug)
-        (self.root, self.content) = widgets.create_widgets(geometry=geometry, debug=debug)
-        self.sudoku = sudoku_game
         self.debug = debug
+        self.widgets = SudokuWidgets(sudoku_game=sudoku_game, geometry=geometry, debug=self.debug)
+        # self.widgets.validate_geometry(geometry)
+        # widgets.validate_geometry(geometry, debug=debug)
+        # (self.root, self.content) = widgets.create_widgets(geometry=geometry, debug=debug)
+        self.sudoku = sudoku_game
         self.board = sudoku_game.board
 
 
     def mainloop(self):
-        self.root.mainloop()
+        # self.root.mainloop()
+        self.widgets.root.mainloop()
 
 
     def populate(self, sudoku_game, debug=False):
@@ -37,7 +41,8 @@ class SudokuGUI():
         for i in range(9):
             l = list()
             for j in range(9):
-                l.append(ttk.Label(self.content, text=f"{board[i][j]}"))
+                # l.append(ttk.Label(self.content, text=f"{board[i][j]}"))
+                l.append(ttk.Label(self.widgets.content, text=f"{board[i][j]}"))
             L.append(l)
 
         # Place the numbers 
