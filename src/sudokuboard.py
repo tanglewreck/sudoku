@@ -25,16 +25,16 @@ class Sudoku():
     def __init__(self, board=None, filename=None, debug=False):
         self.debug = debug
 
-        if board is None and filename is None:
-            self.board = np.zeros((9,9), dtype=int)
-        elif not board is None:
-            self.board = np.array(board, dtype=int)
-        elif not filename is None:
-            self.load_board(filename)
-
-        if not self.validate_board(self.board, debug=debug):
-            err_msg("Invalid entry/entries found – aborting")
-            raise SystemExit(1)
+#        if not filename is None:
+#            self.load_board(filename)
+#        elif not board is None:
+#            self.board = np.array(board, dtype=int)
+#        else:
+#            self.board = np.zeros((9,9), dtype=int)
+#
+#        if not self.validate_board():
+#            err_msg("Invalid entry/entries found – aborting")
+#            raise SystemExit(1)
 
 
     def __str__(self):
@@ -42,40 +42,76 @@ class Sudoku():
 
 
     def load_board(self, filename, debug=False):
-        if debug:
-            debug_msg(f"filename = {filename}")
+        if filename is None:
+            self.board = np.zeros((9, 9), dtype=int)
+        else:
+            if self.debug:
+                debug_msg(f"filename = {filename}")
+            try:
+                self.board = np.loadtxt(filename, delimiter=",", dtype=int)
+                if not self.validate_format():
+                    err_msg("Invalid board entry/entries found – aborting")
+                    raise SystemExit(1)
+                if not self.validate_board():
+                    sys_msg("Invalid row found")
+            except ValueError as e:
+                err_msg(f"Unable to load game file ({filename}): invalid entries found ({e})")
+                raise SystemExit(1)
+            except OSError as e:
+                err_msg(e)
+                raise SystemExit(1)
 
+
+    def save_board(self, filename):
         try:
-            self.board = np.loadtxt(filename, delimiter=",", dtype=int)
-            if not self.validate_board(self.board):
-                err_msg(f"Failed to validate board (file = \"{filename}\")")
-        except ValueError:
-            err_msg(f"Unable to load game file ({filename}): invalid entries found")
+            np.savetxt(filename, self.board, delimiter=",", fmt='%d')
         except OSError as e:
             err_msg(e)
 
+    def validate_format(self):
+        """Check that the board contains only integers btw. 0 and 9"""
+        for row in range(9):
+            if self.debug:
+                sys_msg(f"{self.board[row,]}")
+            for col in range(9):
+                if not 0 <= self.board[row, col] <=9:
+                    err_msg(f"Invalid entry ({row}, {col}): {self.board[row, col]}")
+                    return False
+        return True
 
-    def save_board(self, board, filename):
-        try:
-            np.savetxt(filename, board, delimiter=",", fmt='%d')
-        except OSError as e:
-            err_msg(e)
+    def validate_board(self):
+        """Check that each square contains a number btw. 0 (representing an
+        empty square) and 9"""
 
+        def validate_row(row):
+            """Check that a row contains at most one instance of a number
+            (excluding the number zeror, representing an empty square"""
+            valid = True
+            try:
+                # Count the number of occurrences of 0's, 1's, etc.
+                count = {}
+                for col in range(10):
+                    count[col] = 0
+                for col in self.board[row]:
+                    count[col] += 1
+                for col in range(1,10):
+                    if self.debug:
+                        sys_msg(f"row = {row}, column = {col}, count = {count[col]}")
+                    if count[col] > 1:
+                        sys_msg(f"row = {row + 1} not valid")
+                        valid = False
+            except IndexError as e:
+                err_msg(e)
+            return valid
 
-    def validate_board(self, board, debug=False):
-        debug = False
         valid = True
         for row in range(9):
-            if debug:
-                print(board[row,])
-            for col in range(9):
-                if not 0 <= board[row, col] <=9:
-                    err_msg(f"Invalid entry ({row}, {col}): {board[row, col]}")
-                    valid = False
+            if not validate_row(row):
+                valid = False
         return valid
 
 
-    def set_value(self, row, col, value):
+    def set_value(self, row:int, col:int, value):
         try:
             if 1 <= value <= 9:
                 self.board[row, col] = 9
@@ -85,3 +121,5 @@ class Sudoku():
         except (IndexError, ValueError) as e:
             err_msg(e)
 
+    def get_value(self, row:int, col:int):
+        pass

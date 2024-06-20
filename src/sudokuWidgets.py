@@ -1,4 +1,6 @@
-"""Sudoku game widgets"""
+__doc__ = """Sudoku game widgets"""
+__author__ = "Mikael Eriksson"
+__version__ = "0.9.0"
 
 import re
 
@@ -10,8 +12,20 @@ from utils import ROOT_GEOMETRY
 
 __all__ = ["SudokuWidgets"]
 
+# class SudokuRoot():
+#   pass
+#
+# class SudokuContent():
+#   pass
+#
+# class SudokuQuit():
+# """A frame containing the 'Quit' button"""
+#   pass
+
 
 class SudokuWidgets():
+    """A class for creating and configuring the tkinter widgets used by the SudokuGUI class"""
+
     def __init__(self, sudoku_game=None, geometry=ROOT_GEOMETRY, debug=False):
         self.debug = debug
         self.board = sudoku_game
@@ -19,6 +33,7 @@ class SudokuWidgets():
         if not self.__validate_geometry__(geometry):
             err_msg(f"Invalid geometry")
             raise SystemExit(1)
+
         # <Root window>
         self.root = Tk()
         self.__root_configure__(bg="white", geometry=self.geometry)
@@ -45,6 +60,14 @@ class SudokuWidgets():
         self.quit_button = Button(self.root)
         self.__quit_button_configure__()
         # </Quit button>
+
+        # <Numerical keypad frame>
+        self.num_keypad_frame = Frame(self.root)
+        self.__num_keypad_frame_configure__()
+        # </Numerical keypad frame>
+
+    def __num_keypad_frame_configure__(self):
+        pass
 
 
     def __root_configure__(self, bg="white", geometry=ROOT_GEOMETRY):
@@ -75,6 +98,7 @@ class SudokuWidgets():
 
 
     def __configure_content_styles__(self, cbg="white", lbg="white", lpad=7, lh=20, lw=3, lf="helvetica", lfs=18, theme='classic'):
+        """Create and return a ttk.Style objecat for the content frame and its children"""
         self.content_style = ttk.Style()
         self.content_style.theme_use(theme)
         # Content frame style:
@@ -126,7 +150,5 @@ class SudokuWidgets():
 
     def mainloop(self):
         self.root.mainloop()
-
-
 
 
