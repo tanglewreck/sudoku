@@ -33,12 +33,12 @@ def main():
     if args.debug:
         sys_msg(f"{args}")
 
-    sudoku_game = Sudoku(debug=args.debug)
-    sudoku_game.load_board(args.filename, debug=args.debug)
+    sudoku = Sudoku(debug=args.debug)
+    sudoku.load(args.filename)
 
-    sudoku_gui = SudokuGUI(sudoku_game, geometry=args.geometry, debug=args.debug)
-    sudoku_gui.populate(sudoku_game, debug=args.debug)
-    sudoku_gui.mainloop()
+    sudokuApp = SudokuGUI(sudoku, geometry=args.geometry, debug=args.debug)
+    sudokuApp.populate(sudoku)
+    sudokuApp.mainloop()
 
 
 if __name__ == "__main__":
