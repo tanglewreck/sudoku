@@ -26,13 +26,13 @@ class Sudoku():
         self.debug = debug
 
 #        if not filename is None:
-#            self.load_board(filename)
+#            self.load(filename)
 #        elif not board is None:
 #            self.board = np.array(board, dtype=int)
 #        else:
 #            self.board = np.zeros((9,9), dtype=int)
 #
-#        if not self.validate_board():
+#        if not self.validate():
 #            err_msg("Invalid entry/entries found – aborting")
 #            raise SystemExit(1)
 
@@ -41,7 +41,7 @@ class Sudoku():
         return str(self.board)
 
 
-    def load_board(self, filename, debug=False):
+    def load(self, filename, debug=False):
         if filename is None:
             self.board = np.zeros((9, 9), dtype=int)
         else:
@@ -49,10 +49,13 @@ class Sudoku():
                 debug_msg(f"filename = {filename}")
             try:
                 self.board = np.loadtxt(filename, delimiter=",", dtype=int)
+                # Check that the board contains only integers
                 if not self.validate_format():
                     err_msg("Invalid board entry/entries found – aborting")
                     raise SystemExit(1)
-                if not self.validate_board():
+                # Check that rows, columns, and 3x3 squares contain only unique
+                # numbers:
+                if not self.validate():
                     sys_msg("Invalid row found")
             except ValueError as e:
                 err_msg(f"Unable to load game file ({filename}): invalid entries found ({e})")
@@ -62,7 +65,7 @@ class Sudoku():
                 raise SystemExit(1)
 
 
-    def save_board(self, filename):
+    def save(self, filename):
         try:
             np.savetxt(filename, self.board, delimiter=",", fmt='%d')
         except OSError as e:
@@ -79,14 +82,15 @@ class Sudoku():
                     return False
         return True
 
-    def validate_board(self):
-        """Check that each square contains a number btw. 0 (representing an
-        empty square) and 9"""
+    def validate(self):
+        """Check that rows, columns, and blocks contain unique numbers only
+        (excluding 0)""" 
+
 
         def validate_row(row):
             """Check that a row contains at most one instance of a number
             (excluding the number zeror, representing an empty square"""
-            valid = True
+            is_valid = True
             try:
                 # Count the number of occurrences of 0's, 1's, etc.
                 count = {}
@@ -99,16 +103,25 @@ class Sudoku():
                         sys_msg(f"row = {row}, column = {col}, count = {count[col]}")
                     if count[col] > 1:
                         sys_msg(f"row = {row + 1} not valid")
-                        valid = False
+                        is_valid = False
             except IndexError as e:
                 err_msg(e)
-            return valid
+            return is_valid
 
-        valid = True
+
+        def validate_column(col):
+            """Check that a column contains only unique numbers (except 0)"""
+            is_valid = True
+
+
+        is_valid = True
         for row in range(9):
             if not validate_row(row):
-                valid = False
-        return valid
+                is_valid = False
+        for col in range(0):
+            if not validate_column(col):
+                is_valid = False
+        return is_valid
 
 
     def set_value(self, row:int, col:int, value):
@@ -122,4 +135,7 @@ class Sudoku():
             err_msg(e)
 
     def get_value(self, row:int, col:int):
+        return self.board[row, col]
+
+    def generate(self):
         pass
