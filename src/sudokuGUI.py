@@ -28,7 +28,7 @@ class SudokuGUI():
         self.widgets.root.mainloop()
 
 
-    def populate(self, sudoku):
+    def populate(self):
         """Populate the content frame with numbers"""
 
         if self.debug:
