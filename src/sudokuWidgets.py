@@ -26,51 +26,53 @@ __all__ = ["SudokuWidgets"]
 class SudokuWidgets():
     """A class for creating and configuring the tkinter widgets used by the SudokuGUI class"""
 
-    def __init__(self, sudoku_game=None, geometry=ROOT_GEOMETRY, debug=False):
+    def __init__(self, geometry=ROOT_GEOMETRY, debug=False):
         self.debug = debug
-        self.board = sudoku_game
         self.geometry = geometry
         if not self.__validate_geometry__(geometry):
             err_msg(f"Invalid geometry")
             raise SystemExit(1)
 
         # <Root window>
-        self.root = Tk()
         self.__root_configure__(bg="white", geometry=self.geometry)
         # </Root window>
         
         # <Content frame>
-        self.content = ttk.Frame(self.root)
-        self.__content_configure__(borderwidth=1, padding="20 100 20 100")
-        self.content_style = self.__configure_content_styles__(cbg="white",
-                                                               lf="helvetica", lfs=14,
-                                                               lw=4,lh=30, lpad=5, lbg="#efefef",
-                                                               theme='default')
-
-        self.content['style'] = "SudokuBoard.TFrame"
-        self.content.update()
+        self.__content_configure__()
         # </Content frame>
 
         # <Quit frame>
-        self.quit_frame = Frame(self.root)
         self.__quit_frame_configure__()
         # </Quit frame>
         
         # <Quit button>
-        self.quit_button = Button(self.root)
         self.__quit_button_configure__()
         # </Quit button>
 
         # <Numerical keypad frame>
-        self.num_keypad_frame = Frame(self.root)
         self.__num_keypad_frame_configure__()
         # </Numerical keypad frame>
 
-    def __num_keypad_frame_configure__(self):
-        pass
+
+    def __validate_geometry__(self, geometry, debug=False):
+        regexp = r"^(\d+)x(\d+)\+(\d+)\+(\d+)$"
+        try:
+            if match := re.search(regexp, geometry):
+                if debug:
+                    sys_msg(f"geometry (decoded): {match.groups()}")
+                return True
+            else:
+                err_msg(f"geometry format error: {geometry}")
+        except AttributeError as e:
+            err_msg("Unable to decode geometry")
+            return False
+        except re.error as e:
+            err_msg(e)
+            return False
 
 
     def __root_configure__(self, bg="white", geometry=ROOT_GEOMETRY):
+        self.root = Tk()
         self.root.title("sudoku ftw")
         self.root.geometry(geometry)
         self.root.configure(background=bg)
@@ -82,7 +84,16 @@ class SudokuWidgets():
             self.root.columnconfigure(rc, weight=1)
 
 
-    def __content_configure__(self, borderwidth=10, padding=50):
+    def __content_configure__(self, borderwidth=1, padding="20 100 20 100"):
+        # <Content frame>
+        self.content = ttk.Frame(self.root)
+        self.content_style = self.__configure_content_styles__(cbg="white",
+                                                               lf="helvetica", lfs=14,
+                                                               lw=4,lh=30, lpad=5, lbg="#efefef",
+                                                               theme='default')
+
+        self.content['style'] = "SudokuBoard.TFrame"
+        self.content.update()
         # ttk style:
         #   default class: TFrame
         #   possible widget states: active, disabled, focus, pressed, selected,
@@ -116,6 +127,7 @@ class SudokuWidgets():
 
 
     def __quit_frame_configure__(self, bg="white"):
+        self.quit_frame = Frame(self.root)
         self.quit_frame.configure(background=bg)
         self.quit_frame.configure(background="lightgray")
         self.quit_frame.configure(border=2)
@@ -124,6 +136,7 @@ class SudokuWidgets():
 
 
     def __quit_button_configure__(self, text="Quit"):
+        self.quit_button = Button(self.root)
         self.quit_button.configure(text=text)
         self.quit_button.configure(padx=3, pady=3)
         self.quit_button.configure(command=self.root.destroy)
@@ -131,21 +144,10 @@ class SudokuWidgets():
         self.quit_button.update()
 
 
-    def __validate_geometry__(self, geometry, debug=False):
-        regexp = r"^(\d+)x(\d+)\+(\d+)\+(\d+)$"
-        try:
-            if match := re.search(regexp, geometry):
-                if debug:
-                    sys_msg(f"geometry (decoded): {match.groups()}")
-                return True
-            else:
-                err_msg(f"geometry format error: {geometry}")
-        except AttributeError as e:
-            err_msg("Unable to decode geometry")
-            return False
-        except re.error as e:
-            err_msg(e)
-            return False
+    def __num_keypad_frame_configure__(self):
+        self.num_keypad_frame = Frame(self.root)
+        self.num_keypad_frame.grid(column=10, row=5, sticky=(E,N,W,S))
+        self.num_keypad_frame.grid(column=10, row=5, sticky=(E,N,W,S))
 
 
     def mainloop(self):
