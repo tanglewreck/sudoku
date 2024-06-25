@@ -19,9 +19,9 @@ class SudokuGUI():
 
     def __init__(self, sudoku:Sudoku, geometry:str=ROOT_GEOMETRY, debug=False):
         self.debug = debug
-        self.widgets = SudokuWidgets(geometry=geometry, debug=self.debug)
         self.sudoku = sudoku
         self.board = self.sudoku.board
+        self.widgets = SudokuWidgets(geometry=geometry, debug=self.debug)
 
 
     def mainloop(self):
@@ -47,6 +47,7 @@ class SudokuGUI():
             for j in range(9):
                 L[i][j]['style'] = 'SudokuBoard.TLabel'
                 L[i][j].grid(column=j, row=i, sticky=(E,N,W,S))
+
         
     
 if __name__ == "__main__":

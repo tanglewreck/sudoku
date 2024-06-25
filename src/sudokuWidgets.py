@@ -29,16 +29,18 @@ class SudokuWidgets():
     def __init__(self, geometry=ROOT_GEOMETRY, debug=False):
         self.debug = debug
         self.geometry = geometry
+        print("geometry =", geometry)
         if not self.__validate_geometry__(geometry):
             err_msg(f"Invalid geometry")
             raise SystemExit(1)
 
-        # define ttk Styles
-        self.content_style = self.__content_styles__(lf="helvetica", lfs=14, lw=4,
-                                                     lh=30, lpad=5, lbg="#efefef", theme='default')
         # <Root window>
         self.__root__(bg="white", geometry=self.geometry)
         # </Root window>
+
+        
+        # define ttk Styles
+        self.content_style = self.__content_styles__(lf="helvetica", lfs=14, lw=4, lh=30, lpad=5, lbg="#efefef", theme='default')
         
         # <Content frame>
         self.__content__()
@@ -140,10 +142,46 @@ class SudokuWidgets():
 
 
     def __num_keypad_frame__(self):
+        def set_text(*args):
+            # current_number.set(number)
+            print("hej")
+            print(args)
+            self.num_label['text'] = str(current_number.get())
+
         self.num_keypad_frame = ttk.Frame(self.root)
         self.num_keypad_frame['style'] = 'SudokuBoard.TFrame'
-        self.num_keypad_frame.grid(column=10, row=5, sticky=(E,N,W,S))
-        self.num_keypad_frame.grid(column=10, row=5, sticky=(E,N,W,S))
+        self.num_keypad_frame.grid(column=10, row=9, sticky=(E,N,W,S))
+
+        current_number = IntVar()
+        self.num_label = ttk.Label(self.num_keypad_frame, background="white", foreground="black", textvariable=current_number, width=10, justify="left")
+        # num_label = ttk.Label(self.num_keypad_frame, text="f00 label", width=10, justify="left")
+        self.num_label['style'] = "SudokuBoard.TLabel"
+        self.num_label.grid(row=6, column=1)
+
+        number_pad = ttk
+
+        num_keypad_buttons = []
+        for k in range(10):
+            button_text = str(k+1)
+            if k == 9:
+                button_text = "0"
+            current_number.set(k)
+            num_keypad_buttons.append(
+                ttk.Button(self.num_keypad_frame,
+                           text=str(button_text),
+                           command=set_text,
+                           padding=2
+                           )
+                           # command=set_text(k),
+            )
+        for k in range(10):
+            r, c = divmod(k, 3)
+            if self.debug:
+                print("row, column =", r, c)
+            num_keypad_buttons[k].grid(row=r, column=c, sticky=(E))
+        current_number.set(99999)
+
+
         
 
 

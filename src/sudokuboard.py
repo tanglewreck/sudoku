@@ -3,21 +3,13 @@ __author__ = "mier"
 __version__ = "0.1"
 __all__ = ["Sudoku"]
 
-import argparse
-import inspect
 import numpy as np
 import os
 import re
-import subprocess
-import sys
-import time
 
 from utils import debug_msg, err_msg, sys_msg
 
-# import glob
-# import pathlib
-# import shlex
-# import shutil
+# import sys
 
 
 class Sudoku():
@@ -111,17 +103,27 @@ class Sudoku():
 
         def validate_column(col):
             """Check that a column contains only unique numbers (except 0)"""
+            col_nonzero = col[np.nonzero(col > 0)]
+            print("col =", col) 
+            print("col (non-zero elements) =", col_nonzero)
             is_valid = True
 
 
-        is_valid = True
+        def is_valid(row):
+            pass
+
+
+        validate_column(self.board[0, :])
+        validate_column(self.board[1, :])
+        validate_column(self.board[2, :])
+        _is_valid = True
         for row in range(9):
             if not validate_row(row):
-                is_valid = False
+                _is_valid = False
         for col in range(0):
             if not validate_column(col):
-                is_valid = False
-        return is_valid
+                _is_valid = False
+        return _is_valid
 
 
     def set_value(self, row:int, col:int, value):

@@ -36,6 +36,7 @@ def main():
     sudoku = Sudoku(debug=args.debug)
     sudoku.load(args.filename)
 
+    # breakpoint()
     sudokuApp = SudokuGUI(sudoku, geometry=args.geometry, debug=args.debug)
     sudokuApp.populate()
     sudokuApp.mainloop()
