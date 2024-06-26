@@ -28,27 +28,39 @@ class SudokuGUI():
         self.widgets.root.mainloop()
 
 
+    def numkeypad(self):
+        pass
+        
     def populate(self):
         """Populate the content frame with numbers"""
+
+        def change_text(m,n):
+            """Call-back function for the board buttons; changes the text 
+            of the button to the current value of 'current_number'"""
+            self.board_buttons[m][n]['text'] = self.widgets.current_number.get()
+            
 
         if self.debug:
             debug_msg(f"\n{self.sudoku.board}")
 
-        # Create a list of lists of Sudoku number labels
-        L = list()
+        # Create a list of lists of Sudoku number labels (buttons)
+        self.board_buttons = list()
         for i in range(9):
             l = list()
             for j in range(9):
-                l.append(ttk.Label(self.widgets.content, text=f"{self.sudoku.board[i][j]}"))
-            L.append(l)
+                l.append(ttk.Button(self.widgets.content,
+                                    command=lambda m=i, n=j: change_text(m,n),
+                                    text=f"{self.sudoku.board[i][j]}"
+                                    )
+                         )
+            self.board_buttons.append(l)
 
-        # Place the number labels using grid())
+        # Place the number labels (buttons) using grid())
         for i in range(9):
             for j in range(9):
-                L[i][j]['style'] = 'SudokuBoard.TLabel'
-                L[i][j].grid(column=j, row=i, sticky=(E,N,W,S))
+                self.board_buttons[i][j]['style'] = 'SudokuBoard_boardbutton.TButton'
+                self.board_buttons[i][j].grid(column=j, row=i, sticky=(E,N,W,S))
 
-        
     
 if __name__ == "__main__":
     print(__doc__)

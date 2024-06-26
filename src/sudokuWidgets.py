@@ -98,13 +98,15 @@ class SudokuWidgets():
         # Label style:
         self.content_style.configure('SudokuBoard.TLabel', background=bg,
                                      foreground="black", font=f"{lf} {lfs}",
-                                     anchor=(E,N,W,S), relief='groove',
+                                     anchor=(E,N,W,S), 
                                      padding=lpad, height=lh, width=lw
         )
-        self.content_style.configure('SudokuBoard.TButton', background="white",
-                                     padding=2,
-                                     font=f"{lf} 12",
-                                     anchor=(E,W))
+                                     # anchor=(E,N,W,S), relief='groove',
+        self.content_style.configure('SudokuBoard_numkey.TButton', background="#fefefe",
+                                     padding=2, font=f"{lf} 12", anchor=(E,W))
+        self.content_style.configure('SudokuBoard_boardbutton.TButton', background="#fafafa",
+                                     padding=8, font=f"{lf} 12", anchor=(E,W),
+                                     width=5, height=10)
         return self.content_style
 
 
@@ -146,26 +148,24 @@ class SudokuWidgets():
 
 
     def __num_keypad_frame__(self):
-        def set_text(*args):
-            # current_number.set(number)
-            print("hej")
-            print(args)
-            self.num_label['text'] = str(current_number.get())
+        """Maybe this should be moved to sudokuGUI.py in order to let the
+        SudokuWidget class contain just the basic widgets, such as
+        the content frame, etc.?"""
 
         self.num_keypad_frame = ttk.Frame(self.root)
         self.num_keypad_frame['style'] = 'SudokuBoard.TFrame'
         self.num_keypad_frame.grid(column=10, row=9, sticky=(E,N,W,S))
 
-        current_number = IntVar()
+        self.current_number = IntVar()
 
         num_keypad_buttons = []
         for k in range(10):
             button_text = str((k+1) % 10)
-            current_number.set(k)
+            self.current_number.set(k)
             num_keypad_buttons.append(
                 ttk.Button(self.num_keypad_frame,
                            text=str(button_text),
-                           command=lambda k=k: current_number.set((k + 1) % 10),
+                           command=lambda k=k: self.current_number.set((k + 1) % 10),
                            padding=2
                            )
             )
@@ -177,17 +177,17 @@ class SudokuWidgets():
                 num_keypad_buttons[k].grid(row=r, column=c+1, sticky=(E,N,W,S))
             else:
                 num_keypad_buttons[k].grid(row=r, column=c, sticky=(E,N,W,S))
-            num_keypad_buttons[k]['style'] = 'SudokuBoard.TButton'
+            num_keypad_buttons[k]['style'] = 'SudokuBoard_numkey.TButton'
 
 
         self.num_label = ttk.Label(self.num_keypad_frame,
                                    background="white", foreground="black",
-                                   textvariable=current_number,
+                                   textvariable=self.current_number,
                                    width=5, padding=20, anchor="center", justify="center")
         self.num_label['style'] = "SudokuBoard.TLabel"
         self.num_label.grid(row=5, column=1)
 
-        current_number.set(0)
+        self.current_number.set(0)
         
 
 

@@ -24,7 +24,7 @@ import time
 # Root window geometry
 R_HEIGHT = 500
 R_WIDTH = 800
-R_X = 1000
+R_X = 100
 R_Y = 0
 ROOT_GEOMETRY = f"{R_WIDTH}x{R_HEIGHT}+{R_X}+{R_Y}"
 
