@@ -84,7 +84,7 @@ class SudokuWidgets():
         if self.debug:
             print(f"({__name__}): self.root.winfo_geometry: {self.root.winfo_geometry()} ")
 
-        for rc in range(11):
+        for rc in range(20):
             self.root.rowconfigure(rc, weight=1)
             self.root.columnconfigure(rc, weight=1)
 
@@ -101,6 +101,10 @@ class SudokuWidgets():
                                      anchor=(E,N,W,S), relief='groove',
                                      padding=lpad, height=lh, width=lw
         )
+        self.content_style.configure('SudokuBoard.TButton', background="white",
+                                     padding=2,
+                                     font=f"{lf} 12",
+                                     anchor=(E,W))
         return self.content_style
 
 
@@ -153,35 +157,37 @@ class SudokuWidgets():
         self.num_keypad_frame.grid(column=10, row=9, sticky=(E,N,W,S))
 
         current_number = IntVar()
-        self.num_label = ttk.Label(self.num_keypad_frame, background="white", foreground="black", textvariable=current_number, width=10, justify="left")
-        # num_label = ttk.Label(self.num_keypad_frame, text="f00 label", width=10, justify="left")
-        self.num_label['style'] = "SudokuBoard.TLabel"
-        self.num_label.grid(row=6, column=1)
-
-        number_pad = ttk
 
         num_keypad_buttons = []
         for k in range(10):
-            button_text = str(k+1)
-            if k == 9:
-                button_text = "0"
+            button_text = str((k+1) % 10)
             current_number.set(k)
             num_keypad_buttons.append(
                 ttk.Button(self.num_keypad_frame,
                            text=str(button_text),
-                           command=set_text,
+                           command=lambda k=k: current_number.set((k + 1) % 10),
                            padding=2
                            )
-                           # command=set_text(k),
             )
         for k in range(10):
             r, c = divmod(k, 3)
             if self.debug:
                 print("row, column =", r, c)
-            num_keypad_buttons[k].grid(row=r, column=c, sticky=(E))
-        current_number.set(99999)
+            if k == 9:
+                num_keypad_buttons[k].grid(row=r, column=c+1, sticky=(E,N,W,S))
+            else:
+                num_keypad_buttons[k].grid(row=r, column=c, sticky=(E,N,W,S))
+            num_keypad_buttons[k]['style'] = 'SudokuBoard.TButton'
 
 
+        self.num_label = ttk.Label(self.num_keypad_frame,
+                                   background="white", foreground="black",
+                                   textvariable=current_number,
+                                   width=5, padding=20, anchor="center", justify="center")
+        self.num_label['style'] = "SudokuBoard.TLabel"
+        self.num_label.grid(row=5, column=1)
+
+        current_number.set(0)
         
 
 
