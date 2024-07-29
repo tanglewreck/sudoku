@@ -19,12 +19,12 @@ Usage: sudoku [--debug] <sudoku game file>
                         0,0,2,0,0,0,3,0,1
 """
 
-from utils import debug_msg, err_msg, sys_msg
-from utils import ROOT_GEOMETRY
-from utils import parse_arguments
+from sudoku.utils import debug_msg, err_msg, sys_msg
+from sudoku.utils import parse_arguments
+from sudoku.utils import ROOT_GEOMETRY
 
-from sudokuboard import Sudoku
-from sudokuGUI import SudokuGUI
+from sudoku.board import Sudoku
+from sudoku.gui import SudokuGUI
 
 DEBUG = False
 
