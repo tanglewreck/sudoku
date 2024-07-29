@@ -7,11 +7,11 @@ __author__ = "Mikael Eriksson"
 from tkinter import *
 from tkinter import ttk
 
-from utils import debug_msg, err_msg, sys_msg
-from utils import ROOT_GEOMETRY
+from . utils import debug_msg, err_msg, sys_msg
+from . utils import ROOT_GEOMETRY
 
-from sudokuWidgets import SudokuWidgets
-from sudokuboard import Sudoku
+from . widgets import SudokuWidgets
+from . board import Sudoku
 
 
 class SudokuGUI():
