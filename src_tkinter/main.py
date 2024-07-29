@@ -13,6 +13,10 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 
+from sudoku.utils import debug_msg, err_msg, sys_msg
+from sudoku.utils import parse_arguments
+from sudoku.utils import ROOT_GEOMETRY
+
 import sys
 
 # Config.set('modules', 'monitor', '')
@@ -104,4 +108,5 @@ class SudokuApp(App):
 
 
 if __name__ == "__main__":
+    args = parse_arguments()
     SudokuApp().run()
