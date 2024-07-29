@@ -7,8 +7,8 @@ import re
 from tkinter import *
 from tkinter import ttk
 
-from utils import debug_msg, err_msg, sys_msg
-from utils import ROOT_GEOMETRY
+from .utils import debug_msg, err_msg, sys_msg
+from .utils import ROOT_GEOMETRY
 
 __all__ = ["SudokuWidgets"]
 
