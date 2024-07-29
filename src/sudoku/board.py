@@ -7,7 +7,7 @@ import numpy as np
 import os
 import re
 
-from utils import debug_msg, err_msg, sys_msg
+from . utils import debug_msg, err_msg, sys_msg
 
 # import sys
 
