@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# KIVY_NO_ARGS = 1
+
 import kivy
 kivy.require("2.0.0")
 
@@ -13,9 +15,9 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 
-from sudoku.utils import debug_msg, err_msg, sys_msg
-from sudoku.utils import parse_arguments
-from sudoku.utils import ROOT_GEOMETRY
+from  utils import debug_msg, err_msg, sys_msg
+from  utils import parse_arguments
+from  utils import WINDOW_SIZE
 
 import sys
 
@@ -24,7 +26,7 @@ import sys
 
 # class Sudoku(GridLayout):
 # Window.size = (1000, 600)
-Window.size = (1000, 600)
+# Window.size = WINDOW_SIZE
 
 class CustomLabel(Label):
     def __init__(self, **kwargs):
@@ -109,4 +111,13 @@ class SudokuApp(App):
 
 if __name__ == "__main__":
     args = parse_arguments()
+    if args.filename:
+        print(args.filename)
+        print(type(args.filename))
+        # Window.size = args.geometry
+        #print("SIZE", args.geometry)
+        Window.size = win_size
+        # for k in args.geometry.split(","):
+        #    print(int(k))
+        # print(type(args.geometry))
     SudokuApp().run()
