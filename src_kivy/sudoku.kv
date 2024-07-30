@@ -49,7 +49,11 @@
         Rectangle:
             pos: self.pos
             size: self.size
+    # canvas.after:
+    #    Line:
+    #        circle: 150, 150, 50, 90, 180
     orientation: 'horizontal'
+    opacity: 1
     # padding: Padding between layout box and children: [padding_left, padding_top, padding_right, padding_bottom].
     # padding: (50, 50, 50, 50)
     # padding: (0, 0.1, 0, 0.1)
@@ -74,7 +78,7 @@
         # canvas.before:
         canvas:
             Color:
-                rgba: 0,0,0,0.1
+                rgba: 0.05,0,0,0.1
                 # rgb: 0,0,0
             Rectangle:
                 size: self.size
@@ -88,37 +92,16 @@
         # size_hint_x: 0.5
         # size_hint_y: 0.5
         # pos_hint: {'y': 0}
-        # size_hint_x: 0.8
-        # size_hint_y: 0.7
-        # size_hint: (1, 0.5)
-        # size_hint: (None, .30)
         # height: 400
         # width: 600
-        # size_hint: (.8, .30)
-        # size_hint: (.5, .25)
-        # pos_hint: {'center_x': .5}
-        # padding: (0)
         # col_force_default: True
         # col_default_width: 50
         # cols_minimum['0']: 500
         # padding: 10
         # row_force_default: True
         # row_default_height: 50
-#            TextInput:
-#                id: s11
-#                multiline: False
-#                # on_focus: root.on_focus("s11")
-#            TextInput:
-#                id: s12
-#                multiline: False
-#                on_text: selected.text = s12.text
-#                # on_focus: root.on_focus("s12")
-#                # on_text: label1.text = "".join(random.choices(string.ascii_letters, k=10))
-#                # on_text: label1.text = "".join(random.choices(string.printable, k=20))
-#                on_text: selected.color = [random.random() for i in range(3)] + [0.7]
-        #
+
         # Row 1
-        #CustomLabel:
         BoardButton:
             id: s11
             on_press: self.text = active_number.text

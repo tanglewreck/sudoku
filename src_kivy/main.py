@@ -49,6 +49,7 @@ class SudokuWidgets(BoxLayout):
 
     def __init__(self, **kwargs):
         super(SudokuWidgets, self).__init__(**kwargs)
+
         # print("self.kv_file =", self.kv_file)
         # print("self.__class__.__name__ =", self.__class__.__name__)  # -> "Sudoku"
 
