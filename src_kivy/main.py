@@ -2,10 +2,32 @@
 
 # KIVY_NO_ARGS = 1
 
+
+import os
+os.environ['KIVY_HOME'] = "./.kivy"  # Use local .kivy directory (for config, logs, etc.)
+
+# 
+from kivy.config import Config
+# Read the configuration file and then change stuff to our liking
+Config.read("/Users/mier/Proj/sudoku/src_kivy/.kivy/config.ini")  # 
+Config.set('kivy', 'exit_on_escape', 1)                           # set to 0 to disable exit on escape
+Config.set('kivy', 'log_enable', 1)                               # set to 0 to disable logging
+Config.set('kivy', 'log_level', "warning")                        # possible values: 'debug', 'info', 'warning', 'error', 'critical'
+Config.set('graphics', 'fullscreen', 0)                           #
+Config.set('graphics', 'height', 600)                             #
+Config.set('graphics', 'width', 1000)                             #
+Config.set('graphics', 'resizable', 0)                            # set to 1 to enable 
+Config.set('graphics', 'position', 'auto')                        # or 'custom'
+Config.set('graphics', 'left', 500)                               # ignored when 'position' is set to 'auto'
+Config.set('graphics', 'top', 100)                                # ignored when 'position' is set to 'auto'
+Config.write()                                                    # save configuration for future reference
+
+# Config.set('modules', 'monitor', '')
+# Config.set('modules', 'touchring', '')
+
 import kivy
 kivy.require("2.0.0")
 
-from kivy.config import Config 
 
 from kivy.app import App
 from kivy.core.window import Window
@@ -15,14 +37,13 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 
+import numpy as np
+
 from  utils import debug_msg, err_msg, sys_msg
 from  utils import parse_arguments
 from  utils import WINDOW_SIZE
 
 import sys
-
-# Config.set('modules', 'monitor', '')
-# Config.set('modules', 'touchring', '')
 
 # class Sudoku(GridLayout):
 # Window.size = (1000, 600)
@@ -37,6 +58,9 @@ class CustomLabel(Label):
 class NumberPadButton(Button):
     def __init__(self, **kwargs):
         super(NumberPadButton, self).__init__(**kwargs)
+    def update_active_number(self, number):
+        SudokuWidgets().ids['active_number'].text = number
+
 
 
 class BoardButton(Button):
@@ -45,30 +69,17 @@ class BoardButton(Button):
 
 
 class SudokuWidgets(BoxLayout):
-
+    """A widget tree that draws a sudoku board with a numerical keypad on the right"""
 
     def __init__(self, **kwargs):
         super(SudokuWidgets, self).__init__(**kwargs)
+        ### grid_1 = GridLayout(cols=3, rows=3, size_hint_x=10)
+        ### b1 = Button(text="f00")
+        ### grid_1.add_widget(b1)
+        ### self.add_widget(grid_1)
 
-        # print("self.kv_file =", self.kv_file)
-        # print("self.__class__.__name__ =", self.__class__.__name__)  # -> "Sudoku"
-
-        # self.cols = 2
-        # self.rows = 2
-        # self.row_force_default = True
-        # self.row_default_height = 1000
-#
-#        username_label = Label(text='Username')
-#        self.add_widget(username_label)
-#
-#        self.username = TextInput(multiline=False)
-#        self.add_widget(self.username)
-#
-#        password_label = Label(text='Password')
-#        self.add_widget(password_label)
-#
-#        self.password = TextInput(password=True, multiline=False)
-#        self.add_widget(self.password)
+        # if debug:
+        #    print("self.__class__.__name__ =", self.__class__.__name__)  # -> "Sudoku"
 
     def update_active_number(self, number):
         self.ids['active_number'].text = number
