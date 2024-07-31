@@ -59,7 +59,7 @@ class NumberPadButton(Button):
     def __init__(self, **kwargs):
         super(NumberPadButton, self).__init__(**kwargs)
     def update_active_number(self, number):
-        SudokuWidgets().ids['active_number'].text = number
+        RootWidget().ids['active_number'].text = number
 
 
 
@@ -68,57 +68,66 @@ class BoardButton(Button):
         super(BoardButton, self).__init__(**kwargs)
 
 
-class SudokuWidgets(BoxLayout):
+class BoardButtonTest(BoardButton):
+    def update_block_button(self, active_number, id, text):
+        print("updating button text")
+        print(type(active_number))
+        print(active_number.text)
+        # root.ids['s11'].text = root.ids['active_number'].text
+        # print(root.ids)
+    pass
+
+
+class SudokuBlock(GridLayout):
+    pass
+
+class SudokuBlockLight(SudokuBlock):
+    pass
+
+
+class RootWidget(BoxLayout):
     """A widget tree that draws a sudoku board with a numerical keypad on the right"""
 
     def __init__(self, **kwargs):
-        super(SudokuWidgets, self).__init__(**kwargs)
+        super(RootWidget, self).__init__(**kwargs)
         ### grid_1 = GridLayout(cols=3, rows=3, size_hint_x=10)
         ### b1 = Button(text="f00")
         ### grid_1.add_widget(b1)
         ### self.add_widget(grid_1)
 
-        # if debug:
-        #    print("self.__class__.__name__ =", self.__class__.__name__)  # -> "Sudoku"
-
     def update_active_number(self, number):
         self.ids['active_number'].text = number
-
-    def update_label_text(self, id, text):
-        print("updating")
-        self.ids[id].text = text
-        for id in self.ids:
-            print(id)
-
-    def on_enter(self, *args):
-        print('User pressed enter in', args)
-
-
-    def on_focus(self, msg):
-        print("got focus", msg)
-
 
     def do_quit(self, *args):
         print("See ya!", file=sys.stderr)
         raise SystemExit(0)
 
+    # def update_label_text(self, id, text):
+    #    print("updating")
+    #    self.ids[id].text = text
+    #    for id in self.ids:
+    #        print(id)
+
+    # def on_enter(self, *args):
+    #     print('User pressed enter in', args)
+
+    # def on_focus(self, msg):
+    #    print("got focus", msg)
+
 
 class SudokuApp(App):
     def build(self):
-        return SudokuWidgets()
-        # return Sudoku(cols=2, rows=3)
-
+        self.root = RootWidget()
+        return self.root
 
     def on_start(self):
         print("Starting up...")
 
-
     def on_resume(self):
         print("Resuming...")
 
-
     def on_stop(self):
-        print("bye bye")
+        print("Bye bye!")
 
 
 if __name__ == "__main__":
@@ -126,10 +135,5 @@ if __name__ == "__main__":
     if args.filename:
         print(args.filename)
         print(type(args.filename))
-        # Window.size = args.geometry
-        #print("SIZE", args.geometry)
-        Window.size = win_size
-        # for k in args.geometry.split(","):
-        #    print(int(k))
-        # print(type(args.geometry))
+        # Window.size = win_size
     SudokuApp().run()
