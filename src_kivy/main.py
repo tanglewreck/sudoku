@@ -3,6 +3,7 @@
 # KIVY_NO_ARGS = 1
 
 
+# KIVY_HOME environment variable
 import os
 os.environ['KIVY_HOME'] = "./.kivy"  # Use local .kivy directory (for config, logs, etc.)
 
@@ -62,13 +63,15 @@ class NumberPadButton(Button):
         RootWidget().ids['active_number'].text = number
 
 
-
 class BoardButton(Button):
     def __init__(self, **kwargs):
         super(BoardButton, self).__init__(**kwargs)
 
 
 class BoardButtonTest(BoardButton):
+    def __init__(self, **kwargs):
+        super(BoardButtonTest, self).__init__(**kwargs)
+
     def update_block_button(self, active_number, id, text):
         print("updating button text")
         print(type(active_number))
@@ -118,6 +121,8 @@ class RootWidget(BoxLayout):
 class SudokuApp(App):
     def build(self):
         self.root = RootWidget()
+        # self.icon = 'sudoku_64x64.png'
+        self.icon = 'mier_347x437.jpg'
         return self.root
 
     def on_start(self):
