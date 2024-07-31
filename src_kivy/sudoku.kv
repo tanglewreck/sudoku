@@ -6,7 +6,8 @@
 <BoardButton>:
     canvas.after:
         Color:
-            rgba: .2, .2, .2, 0
+            rgba: 51/255, 51/255, 51/255, 0
+            # rgba: .2, .2, .2, 0
         Rectangle:
             pos: self.pos
             size: self.size
@@ -17,7 +18,7 @@
 <CustomLabel>:
     canvas.after:
         Color:
-            rgba: .2, .2, .2, 0.5
+            rgba: 51/255, 51/255, 51/255, 0.5
         Rectangle:
             pos: self.pos
             size: self.size
@@ -30,35 +31,34 @@
     # on_ref_press: self.text = root.active_number.text
 
 <NumberPadButton>:
-    canvas.before:
+    canvas:
         Color:
-            rgba: 0, 0, 0, 1
+            rgba: 255/255, 0/255, 0/255, 0
         Rectangle:
             pos: self.pos
             size: self.size
-    # on_press: root.update_active_number(self.text)
+    background_color: 1,1,1,1
+    on_press: root.update_active_number(self.text)
 
 
 <SudokuWidgets>:
+    id: main_window
     # canvas.after:
     # canvas.before:
-    canvas.before:
+    canvas:
         Color:
-            rgba: 0.1, 0.1, 0.1, 1
-            # rgba: 0.3,0.3,0.3, 1
-            # rgb: 0.3, 0.3, 0.3
+            rgba: 85.5/255, 85.5/255, 45.5/255, 1
         Rectangle:
             pos: self.pos
             size: self.size
     orientation: 'horizontal'
-    opacity: 1
+    opacity: 1.0
+    spacing: 20
+    # padding: '50sp'
+    padding: '70sp', '50sp', '20sp', '50sp'
     # padding: Padding between layout box and children: [padding_left, padding_top, padding_right, padding_bottom].
     # padding: (50, 50, 50, 50)
-    # padding: (0, 0.1, 0, 0.1)
-    padding: '20sp'
     # pos_hint: {'center_x': 0.45, 'center_y': 0.8}
-    # pos_hint: {'center_x': 0.5, 'center_y': 0.75}
-    # spacing: 100
     ## size_hint: (None, None)
     ## width: 1000
     ## height: 600
@@ -70,6 +70,7 @@
         rows: 3
         padding: '10sp'
         spacing: 0
+        size_hint_x: 3/8
         canvas.before:
             Color:
                 # rgba: 0.5, 0.5, 0.5, 0.5
@@ -595,19 +596,16 @@
                 id: b9
                 text: "9"
                 on_press: active_number.text = "9"
-            # Button:
-            #    canvas.after:
-            #        Color:
-            #            rgb: 0.3,0.3,0.3
-            #        Rectangle:
-            #            pos: self.pos
-            #            size: self.size
-            #    text: ""
-
+            Label:
+                text: ""
             NumberPadButton:
-                id:clear_button
+                id:bx
                 text: "X"
-                pos_hint: {'center_x': 500}
+                # size_hint: None, None
+                # size_hint_x: 500
+                # pos_hint: {'x': 500}
+                # pos_hint: {'center_x': 500}
+                # pos_hint: None, None
                 on_press: active_number.text = ""
     
         Label:
@@ -627,12 +625,18 @@
             # padding: '10sp'
             # padding: (0, 0, 0, 0)
         Button:
-            padding: 10
-            pos_hint: {'center_x': 0.55}
-            size_hint: 0.85, 0.1
+            # canvas.before:
+            #    Color: 
+            #        rgba: 200/255, 100/255, 10/255, 1
+            opacity: 100/100
+            background_color: 255/255, 255/255, 0/255, 100/100
+            padding: 10,10,10,10
+            # pos_hint: {'center_x': 0.55}
+            size_hint: 0.5, None
+            height: '30sp'
             markup: True
             bold: False
-            text: "[i]Qu[/i]it"
+            text: "[color=ff7070]Q[/color][sup][size=24][color=bb90ff]u[/color][/size][/sup][sub][size=32][color=ff5050]i[/color][/size][/sub][i][sup][size=36][color=ffff00]t[/color][/size][/i]"
             on_press: raise SystemExit(0)
             # size_hint_x: 0.15
             # size_hint_y: 0.05
@@ -649,41 +653,3 @@
             # padding: 200
             # on_press: root.do_quit()
     
-
-
-
-
-
-
-#    Label:
-#        id: selected
-#        text: "f00"
-#        bold: True
-#        color: [100, 100, 100, 100] 
-        # size_hint_x: None
-        # size_hint_y: None
-        # height: 50
-        #    width: 500
-        # size_hint_x: None
-        # width: 200
-        # center_x: root.width / 2
-        # center_y: root.height / 2
-        # pos: root.width / 2, root.height / 2
-    #Label:
-    #    text: "Password"
-        # size_hint_x: None
-        # size_hint_y: None
-        # height: 50
-        # width: 100
-        # size_hint_x: None
-        # width: 200
-    #TextInput:
-    #    id: password
-    #    password: True
-    #    multiline: False
-        # size_hint_x: None
-        # size_hint_y: None
-        # height: 50
-        # width: 100
-        # size_hint_x: None
-        # width: 200
