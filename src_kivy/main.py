@@ -119,6 +119,12 @@ class RootWidget(BoxLayout):
 
 
 class SudokuApp(App):
+    def __init__(self, **kwargs):
+        super(SudokuApp, self).__init__(**kwargs)
+        # self.kv_directory = "/Users/mier/Proj/sudoku/src_kivy"
+        # self.kv_file = "/Users/mier/Proj/sudoku/sudoku.kv"
+        self.kv_file = "/Users/mier/Proj/sudoku/src_kivy/sudoku.kv"
+
     def build(self):
         self.root = RootWidget()
         # self.icon = 'sudoku_64x64.png'
