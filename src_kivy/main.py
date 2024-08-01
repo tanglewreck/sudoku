@@ -36,6 +36,7 @@ from kivy.properties import ColorProperty
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
 from kivy.uix.button import Button
+from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
@@ -70,13 +71,6 @@ class NumberPadButton(Button):
     def __init__(self, **kwargs):
         super(NumberPadButton, self).__init__(**kwargs)
 
-    # def update_active_number(self, text):
-    #    print("apa")
-    #    print(text)
-    #    RootWidget().ids['active_number'].text = "99"
-    #    # print(RootWidget().ids)
-    #    # print(RootWidget().ids['active_number'].text)
-
 
 class BoardButton(Button):
     def __init__(self, **kwargs):
@@ -84,18 +78,19 @@ class BoardButton(Button):
         # This seems to be ignored:
         # self.kv_file = "kv/boardbutton.kv"
 
-    def update_block_button(self, text):
-        #
-        # This is butt ugly! Gotta find a cleaner, neater, better way of
-        # updating the blockbutton text!
-        #
-        #           <SudokuBlock>
-        #                |      <GridLayout>
-        #                |      |      <RootWidget>
-        #                |      |      |      <BoxLayout>
-        #                |      |      |      |           <Label>
-        #                |      |      |      |           |
-        self.text = self.parent.parent.parent.children[0].children[1].text # the text property of the Label widget (i.e. active_number)
+#     Moved the .kv-file:
+#     def update_block_button(self, text):
+#         #
+#         # This is butt ugly! Gotta find a cleaner, neater, better way of
+#         # updating the blockbutton text!
+#         #
+#         #           <SudokuBlock>
+#         #                |      <GridLayout>
+#         #                |      |      <RootWidget>
+#         #                |      |      |      <BoxLayout>
+#         #                |      |      |      |           <Label>
+#         #                |      |      |      |           |
+#         self.text = self.parent.parent.parent.children[0].children[1].text # the text property of the Label widget (i.e. active_number)
         
 
 # class BoardButtonTest(BoardButton):

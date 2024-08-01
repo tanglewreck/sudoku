@@ -13,12 +13,24 @@
         Rectangle:
             pos: self.pos
             size: self.size
-    padding: 0
     background_color: 220/255, 220/255, 0/255, 30/100
-    font_size: '24sp'
     bold: True
-    on_release: self.update_block_button(self.text)
-    # on_press: ...
+    font_size: '24sp'
+    markup: True
+    # 
+    # Set the text to the activate number (chosen on the numpad):
+    #
+    # This is butt ugly! Gotta find a cleaner, neater, better way of
+    # updating the blockbutton text!
+    #
+    #           <SudokuBlock>
+    #                |      <GridLayout>
+    #                |      |      <RootWidget>
+    #                |      |      |      <BoxLayout>
+    #                |      |      |      |           <Label>
+    #                |      |      |      |           |
+    on_release: self.text = self.parent.parent.parent.children[0].children[1].text # the text property of the Label widget (i.e. active_number)
+    # on_release: self.update_block_button(self.text)
 
 
 # <BoardButtonTest>:
@@ -40,28 +52,30 @@
         Color:
             rgba: 255/255, 255/255, 255/255, 100/100
     canvas:
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 1
         #Color:
         #    rgba: 255/255, 255/255, 255/255, 100/100
         # Rectangle:
         #     pos: self.pos
         #     size: self.size
-            # pos: self.x + 2, self.y - 4
-            # size: self.width * 1.025, self.height * 1.05
-        Line:
-            rectangle: self.x, self.y, self.width, self.height
-            width: 1
+        #     pos: self.x + 2, self.y - 4
+        #     size: self.width * 1.025, self.height * 1.05
     background_color: 220/255, 220/255, 0/255, 5/100
-    # background_color: 220/255, 220/255, 0/255, 20/100
     # background_normal: ''
     background_normal: "atlas://data/images/defaulttheme/button"
     background_disabled_normal: "atlas://data/images/defaulttheme/button"
     # background_disabled_normal: "atlas://data/images/defaulttheme/button_disabled"
     # border: 25, 25, 25, 25 # defaults to (16, 16, 16, 16)
     # opacity: 100/100
-    font_size: '14sp'
+    font_size: '16sp'
     markup: True
     bold: True
-    on_press: self.parent.parent.children[1].text = f"[color=ffffbb][size=48]{self.text}[/size][/color]" if not self.text == "X" else ""
+    # Set the text of the status label:
+    on_press: self.parent.parent.children[1].text = f"[color=fffff0][size=48]{self.text}[/size][/color]" if self.text in ['1','2','3','4','5','6','7','8','9'] else ""
+    # on_press: self.parent.parent.children[1].text = f"[color=fffff0][size=48]{self.text}[/size][/color]" if not self.text == "X" else ""
+    # on_press: self.parent.parent.children[1].text = self.text if not self.text == "X" else ""
 
 
 <SudokuBlock>: # inherits GridLayout
@@ -119,7 +133,7 @@
         cols: 3
         rows: 3
         padding: '1sp'
-        spacing: '3sp'
+        spacing: '2sp'
         size_hint_x: 3/8
         
         # Block 1,1
@@ -312,14 +326,16 @@
                 id: s99
 
 
-    # 
-    # The panel to the right of the sudoku grid, stacked vertically
+    # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+    #  Right-hand side panel, stacked vertically. Includes numberpad, status
+    #  label, and quit-button
+    # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
     BoxLayout:
         orientation: 'vertical'
         size_hint: 0.25, 1 # 1/4 of root widget width, 1/1 of root widget height
-        padding: 50, 200, 0, 0
+        padding: 50, 300, 0, 0
         # padding: 0
-        align: 'right'
+        align: 'center'
         valign: 'bottom'
 
         # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -342,21 +358,14 @@
                 #Rectangle: # draws a rectangle around individual squares
                 #    size: self.size
                 #    pos: self.pos
-            #canvas:
-            #    Color:
-            #        rgba: 1,1,1,1
-            #    Line:
-            #        rectangle: self.x, self.y, self.width, self.height
             cols: 3
             rows: 4
-            size_hint: 1, 0.25
+            size_hint: 1, 0.5
             spacing: '1sp'
     
             NumberPadButton:
                 id: b1
                 text: "1"
-                # text: "[color=ffffff]1[/color]"
-                # text: "[color=ffffff][size=48]1[/size][/color]"
                 # on_press: active_number.text = "1"
             NumberPadButton:
                 id: b2
@@ -383,15 +392,14 @@
                 id: b9
                 text: "9"
             NumberPadButton: # placeholder
-                text: ""
-                disabled: True
-            #     background_disabled_normal: "atlas://data/images/defaulttheme/button"
+                text: "[size=24]Note[/size]"
+            #    disabled: True
             NumberPadButton:
                 id:bx
                 text: "X"
                 on_press: active_number.text = ""
             NumberPadButton: # placeholder
-                text: ""
+                text: "[size=24][/size]"
                 disabled: True
     
         #
@@ -411,24 +419,31 @@
         #
         # Quit button
         #
-        Button:
-            canvas:
-                Color: 
-                    rgba: 0/255, 0/255, 10/255, 20/100
-                Line:
-                    width: 4
-                    rectangle: self.x, self.y, self.width, self.height
-            background_color: 255/255, 255/255, 0/255, 30/100
-            opacity: 80/100
-            # padding: 10,10,10,10
-            padding: 0
-            # pos_hint: {'center_x': 0.55}
-            size_hint: 0.5, None
-            height: '30sp'
-            markup: True
-            bold: False
-            text: "[color=ff4040]Q[/color][sup][size=24][color=2040aa]u[/color][/size][/sup][sub][size=32][color=602010]i[/color][/size][/sub][i][sup][size=36][color=ffff00]t[/color][/size][/i]"
-            on_release: raise SystemExit(0)
+        AnchorLayout:
+            # cols: 1
+            # rows: 1
+            size_hint_y: 0.25
+            # size_hint_x: 0.5
+            anchor_x: 'center'
+            anchor_y: 'bottom'
+            Button:
+                canvas:
+                    Color: 
+                        rgba: 0/255, 0/255, 10/255, 20/100
+                    Line:
+                        width: 4
+                        rectangle: self.x, self.y, self.width, self.height
+                background_color: 255/255, 255/255, 0/255, 30/100
+                opacity: 80/100
+                # padding: 10,10,10,10
+                padding: 0
+                # pos_hint: {'center_x': 100}
+                size_hint: 0.25, None
+                height: '30sp'
+                markup: True
+                bold: False
+                text: "[color=ff4040]Q[/color][sup][size=24][color=2040aa]u[/color][/size][/sup][sub][size=32][color=602010]i[/color][/size][/sub][i][sup][size=36][color=ffff00]t[/color][/size][/i]"
+                on_release: raise SystemExit(0)
     
 
 <CustomLabel>:
