@@ -23,13 +23,15 @@
     # This is butt ugly! Gotta find a cleaner, neater, better way of
     # updating the blockbutton text!
     #
-    #           <SudokuBlock>
-    #                |      <GridLayout>
-    #                |      |      <RootWidget>
-    #                |      |      |      <BoxLayout>
-    #                |      |      |      |           <Label>
-    #                |      |      |      |           |
-    on_release: self.text = self.parent.parent.parent.children[0].children[1].text # the text property of the Label widget (i.e. active_number)
+    #                       <SudokuBlock>
+    #                            |      <GridLayout>
+    #                            |      |      <RootWidget>
+    #                            |      |      |      <BoxLayout>
+    #                            |      |      |      |           <AnchorLayout>
+    #                            |      |      |      |           |           <Label>
+    #                            |      |      |      |           |           |
+    #                            |      |      |      |           |           |
+    on_release: self.text = self.parent.parent.parent.children[0].children[2].children[0].text # the text property of the Label widget (i.e. active_number)
     # on_release: self.update_block_button(self.text)
 
 
@@ -72,8 +74,13 @@
     font_size: '16sp'
     markup: True
     bold: True
-    # Set the text of the status label:
-    on_press: self.parent.parent.children[1].text = f"[color=fffff0][size=48]{self.text}[/size][/color]" if self.text in ['1','2','3','4','5','6','7','8','9'] else ""
+
+    # Set the text of the status label (UGLY and very prone to stop working if
+    # the layouts change...):
+    on_press: self.parent.parent.children[2].children[0].text = f"[color=fffff0][size=48]{self.text}[/size][/color]" if self.text in ['1','2','3','4','5','6','7','8','9'] else ""  # After adding AnchorLayouts to the right hand side
+
+    # on_press: self.parent.parent.children[1].text = f"[color=fffff0][size=48]{self.text}[/size][/color]" if self.text in ['1','2','3','4','5','6','7','8','9'] else ""
+
     # on_press: self.parent.parent.children[1].text = f"[color=fffff0][size=48]{self.text}[/size][/color]" if not self.text == "X" else ""
     # on_press: self.parent.parent.children[1].text = self.text if not self.text == "X" else ""
 
@@ -333,7 +340,7 @@
     BoxLayout:
         orientation: 'vertical'
         size_hint: 0.25, 1 # 1/4 of root widget width, 1/1 of root widget height
-        padding: 50, 300, 0, 0
+        padding: 50, 200, 0, 0
         # padding: 0
         align: 'center'
         valign: 'bottom'
@@ -405,16 +412,49 @@
         #
         # Label showing which number has been selected, or "" (blank) if the 'X' button has been pressed)
         #
-        Label:
-            id: active_number
-            font_size: '18sp'
-            bold: True
-            markup: True
-            padding: 0, 0, 0, 0
-            size_hint_y: 0.25
-            # on_ref_press: self.text = "fubar" # active_number.text
-            # text: "[ref=foo]0[/ref]"
-            # text: "[ref=footext][color=aabbaa]Label[/color][color=ff3333][sub]with[/sub][/color][color=3333ff][b]mark[sup]up[/sup][/b][/color][/ref]"
+        AnchorLayout:
+            anchor_x: 'center'
+            anchor_y: 'center'
+            size_hint_y: 0.5
+            Label:
+                id: active_number
+                font_size: '18sp'
+                bold: True
+                markup: True
+                padding: 0, 0, 0, 0
+                #size_hint_y: 0.15
+                # on_ref_press: self.text = "fubar" # active_number.text
+                # text: "[ref=foo]0[/ref]"
+                # text: "[ref=footext][color=aabbaa]Label[/color][color=ff3333][sub]with[/sub][/color][color=3333ff][b]mark[sup]up[/sup][/b][/color][/ref]"
+
+        #
+        # Load button
+        #
+        AnchorLayout:
+            # cols: 1
+            # rows: 1
+            size_hint_y: 0.15
+            size_hint_x: 1
+            anchor_x: 'center'
+            anchor_y: 'bottom'
+            Button:
+                canvas:
+                    Color: 
+                        rgba: 0/255, 0/255, 10/255, 20/100
+                    Line:
+                        width: 2
+                        rectangle: self.x, self.y, self.width, self.height
+                background_color: 255/255, 255/255, 0/255, 20/100
+                opacity: 80/100
+                # padding: 10,10,10,10
+                padding: 0
+                # pos_hint: {'center_x': 100}
+                size_hint: 0.5, None
+                height: '30sp'
+                markup: True
+                bold: False
+                text: "Load game from file"
+                # on_release: raise SystemExit(0)
 
         #
         # Quit button
@@ -431,7 +471,7 @@
                     Color: 
                         rgba: 0/255, 0/255, 10/255, 20/100
                     Line:
-                        width: 4
+                        width: 2
                         rectangle: self.x, self.y, self.width, self.height
                 background_color: 255/255, 255/255, 0/255, 30/100
                 opacity: 80/100
