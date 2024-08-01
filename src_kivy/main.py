@@ -6,11 +6,12 @@
 # KIVY_HOME environment variable
 import os
 os.environ['KIVY_HOME'] = "./.kivy"  # Use local .kivy directory (for config, logs, etc.)
+HOME=os.environ['HOME']
 
 # 
 from kivy.config import Config
 # Read the configuration file and then change stuff to our liking
-Config.read("/Users/mier/Proj/sudoku/src_kivy/.kivy/config.ini")  # 
+Config.read(f"{HOME}/Proj/sudoku/src_kivy/.kivy/config.ini")  # 
 Config.set('kivy', 'exit_on_escape', 1)                           # set to 0 to disable exit on escape
 Config.set('kivy', 'log_enable', 1)                               # set to 0 to disable logging
 Config.set('kivy', 'log_level', "warning")                        # possible values: 'debug', 'info', 'warning', 'error', 'critical'
