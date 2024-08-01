@@ -81,11 +81,13 @@ class NumberPadButton(Button):
 class BoardButton(Button):
     def __init__(self, **kwargs):
         super(BoardButton, self).__init__(**kwargs)
+        # This seems to be ignored:
+        # self.kv_file = "kv/boardbutton.kv"
 
     def update_block_button(self, text):
         #
         # This is butt ugly! Gotta find a cleaner, neater, better way of
-        # updating the button's text!
+        # updating the blockbutton text!
         #
         #           <SudokuBlock>
         #                |      <GridLayout>
@@ -102,9 +104,11 @@ class BoardButton(Button):
 
 
 class SudokuBlock(GridLayout):
+    """A 3x3 GridLayout with custom background colour"""
     pass
 
 class SudokuBlockLight(SudokuBlock):
+    """A lighter/brighter version of SudokuBlock"""
     pass
 
 
@@ -128,10 +132,10 @@ class RootWidget(BoxLayout):
 class SudokuApp(App):
     def __init__(self, **kwargs):
         super(SudokuApp, self).__init__(**kwargs)
-        self.kv_directory = "/Users/mier/Proj/sudoku/src_kivy/kv/"
+        # self.kv_directory = "/Users/mier/Proj/sudoku/src_kivy/kv/"
         # self.kv_file = "/Users/mier/Proj/sudoku/sudoku.kv"
         # self.kv_file = "/Users/mier/Proj/sudoku/src_kivy/sudoku.kv"
-        # self.kv_file = "kv/sudokuapp.kv"
+        self.kv_file = "kv/sudoku.kv"
 
     def build(self):
         self.root = RootWidget()
