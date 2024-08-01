@@ -32,6 +32,9 @@ kivy.require("2.0.0")
 
 from kivy.app import App
 from kivy.core.window import Window
+from kivy.properties import ColorProperty
+from kivy.properties import NumericProperty
+from kivy.properties import StringProperty
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
@@ -50,6 +53,13 @@ import sys
 # Window.size = (1000, 600)
 # Window.size = WINDOW_SIZE
 
+
+Active_Number = StringProperty("spam")
+print("A_N:", str(Active_Number))
+N = NumericProperty()
+N = 100
+# print(N)
+
 class CustomLabel(Label):
     def __init__(self, **kwargs):
         super(CustomLabel, self).__init__(**kwargs)
@@ -59,26 +69,36 @@ class CustomLabel(Label):
 class NumberPadButton(Button):
     def __init__(self, **kwargs):
         super(NumberPadButton, self).__init__(**kwargs)
-    def update_active_number(self, number):
-        RootWidget().ids['active_number'].text = number
+
+    # def update_active_number(self, text):
+    #    print("apa")
+    #    print(text)
+    #    RootWidget().ids['active_number'].text = "99"
+    #    # print(RootWidget().ids)
+    #    # print(RootWidget().ids['active_number'].text)
 
 
 class BoardButton(Button):
     def __init__(self, **kwargs):
         super(BoardButton, self).__init__(**kwargs)
 
+    def update_block_button(self, text):
+        #
+        # This is butt ugly! Gotta find a cleaner, neater, better way of
+        # updating the button's text!
+        #
+        #           <SudokuBlock>
+        #                |      <GridLayout>
+        #                |      |      <RootWidget>
+        #                |      |      |      <BoxLayout>
+        #                |      |      |      |           <Label>
+        #                |      |      |      |           |
+        self.text = self.parent.parent.parent.children[0].children[1].text # the text property of the Label widget (i.e. active_number)
+        
 
-class BoardButtonTest(BoardButton):
-    def __init__(self, **kwargs):
-        super(BoardButtonTest, self).__init__(**kwargs)
-
-    def update_block_button(self, active_number, id, text):
-        print("updating button text")
-        print(type(active_number))
-        print(active_number.text)
-        # root.ids['s11'].text = root.ids['active_number'].text
-        # print(root.ids)
-    pass
+# class BoardButtonTest(BoardButton):
+#    def __init__(self, **kwargs):
+#        super(BoardButtonTest, self).__init__(**kwargs)
 
 
 class SudokuBlock(GridLayout):
@@ -93,23 +113,10 @@ class RootWidget(BoxLayout):
 
     def __init__(self, **kwargs):
         super(RootWidget, self).__init__(**kwargs)
-        ### grid_1 = GridLayout(cols=3, rows=3, size_hint_x=10)
-        ### b1 = Button(text="f00")
-        ### grid_1.add_widget(b1)
-        ### self.add_widget(grid_1)
-
-    def update_active_number(self, number):
-        self.ids['active_number'].text = number
 
     def do_quit(self, *args):
         print("See ya!", file=sys.stderr)
         raise SystemExit(0)
-
-    # def update_label_text(self, id, text):
-    #    print("updating")
-    #    self.ids[id].text = text
-    #    for id in self.ids:
-    #        print(id)
 
     # def on_enter(self, *args):
     #     print('User pressed enter in', args)
@@ -121,13 +128,13 @@ class RootWidget(BoxLayout):
 class SudokuApp(App):
     def __init__(self, **kwargs):
         super(SudokuApp, self).__init__(**kwargs)
-        # self.kv_directory = "/Users/mier/Proj/sudoku/src_kivy"
+        self.kv_directory = "/Users/mier/Proj/sudoku/src_kivy/kv/"
         # self.kv_file = "/Users/mier/Proj/sudoku/sudoku.kv"
-        self.kv_file = "/Users/mier/Proj/sudoku/src_kivy/sudoku.kv"
+        # self.kv_file = "/Users/mier/Proj/sudoku/src_kivy/sudoku.kv"
+        # self.kv_file = "kv/sudokuapp.kv"
 
     def build(self):
         self.root = RootWidget()
-        # self.icon = 'sudoku_64x64.png'
         self.icon = 'mier_347x437.jpg'
         return self.root
 
@@ -146,5 +153,5 @@ if __name__ == "__main__":
     if args.filename:
         print(args.filename)
         print(type(args.filename))
-        # Window.size = win_size
+
     SudokuApp().run()

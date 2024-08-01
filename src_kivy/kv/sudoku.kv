@@ -12,16 +12,17 @@
             pos: self.pos
             size: self.size
     padding: 0
-    background_color: 220/255, 220/255, 0/255, 40/100
+    background_color: 220/255, 220/255, 0/255, 30/100
     font_size: '24sp'
     bold: True
+    on_release: root.update_block_button(self.text)
     # on_press: ...
 
 
 <BoardButtonTest>:
     canvas.before:
         Color:
-            rgba: 255/255, 255/255, 255/255, 0/100
+            rgba: 55/255, 255/255, 255/255, 0/100
         Rectangle:
             pos: self.pos
             size: self.size
@@ -29,8 +30,7 @@
     background_color: 0/255, 220/255, 0/255, 40/100
     font_size: '24sp'
     bold: True
-    # on_release: self.update_block_button(root.active_number, 11, "foo")
-    on_press: print(root.ids)
+    on_release: root.update_block_button(self.text)
 
 
 <NumberPadButton>:
@@ -41,14 +41,11 @@
         Rectangle:
             pos: self.pos
             size: self.size
-    font_size: '18sp'
-    bold: True
-    padding: 0
-    valign: 'top'
     background_color: 220/255, 220/255, 0/255, 40/100
-    # background_color: 0/255, 0/255, 0/255, 30/100
-    # background_color: 255/255,255/255,255/255,1
-    on_press: root.update_active_number(self.text)
+    opacity: 100/100
+    font_size: '14sp'
+    bold: True
+    on_press: self.parent.parent.children[1].text = self.text if not self.text == "X" else ""
 
 
 <SudokuBlock>:
@@ -74,10 +71,9 @@
 
     
 <RootWidget>:
+    thenumber: active_number
     s11x: s11
     id: main_window
-    # canvas.after:
-    # canvas.before:
     canvas:
         Color:
             # rgba: 85.5/255, 85.5/255, 45.5/255, 1  # yellowish
@@ -89,7 +85,7 @@
     orientation: 'horizontal'
     opacity: 1.0
     spacing: 20
-    padding: '70sp', '50sp', '20sp', '50sp'
+    padding: '70sp', '50sp', '70sp', '50sp'
     # padding: Padding between layout box and children: [padding_left, padding_top, padding_right, padding_bottom].
     # padding: (50, 50, 50, 50)
     # pos_hint: {'center_x': 0.45, 'center_y': 0.8}
@@ -117,370 +113,369 @@
         padding: '1sp'
         spacing: '3sp'
         size_hint_x: 3/8
-        # spacing: '1sp'
+        
         # Block 1,1
         SudokuBlock:
-            BoardButtonTest:
+            BoardButton:
                 id: s11
-                on_press: self.text = active_number.text
-                # on_press: lambda x : print("f00000000000")
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s12
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s13
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s14
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s15
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s16
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s17
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s18
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s19
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
         # Block 1,2
         SudokuBlockLight:
             BoardButton:
                 id: s21
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s22
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s23
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s24
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s25
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s26
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s27
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s28
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s29
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
         # Block 1,3
         SudokuBlock:
             BoardButton:
                 id: s31
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s32
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s33
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s34
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s35
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s36
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s37
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s38
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s39
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
         
         # Block 2,1
         SudokuBlockLight:
             BoardButton:
                 id: s41
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s42
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s43
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s44
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s45
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s46
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s47
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s48
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s49
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
         
         # Block 2,2
         SudokuBlock:
             BoardButton:
                 id: s51
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s52
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s53
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s54
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s55
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s56
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s57
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s58
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s59
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             
         # Block 2,3
         SudokuBlock:
             BoardButton:
                 id: s61
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s62
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s63
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s64
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s65
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s66
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s67
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s68
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s69
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             
         # Block 3,1
         SudokuBlock:
             BoardButton:
                 id: s71
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s72
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s73
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s74
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s75
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s76
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s77
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s78
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s79
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
         
         # Block 3,2
         SudokuBlock:
             BoardButton:
                 id: s81
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s82
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s83
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s84
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s85
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s86
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s87
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s88
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s89
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
         
         # Block 3,3
         SudokuBlockLight:
             BoardButton:
                 id: s91
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s92
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s93
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s94
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s95
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s96
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s97
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s98
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
             BoardButton:
                 id: s99
                 text: ""
-                on_press: self.text = active_number.text
+                # on_press: self.text = active_number.text
 
 
+    # 
+    # The panel to the right of the sudoku grid, stacked vertically
     BoxLayout:
         orientation: 'vertical'
         size_hint: 0.25, 1
         padding: 50, 200, 0, 0
-        # width: '500sp'
-        # padding: 200, 0, 0, 0
-        # padding: '0sp', '20sp', 0, 0
-        # padding: '50sp', '100sp', 0, 0
-        # height: self.height
+        # padding: 0
         # align: 'left'
-        # valign: 'top'
-    # = = = = = #
-    # Numpad    #
-    # = = = = = #
+        valign: 'bottom'
+
+        # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+        # Numpad: A 3x4 grid (last row containing two placeholder   #
+        #         buttons (disabled) surrounding the 'X' button     #
+        # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
         GridLayout:
             canvas:
                 Color:
@@ -495,41 +490,39 @@
             NumberPadButton:
                 id: b1
                 text: "1"
-                on_press: active_number.text = "1"
-                # on_press: root.update_active_number("1")
+                # on_press: active_number.text = "1"
             NumberPadButton:
                 id: b2
                 text: "2"
                 # on_press: active_number.text = "2"
-                on_press: root.update_active_number(self.text)
             NumberPadButton:
                 id: b3
                 text: "3"
-                on_press: active_number.text = "3"
+                # on_press: active_number.text = "3"
             NumberPadButton:
                 id: b4
                 text: "4"
-                on_press: active_number.text = "4"
+                # on_press: active_number.text = "4"
             NumberPadButton:
                 id: b5
                 text: "5"
-                on_press: active_number.text = "5"
+                # on_press: active_number.text = "5"
             NumberPadButton:
                 id: b6
                 text: "6"
-                on_press: active_number.text = "6"
+                # on_press: active_number.text = "6"
             NumberPadButton:
                 id: b7
                 text: "7"
-                on_press: active_number.text = "7"
+                # on_press: active_number.text = "7"
             NumberPadButton:
                 id: b8
                 text: "8"
-                on_press: active_number.text = "8"
+                # on_press: active_number.text = "8"
             NumberPadButton:
                 id: b9
                 text: "9"
-                on_press: active_number.text = "9"
+                # on_press: active_number.text = "9"
             NumberPadButton: # placeholder
                 text: ""
                 disabled: True
@@ -543,16 +536,23 @@
                 disabled: True
                 background_disabled_normal: "atlas://data/images/defaulttheme/button"
     
+        #
+        # Label showing which number has been selected, or "" (blank) if the 'X' button has been pressed)
+        #
         Label:
             id: active_number
             font_size: '18sp'
+            bold: True
             markup: True
-            # text: "[ref=foo]0[/ref]"
-            on_ref_press: self.text = "fubar" # active_number.text
-            # text: "[ref=footext][color=aabbaa]Label[/color][color=ff3333][sub]with[/sub][/color][color=3333ff][b]mark[sup]up[/sup][/b][/color][/ref]"
             padding: 0, 0, 0, 0
             size_hint_y: 0.25
+            # on_ref_press: self.text = "fubar" # active_number.text
+            # text: "[ref=foo]0[/ref]"
+            # text: "[ref=footext][color=aabbaa]Label[/color][color=ff3333][sub]with[/sub][/color][color=3333ff][b]mark[sup]up[/sup][/b][/color][/ref]"
 
+        #
+        # Quit button
+        #
         Button:
             canvas:
                 Color: 
@@ -560,8 +560,8 @@
                 Line:
                     width: 4
                     rectangle: self.x, self.y, self.width, self.height
+            background_color: 255/255, 255/255, 0/255, 30/100
             opacity: 80/100
-            background_color: 255/255, 255/255, 0/255, 60/100
             # padding: 10,10,10,10
             padding: 0
             # pos_hint: {'center_x': 0.55}
