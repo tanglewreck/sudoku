@@ -90,6 +90,7 @@ class NumberPadButton(Button):
 
 
 class BoardButton(Button):
+    nn = StringProperty("1")
     pass
 #    def __init__(self, **kwargs):
 #        super(BoardButton, self).__init__(**kwargs)
@@ -119,6 +120,7 @@ class SudokuBlockLight(SudokuBlock):
 
 class RootWidget(BoxLayout):
     """A widget tree that draws a sudoku board with a numerical keypad on the right"""
+    nnn = StringProperty("2")
 
     def __init__(self, b=np.zeros((9, 9), dtype=int), debug=None):
         super(RootWidget, self).__init__()
