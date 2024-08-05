@@ -29,20 +29,23 @@ WINDOW_SIZE = f"WIDTHxHEIGHT"
 
 
 
-def debug_msg(msg=None):
+def debug_msg(*args):
     """Utility function. Prints debugging info on stderr"""
+    msg = ' '.join(args)
     caller = inspect.stack()[1].function
     print(f"({caller}) {msg}", file=sys.stderr)
 
 
-def err_msg(msg=None):
+def err_msg(*args):
     """Utility function. Prints a message on stderr"""
+    msg = ' '.join(args)
     caller = inspect.stack()[1].function
     print(f"({caller}) {msg}", file=sys.stderr)
 
 
-def sys_msg(msg=None):
+def sys_msg(*args):
     """Utility function. Prints a message on stdout"""
+    msg = ' '.join(args)
     caller = inspect.stack()[1].function
     print(f"({caller}) {msg}", file=sys.stdout)
 
@@ -53,8 +56,8 @@ def parse_arguments():
                                       add_help=True,
                                       description="sudoku ftw utility"
     )
-    # parser.add_argument('-d', '--debug', default=False, action='store_true')
-    # parser.add_argument('--geometry', default=WINDOW_SIZE)
+    parser.add_argument('--winsize', default=WINDOW_SIZE)
+    parser.add_argument('-d', '--debug', default=False, action='store_true')
     parser.add_argument('-f', '--filename', type=argparse.FileType('r'), default=None, required=False)
     try:
         args = parser.parse_args()
