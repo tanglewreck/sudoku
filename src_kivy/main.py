@@ -122,8 +122,17 @@ class RootWidget(BoxLayout):
     """A widget tree that draws a sudoku board with a numerical keypad on the right"""
     nnn = StringProperty("2")
 
-    def __init__(self, b=np.zeros((9, 9), dtype=int), debug=None):
-        super(RootWidget, self).__init__()
+    Active_Number = StringProperty("spam")
+    print(Active_Number)
+    N = NumericProperty(100)
+    print(N)
+    #if N:
+    #    print("100 xyz")
+    #    print(N)
+
+
+    def __init__(self, b=np.zeros((9, 9), dtype=int), debug=None, **kwargs):
+        super(RootWidget, self).__init__(**kwargs)
         # pass
 
     def do_quit(self, *args):
@@ -143,17 +152,8 @@ class RootWidget(BoxLayout):
 
 class SudokuApp(App):
 
-    def __init__(self, b=np.zeros((9, 9), dtype=int), debug=None):
-        super(SudokuApp, self).__init__()
-
-        if debug:
-            Active_Number = StringProperty("spam")
-            print(Active_Number)
-            N = NumericProperty(100)
-            print(N)
-            if N:
-                print("100 xyz")
-            print(N)
+    def __init__(self, b=np.zeros((9, 9), dtype=int), debug=None, **kwargs):
+        super(SudokuApp, self).__init__(**kwargs)
 
         self.board = b
         if not self.board.all():
