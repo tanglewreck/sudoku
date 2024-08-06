@@ -3,24 +3,36 @@
 #:import random random
 #:import string string
 #:import sudoku sudoku
+#:import np numpy
 
+<BackgroundColour@Widget>:
+    background_color: 1, 1, 0, 1
+    canvas.before:
+        Color:
+            rgba: root.background_color
 
 
 <BoardButton>:
     canvas.before:
         Color:
-            rgba: 255/255, 255/255, 255/255, 100/100
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    background_color: 220/255, 220/255, 0/255, 30/100
+            rgba: 1, 1, 1, 0
+        #Rectangle:
+        #    pos: self.pos
+        #    size: self.size
+    canvas:
+        Color:
+            rgba: 1, 1 ,1 ,0
+    background_color: 1, 1, 1, 1
+    background_disabled_normal: "atlas://data/images/defaulttheme/button"
+    disabled_color: 1, 1, 1, 1
+    opacity: 1
     bold: True
     font_size: '24sp'
     markup: True
     # 
-    # Set the text to the activate number (chosen on the numpad):
+    # Set button text to the activate number (chosen on the numpad):
     #
-    # This is butt ugly! Gotta find a cleaner, neater, better way of
+    # Yes, this *is* butt ugly! Gotta find a cleaner, neater, better way of
     # updating the blockbutton text!
     #
     #                       <SudokuBlock>
@@ -32,21 +44,8 @@
     #                            |      |      |      |           |           |
     #                            |      |      |      |           |           |
     on_release: self.text = self.parent.parent.parent.children[0].children[2].children[0].text # the text property of the Label widget (i.e. active_number)
+    # on_release: self.text = root.thenumber    # <=== does not work, why?!
     # on_release: self.update_block_button(self.text)
-
-
-# <BoardButtonTest>:
-#     canvas.before:
-#         Color:
-#             rgba: 55/255, 255/255, 255/255, 0/100
-#         Rectangle:
-#             pos: self.pos
-#             size: self.size
-#     padding: 0
-#     background_color: 0/255, 220/255, 0/255, 40/100
-#     font_size: '24sp'
-#     bold: True
-#     on_release: root.update_block_button(self.text)
 
 
 <NumberPadButton>:
@@ -64,9 +63,10 @@
         #     size: self.size
         #     pos: self.x + 2, self.y - 4
         #     size: self.width * 1.025, self.height * 1.05
-    background_color: 220/255, 220/255, 0/255, 20/100
+    # background_color: 220/255, 220/255, 220/255, 10/100
+    background_color: 1, 1, 1, 1
     # background_normal: ''
-    background_normal: "atlas://data/images/defaulttheme/button"
+    ## background_normal: "atlas://data/images/defaulttheme/button"
     background_disabled_normal: "atlas://data/images/defaulttheme/button"
     # background_disabled_normal: "atlas://data/images/defaulttheme/button_disabled"
     # border: 25, 25, 25, 25 # defaults to (16, 16, 16, 16)
@@ -78,7 +78,8 @@
 
     # Set the text of the status label (UGLY and very prone to stop working if
     # the layouts change...):
-    on_press: self.parent.parent.children[2].children[0].text = f"[color=fffff0][size=48]{self.text}[/size][/color]" if self.text in ['1','2','3','4','5','6','7','8','9'] else ""  # After adding AnchorLayouts to the right hand side
+    on_press: self.parent.parent.children[2].children[0].text = self.text if self.text in ['1','2','3','4','5','6','7','8','9'] else ""  # After adding AnchorLayouts to the right hand side
+    # on_press: self.parent.parent.children[2].children[0].text = f"[color=fffff0][size=48]{self.text}[/size][/color]" if self.text in ['1','2','3','4','5','6','7','8','9'] else ""  # After adding AnchorLayouts to the right hand side
 
     # on_press: self.parent.parent.children[1].text = f"[color=fffff0][size=48]{self.text}[/size][/color]" if self.text in ['1','2','3','4','5','6','7','8','9'] else ""
 
@@ -87,33 +88,41 @@
 
 
 <SudokuBlock>: # inherits GridLayout
-    canvas:
+    canvas.before:
         Color:
-            rgba: 0/255, 0/255, 0/255, 10/100
+            # rgba: 1, 1, 1, 1
+            rgba: 0, 0, 0, 1
         Line:
             width: 4
             rectangle: self.x, self.y, self.width, self.height
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 1
     cols: 3
     rows: 3
-    # background_color: 220/255, 220/255, 0/255, 100/100
-    opacity: 0.85
+    background_color: 1, 1, 1, 1
+    # opacity: 0.85
     padding: 0
     spacing: 0
 
 
 <SudokuBlockLight>: # Inherits SudokuBlock
-    opacity: 0.65
+    opacity: 0.85
 
     
 <RootWidget>:
     thenumber: active_number
-    # s11x: s11
+    s11x: b1
     id: main_window
     canvas:
         Color:
             # rgba: 85.5/255, 85.5/255, 45.5/255, 1  # yellowish
             # rgba: 200/255, 200/255, 200/255, 70/100  # lightgrey
-            rgba: 255/255, 255/255, 225/255, 50/100
+            # rgba: 245/255, 245/255, 245/255, 95/100
+            rgba: 0.9, 0.9, 0.9, 1
         Rectangle:
             pos: self.pos
             size: self.size
@@ -131,13 +140,16 @@
     GridLayout:
         canvas:
             Color:
-                rgba: 0/255, 0/255, 0/255, 20/100  # lightgrey
+                # rgba: 0/255, 0/255, 0/255, 20/100  # lightgrey
+                # rgba: 1, 1, 1, 0.1
+                rgba: 0, 0, 0, 0.6
             Rectangle: # draws a rectangle around individual squares
                 size: self.size
                 pos: self.pos
             Line: # draws a rectangle around the GridLayout as a whole
                 width: 8
                 rectangle: self.x, self.y, self.width, self.height
+        background_color: 1, 1, 1, 1
         cols: 3
         rows: 3
         padding: '1sp'
@@ -146,14 +158,42 @@
         
         # Block 1,1
         SudokuBlock:
+            block11: block11
+            id: block11
+            BoardButton:
+                id: s00
+                #text: root.nnn
+                # on_release: root.f_s11(active_number.text)
+                #on_press: print(root.ids['s12'].text)
+                # on_press: self.text = active_number.text
+            BoardButton:
+                id: s01
+                #text: root.nnn
+                # on_press: self.text = active_number.text
+            BoardButton:
+                id: s02
+            BoardButton:
+                id: s10
             BoardButton:
                 id: s11
-                text: self.nn
-                # on_press: self.text = active_number.text
             BoardButton:
                 id: s12
-                text: root.nnn
-                # on_press: self.text = active_number.text
+            BoardButton:
+                id: s20
+            BoardButton:
+                id: s21
+            BoardButton:
+                id: s22
+        # Block 1,2
+        # SudokuBlockLight:
+        SudokuBlock:
+            id: block12
+            BoardButton:
+                id: s03
+            BoardButton:
+                id: s04
+            BoardButton:
+                id: s05
             BoardButton:
                 id: s13
             BoardButton:
@@ -161,39 +201,59 @@
             BoardButton:
                 id: s15
             BoardButton:
+                id: s23
+            BoardButton:
+                id: s24
+            BoardButton:
+                id: s25
+        # Block 1,3
+        SudokuBlock:
+            id: block13
+            BoardButton:
+                id: s06
+            BoardButton:
+                id: s07
+            BoardButton:
+                id: s08
+            BoardButton:
                 id: s16
             BoardButton:
                 id: s17
             BoardButton:
                 id: s18
             BoardButton:
-                id: s19
-        # Block 1,2
-        SudokuBlockLight:
-            BoardButton:
-                id: s21
-            BoardButton:
-                id: s22
-            BoardButton:
-                id: s23
-            BoardButton:
-                id: s24
-            BoardButton:
-                id: s25
-            BoardButton:
                 id: s26
             BoardButton:
                 id: s27
             BoardButton:
                 id: s28
-            BoardButton:
-                id: s29
-        # Block 1,3
+        
+        # Block 2,1
+        # SudokuBlockLight:
         SudokuBlock:
+            id: block21
+            BoardButton:
+                id: s30
             BoardButton:
                 id: s31
             BoardButton:
                 id: s32
+            BoardButton:
+                id: s40
+            BoardButton:
+                id: s41
+            BoardButton:
+                id: s42
+            BoardButton:
+                id: s50
+            BoardButton:
+                id: s51
+            BoardButton:
+                id: s52
+        
+        # Block 2,2
+        SudokuBlock:
+            id: block22
             BoardButton:
                 id: s33
             BoardButton:
@@ -201,26 +261,28 @@
             BoardButton:
                 id: s35
             BoardButton:
-                id: s36
-            BoardButton:
-                id: s37
-            BoardButton:
-                id: s38
-            BoardButton:
-                id: s39
-        
-        # Block 2,1
-        SudokuBlockLight:
-            BoardButton:
-                id: s41
-            BoardButton:
-                id: s42
-            BoardButton:
                 id: s43
             BoardButton:
                 id: s44
             BoardButton:
                 id: s45
+            BoardButton:
+                id: s53
+            BoardButton:
+                id: s54
+            BoardButton:
+                id: s55
+            
+        # Block 2,3
+        # SudokuBlockLight:
+        SudokuBlock:
+            id: block23
+            BoardButton:
+                id: s36
+            BoardButton:
+                id: s37
+            BoardButton:
+                id: s38
             BoardButton:
                 id: s46
             BoardButton:
@@ -228,35 +290,38 @@
             BoardButton:
                 id: s48
             BoardButton:
-                id: s49
-        
-        # Block 2,2
-        SudokuBlock:
-            BoardButton:
-                id: s51
-            BoardButton:
-                id: s52
-            BoardButton:
-                id: s53
-            BoardButton:
-                id: s54
-            BoardButton:
-                id: s55
-            BoardButton:
                 id: s56
             BoardButton:
                 id: s57
             BoardButton:
                 id: s58
-            BoardButton:
-                id: s59
             
-        # Block 2,3
-        SudokuBlockLight:
+        # Block 3,1
+        SudokuBlock:
+            id: block31
+            BoardButton:
+                id: s60
             BoardButton:
                 id: s61
             BoardButton:
                 id: s62
+            BoardButton:
+                id: s70
+            BoardButton:
+                id: s71
+            BoardButton:
+                id: s72
+            BoardButton:
+                id: s80
+            BoardButton:
+                id: s81
+            BoardButton:
+                id: s82
+        
+        # Block 3,2
+        # SudokuBlockLight:
+        SudokuBlock:
+            id: block32
             BoardButton:
                 id: s63
             BoardButton:
@@ -264,26 +329,27 @@
             BoardButton:
                 id: s65
             BoardButton:
-                id: s66
-            BoardButton:
-                id: s67
-            BoardButton:
-                id: s68
-            BoardButton:
-                id: s69
-            
-        # Block 3,1
-        SudokuBlock:
-            BoardButton:
-                id: s71
-            BoardButton:
-                id: s72
-            BoardButton:
                 id: s73
             BoardButton:
                 id: s74
             BoardButton:
                 id: s75
+            BoardButton:
+                id: s83
+            BoardButton:
+                id: s84
+            BoardButton:
+                id: s85
+        
+        # Block 3,3
+        SudokuBlock:
+            id: block33
+            BoardButton:
+                id: s66
+            BoardButton:
+                id: s67
+            BoardButton:
+                id: s68
             BoardButton:
                 id: s76
             BoardButton:
@@ -291,49 +357,11 @@
             BoardButton:
                 id: s78
             BoardButton:
-                id: s79
-        
-        # Block 3,2
-        SudokuBlockLight:
-            BoardButton:
-                id: s81
-            BoardButton:
-                id: s82
-            BoardButton:
-                id: s83
-            BoardButton:
-                id: s84
-            BoardButton:
-                id: s85
-            BoardButton:
                 id: s86
             BoardButton:
                 id: s87
             BoardButton:
                 id: s88
-            BoardButton:
-                id: s89
-        
-        # Block 3,3
-        SudokuBlock:
-            BoardButton:
-                id: s91
-            BoardButton:
-                id: s92
-            BoardButton:
-                id: s93
-            BoardButton:
-                id: s94
-            BoardButton:
-                id: s95
-            BoardButton:
-                id: s96
-            BoardButton:
-                id: s97
-            BoardButton:
-                id: s98
-            BoardButton:
-                id: s99
 
 
     # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
@@ -341,6 +369,9 @@
     #  label, and quit-button
     # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
     BoxLayout:
+        canvas.after:
+            Color:
+                rgba: 1, 1, 0, 1
         orientation: 'vertical'
         size_hint: 0.25, 1 # 1/4 of root widget width, 1/1 of root widget height
         padding: 50, 200, 0, 0
@@ -355,13 +386,14 @@
         GridLayout:
             canvas.before:
                 Color:
-                    rgba: 0, 0, 0, 1/4
+                    rgba: 0, 0, 0, 0.1
                 Line: # draws a rectangle around the GridLayout as a whole
-                    width: 1
+                    width: 2
                     rectangle: self.x, self.y, self.width, self.height
             canvas:
                 Color:
-                    rgba: 255/255, 255/255, 255/255, 80/100  
+                    # rgba: 255/255, 255/255, 255/255, 80/100  
+                    rgba: 0, 0, 0, .3
                 Line: # draws a rectangle around the GridLayout as a whole
                     width: 1
                     rectangle: self.x, self.y, self.width, self.height
@@ -440,20 +472,21 @@
             size_hint_x: 1
             anchor_x: 'center'
             anchor_y: 'bottom'
-            Button:
-                canvas:
-                    Color: 
-                        rgba: 0/255, 0/255, 10/255, 20/100
-                    Line:
-                        width: 2
-                        rectangle: self.x, self.y, self.width, self.height
-                background_color: 255/255, 255/255, 0/255, 20/100
-                opacity: 80/100
+            NumberPadButton:
+                #canvas:
+                #    Color: 
+                #        rgba: 0/255, 0/255, 10/255, 20/100
+                #    Line:
+                #        width: 2
+                #        rectangle: self.x, self.y, self.width, self.height
+                #background_color: 255/255, 255/255, 0/255, 20/100
+                #opacity: 80/100
                 # padding: 10,10,10,10
-                padding: 0
+                #padding: 0
                 # pos_hint: {'center_x': 100}
                 size_hint: 0.5, None
                 height: '30sp'
+                font_size: '12sp'
                 markup: True
                 bold: False
                 text: "Load game from file"
@@ -478,22 +511,22 @@
                 padding: 50
                 spacing: 20
                 # A f00 button:
-                Button:
-                    background_color: 0/255, 255/255, 0/255, 100/100
+                NumberPadButton:
+                    # background_color: 0/255, 255/255, 0/255, 100/100
                     height: '30sp'
                     size_hint: 0.5, None
                     text: 'f00'
                     on_release: root.foo()
                 # The quit button:
-                Button:
+                NumberPadButton:
                     #canvas:
                     #    Color: 
                     #        rgba: 0/255, 0/255, 10/255, 20/100
                     #    Line:
                     #        width: 2
                     #        rectangle: self.x, self.y, self.width, self.height
-                    background_color: 255/255, 255/255, 0/255, 30/100
-                    opacity: 100/100
+                    # background_color: 255/255, 255/255, 0/255, 30/100
+                    # opacity: 100/100
                     # padding: 10,10,10,10
                     padding: 0
                     # pos_hint: {'center_x': 100}
@@ -501,8 +534,8 @@
                     height: '30sp'
                     markup: True
                     bold: False
-                    # text: "[color=ff4040]Q[/color][sup][size=24][color=2040aa]u[/color][/size][/sup][sub][size=32][color=602010]i[/color][/size][/sub][i][sup][size=36][color=ffff00]t[/color][/size][/i]"
-                    text: "Quit"
+                    text: "[color=ff4040]Q[/color][sup][size=24][color=ffffff]u[/color][/size][/sup][sub][size=32][color=bbbb10]i[/color][/size][/sub][i][sup][size=36][color=ffff00]t[/color][/size][/i]"
+                    # text: "Quit"
                     on_release: root.do_quit()
                     # on_release: raise SystemExit(0)
     
