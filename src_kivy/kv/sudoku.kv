@@ -452,12 +452,25 @@
             anchor_y: 'center'
             size_hint_y: 0.5
             Label:
+                #canvas:
+                #    Color:
+                #        rgba: 1, 1, 0, 1
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                # background_color: 0, 0, 0, 1
+                color: 0, 0, 0, .5
                 id: active_number
                 font_size: '18sp'
                 bold: True
                 markup: True
                 padding: 0, 0, 0, 0
-                #size_hint_y: 0.15
+                font_size: '24sp'
+                size_hint_x: 0.25
+                size_hint_y: 0.25
                 # on_ref_press: self.text = "fubar" # active_number.text
                 # text: "[ref=foo]0[/ref]"
                 # text: "[ref=footext][color=aabbaa]Label[/color][color=ff3333][sub]with[/sub][/color][color=3333ff][b]mark[sup]up[/sup][/b][/color][/ref]"
