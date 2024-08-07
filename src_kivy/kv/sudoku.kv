@@ -11,80 +11,54 @@
         Color:
             rgba: root.background_color
 
-
-<BoardButton>:
+<SudokuButton@Button>
     canvas.before:
         Color:
-            rgba: 1, 1, 1, 0
-        #Rectangle:
-        #    pos: self.pos
-        #    size: self.size
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
     canvas:
         Color:
-            rgba: 1, 1 ,1 ,0
+            rgba: 1, 1 ,1 ,0.3
+        Rectangle:
+            pos: self.pos
+            size: self.size
     background_color: 1, 1, 1, 1
     background_disabled_normal: "atlas://data/images/defaulttheme/button"
-    disabled_color: 0.8, 0.8, 0.8, .5
-    opacity: 1
     bold: True
-    font_size: '24sp'
-    markup: True
-    # 
-    # Set button text to the activate number (chosen on the numpad):
-    #
-    # Yes, this *is* butt ugly! Gotta find a cleaner, neater, better way of
-    # updating the blockbutton text!
-    #
-    #                       <SudokuBlock>
-    #                            |      <GridLayout>
-    #                            |      |      <RootWidget>
-    #                            |      |      |      <BoxLayout>
-    #                            |      |      |      |           <AnchorLayout>
-    #                            |      |      |      |           |           <Label>
-    #                            |      |      |      |           |           |
-    #                            |      |      |      |           |           |
-    on_release: self.text = self.parent.parent.parent.children[0].children[2].children[0].text # the text property of the Label widget (i.e. active_number)
-    # on_release: self.text = root.thenumber    # <=== does not work, why?!
-    # on_release: self.update_block_button(self.text)
-
+    disabled_color: 0.85, 0.852, 0.85, 1
+    font_size: '16sp'
+    markup: False
+    opacity: 1
 
 <NumberPadButton>:
-    #canvas.before:
-    #    Color:
-    #        rgba: 255/255, 255/255, 255/255, 100/100
-    #canvas:
-    #    Line:
-    #        rectangle: self.x, self.y, self.width, self.height
-    #        width: 1
-        #Color:
-        #    rgba: 255/255, 255/255, 255/255, 100/100
-        # Rectangle:
-        #     pos: self.pos
-        #     size: self.size
-        #     pos: self.x + 2, self.y - 4
-        #     size: self.width * 1.025, self.height * 1.05
-    # background_color: 220/255, 220/255, 220/255, 10/100
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    canvas:
+        Color:
+            rgba: 1, 1 ,1 ,0.3
+        Rectangle:
+            pos: self.pos
+            size: self.size
     background_color: 1, 1, 1, 1
-    # background_normal: ''
-    ## background_normal: "atlas://data/images/defaulttheme/button"
     background_disabled_normal: "atlas://data/images/defaulttheme/button"
-    # background_disabled_normal: "atlas://data/images/defaulttheme/button_disabled"
-    # border: 25, 25, 25, 25 # defaults to (16, 16, 16, 16)
-    # opacity: 100/100
-    font_size: '16sp'
-    markup: True
     bold: True
-    # padding: 0
+    disabled_color: 0.85, 0.852, 0.85, 1
+    font_size: '16sp'
+    markup: False
+    opacity: 1
+    on_release: self.do_update(self.text)
 
-    # Set the text of the status label (UGLY and very prone to stop working if
-    # the layouts change...):
-    on_press: self.parent.parent.children[2].children[0].text = self.text if self.text in ['1','2','3','4','5','6','7','8','9'] else ""  # After adding AnchorLayouts to the right hand side
-    # on_press: self.parent.parent.children[2].children[0].text = f"[color=fffff0][size=48]{self.text}[/size][/color]" if self.text in ['1','2','3','4','5','6','7','8','9'] else ""  # After adding AnchorLayouts to the right hand side
 
-    # on_press: self.parent.parent.children[1].text = f"[color=fffff0][size=48]{self.text}[/size][/color]" if self.text in ['1','2','3','4','5','6','7','8','9'] else ""
-
-    # on_press: self.parent.parent.children[1].text = f"[color=fffff0][size=48]{self.text}[/size][/color]" if not self.text == "X" else ""
-    # on_press: self.parent.parent.children[1].text = self.text if not self.text == "X" else ""
+# BoardButton inherits NumberPadButton and overrides do_update()
+<BoardButton>:
+    font_size: '18sp'
+    on_release: self.do_update(self.text)
 
 
 <SudokuBlock>: # inherits GridLayout
@@ -119,9 +93,6 @@
     id: main_window
     canvas:
         Color:
-            # rgba: 85.5/255, 85.5/255, 45.5/255, 1  # yellowish
-            # rgba: 200/255, 200/255, 200/255, 70/100  # lightgrey
-            # rgba: 245/255, 245/255, 245/255, 95/100
             rgba: 0.9, 0.9, 0.9, 1
         Rectangle:
             pos: self.pos
@@ -130,18 +101,11 @@
     opacity: 1.0
     spacing: 20
     padding: '70sp', '50sp', '70sp', '50sp'
-    # padding: Padding between layout box and children: [padding_left, padding_top, padding_right, padding_bottom].
-    # padding: (50, 50, 50, 50)
-    # pos_hint: {'center_x': 0.45, 'center_y': 0.8}
-    # size_hint: (None, None)
-    # size_hint_y: None
 
     # Sudoku board (9x9)
     GridLayout:
         canvas:
             Color:
-                # rgba: 0/255, 0/255, 0/255, 20/100  # lightgrey
-                # rgba: 1, 1, 1, 0.1
                 rgba: 0, 0, 0, 0.6
             Rectangle: # draws a rectangle around individual squares
                 size: self.size
@@ -162,16 +126,12 @@
             id: block11
             BoardButton:
                 id: s00
-                #text: root.nnn
-                # on_release: root.f_s11(active_number.text)
-                #on_press: print(root.ids['s12'].text)
-                # on_press: self.text = active_number.text
             BoardButton:
                 id: s01
-                #text: root.nnn
-                # on_press: self.text = active_number.text
+                on_press: root.foo(index=(0,1))
             BoardButton:
                 id: s02
+                on_press: root.foo(index=(0,2))
             BoardButton:
                 id: s10
             BoardButton:
@@ -368,6 +328,19 @@
     #  Right-hand side panel, stacked vertically. Includes numberpad, status
     #  label, and quit-button
     # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+    # BoxLayout
+    #       GridLayout
+    #           NumberPadButton1
+    #           ...
+    #           NumberPadButton9
+    #       AnchorLayout
+    #           Label (active number)
+    #       AnchorLayout
+    #           Button (Load from file)
+    #       AnchorLayout
+    #           GridLayout
+    #               Button (f00)
+    #               Button (Quit)
     BoxLayout:
         canvas.after:
             Color:
@@ -433,116 +406,80 @@
             NumberPadButton:
                 id: b9
                 text: "9"
+                on_press: root.foo()
             NumberPadButton: # placeholder
                 text: "Note"
-                ### on_press: note = True
+                on_press: root.note = True
                 # on_press: active_number.text = ""
             NumberPadButton:
                 id:bx
                 text: "X"
                 on_press: active_number.text = ""
             NumberPadButton: # placeholder
-                text: "[size=24][/size]"
+                text: ""
                 disabled: True
     
         #
-        # Label showing which number has been selected, or "" (blank) if the 'X' button has been pressed)
+        # AnchorLayout with a Label showing selected number:
         #
         AnchorLayout:
             anchor_x: 'center'
             anchor_y: 'center'
             size_hint_y: 0.5
             Label:
-                #canvas:
-                #    Color:
-                #        rgba: 1, 1, 0, 1
+                id: active_number
                 canvas.before:
                     Color:
                         rgba: 1, 1, 1, 0.5
                     Rectangle:
                         pos: self.pos
                         size: self.size
-                # background_color: 0, 0, 0, 1
                 color: 0, 0, 0, .5
-                id: active_number
                 font_size: '18sp'
                 bold: True
-                markup: True
-                padding: 0, 0, 0, 0
-                font_size: '24sp'
+                markup: False
+                font_size: '18sp'
                 size_hint_x: 0.25
                 size_hint_y: 0.25
-                # on_ref_press: self.text = "fubar" # active_number.text
-                # text: "[ref=foo]0[/ref]"
-                # text: "[ref=footext][color=aabbaa]Label[/color][color=ff3333][sub]with[/sub][/color][color=3333ff][b]mark[sup]up[/sup][/b][/color][/ref]"
 
         #
         # Load button
         #
         AnchorLayout:
-            # cols: 1
-            # rows: 1
             size_hint_y: 0.15
             size_hint_x: 1
             anchor_x: 'center'
             anchor_y: 'bottom'
             NumberPadButton:
-                #canvas:
-                #    Color: 
-                #        rgba: 0/255, 0/255, 10/255, 20/100
-                #    Line:
-                #        width: 2
-                #        rectangle: self.x, self.y, self.width, self.height
-                #background_color: 255/255, 255/255, 0/255, 20/100
-                #opacity: 80/100
-                # padding: 10,10,10,10
-                #padding: 0
-                # pos_hint: {'center_x': 100}
                 size_hint: 0.5, None
                 height: '30sp'
                 font_size: '12sp'
                 markup: True
                 bold: False
                 text: "Load game from file"
-                # on_release: raise SystemExit(0)
+                on_release: print("Load button: implement me")
+                on_press: root.foo()
 
         #
         # Quit button (and more...)
         #
         AnchorLayout:
-            # cols: 1
-            # rows: 1
             size_hint_y: 0.25
-            # size_hint_x: 0.5
             anchor_x: 'right'
             anchor_y: 'bottom'
             GridLayout:
-                # orientation: 'vertical' 
                 rows: 1
                 cols: 2
-                valign: 'center'        # ?????
-                # size_hint: 1, 0.05      # ?????
                 padding: 50
                 spacing: 20
                 # A f00 button:
-                NumberPadButton:
-                    # background_color: 0/255, 255/255, 0/255, 100/100
+                SudokuButton:
                     height: '30sp'
                     size_hint: 0.5, None
                     text: 'f00'
                     on_release: root.foo()
                 # The quit button:
                 NumberPadButton:
-                    #canvas:
-                    #    Color: 
-                    #        rgba: 0/255, 0/255, 10/255, 20/100
-                    #    Line:
-                    #        width: 2
-                    #        rectangle: self.x, self.y, self.width, self.height
-                    # background_color: 255/255, 255/255, 0/255, 30/100
-                    # opacity: 100/100
-                    # padding: 10,10,10,10
-                    padding: 0
                     # pos_hint: {'center_x': 100}
                     size_hint: 0.5, None
                     height: '30sp'
@@ -554,17 +491,3 @@
                     # on_release: raise SystemExit(0)
     
 
-<CustomLabel>:
-    canvas.after:
-        Color:
-            rgba: 51/255, 51/255, 51/255, 25/100
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    padding: 20
-    halign: 'right'
-    font_size: '14sp'
-    bold: False
-    markup: True
-    # on_ref_press: sudoku.RootWidget.update_label_text(self, 's11', "10") 
-    # on_ref_press: self.text = root.active_number.text
