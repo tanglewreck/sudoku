@@ -124,6 +124,8 @@ class RootWidget(GridLayout):
                                        orientation="lr-tb",
                                        size_hint_x=3/8)
         
+        print(self.ids.active_number.text)
+
         # Add board buttons with text set to the corresponding
         # self.board[index] value. Also bind each button to the
         # 'update_boardbutton' function.
@@ -189,11 +191,15 @@ class RootWidget(GridLayout):
         print("See ya!", file=sys.stderr)
         raise SystemExit(0)
 
-    def update_boardbutton(self, id=None, index=None):
+    def update_boardbutton(self, instance, id=None, index=None):
         print("fubar")
-        if self.ids['active_number'].text:
+        if self.ids.active_number.text:
             print("active_number: ", self.ids['active_number'].text)
             self.board[index] = int(self.ids['active_number'].text)
+            instance.text = str(self.ids.active_number.text)
+            print(str(self.ids.active_number.text))
+        print("instance:", instance)
+        print("instance.text:", instance.text)
         print(index)
         print(self.board[index])
         # print(self.ids.block11)
