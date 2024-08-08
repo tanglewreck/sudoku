@@ -136,7 +136,7 @@ class SudokuBlockLight(SudokuBlock):
 
 # RootWidget: The root of our widget tree: a sudoku board
 #             with a numerical keypad on the right
-class RootWidget(BoxLayout):
+class RootWidget(GridLayout):
     # note = False
     def __init__(self, board=None, debug=None, **kwargs):
         super(RootWidget, self).__init__(**kwargs)
