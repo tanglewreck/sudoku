@@ -123,85 +123,52 @@ class RootWidget(GridLayout):
         self.sudokuboard = GridLayout(cols=3, rows=3,
                                        orientation="lr-tb",
                                        size_hint_x=3/8)
-        
-        print(self.ids.active_number.text)
-
         # Add board buttons with text set to the corresponding
         # self.board[index] value. Also bind each button to the
         # 'update_boardbutton' function.
-        self.blocks = list()
-        self.board_buttons = list()
-
 
         # Add board buttons and match indices...
         for n in range(3):
-            row_blocks = list()
-            button_list = list()
             for m in range(3):
-                block = SudokuBlock(orientation='lr-tb')
-                row_blocks.append(block)
-                self.sudokuboard.add_widget(block)
-                print(f"(n, m) = ({n}, {m})")
-                # Add buttons to the SudokuBlock.
-                # Each button should have an index matching the (numpy) index
-                # of self.board...
+                sudoku_block = SudokuBlock(orientation='lr-tb')
+                self.sudokuboard.add_widget(sudoku_block)
                 for i in range(3):
                     for j in range(3):
                         index = (n * 3 + i, m * 3 + j)
-                        button = BoardButton()
-                        button_list.append(button)
-                        # debug_msg(str(self.board[index]))
-                        button.bind(on_release=functools.partial(self.update_boardbutton, index=index))
-                        if self.board[index]:
-                            button.text = str(self.board[index])
-                        block.add_widget(button)
-                    self.board_buttons.append(button_list)
-            self.blocks.append(row_blocks)
+                        board_button = BoardButton(disabled=False)
+                        board_button.bind(on_release=functools.partial(self.update_boardbutton, index=index))
+                        if self.board[index] in range(1,10):
+                            board_button.text = str(self.board[index])
+                            board_button.disabled = True
+                        else:
+                            board_button.text = ""
+                        sudoku_block.add_widget(board_button)
 
         self.add_widget(self.sudokuboard)
-        # print(self.blocks[0][0].children[0].text)
-        print(len(self.board_buttons))
-                
+
 
         if not self.board.all():
-            pass
-            # print(self.board)
+            print(self.board)
             # self.populate_board()
             # self.the_board.append = list(self.board[0])
             # for r in self.board:
             #    self.the_board.append(list(r))
             # print(self.the_board[4][3])
             
-    def populate_board(self):
-        for k in range(9):
-            for l in range(9):
-                id = f"s{k}{l}"
-                if self.board[k, l]:
-                    # self.ids["s" + str(k) + str(l)].text = str(self.board[k,l])
-                    # self.ids[id].text = str(self.board[k,l])
-                    # self.ids[id].disabled = True
-                    print(f"{self.board[k, l]} ", end="")
-                else:
-                    # self.ids["s" + str(k) + str(l)].text = ""
-                    # self.ids[id].text = ""
-                    print("0 ", end="")
-            print()
 
-    def do_quit(self, *args):
-        print("See ya!", file=sys.stderr)
-        raise SystemExit(0)
-
-    def update_boardbutton(self, instance, id=None, index=None):
-        print("fubar")
+    def update_boardbutton(self, instance, index):
         if self.ids.active_number.text:
-            print("active_number: ", self.ids['active_number'].text)
-            self.board[index] = int(self.ids['active_number'].text)
+            self.board[index] = int(self.ids.active_number.text)
             instance.text = str(self.ids.active_number.text)
-            print(str(self.ids.active_number.text))
-        print("instance:", instance)
-        print("instance.text:", instance.text)
-        print(index)
-        print(self.board[index])
+            # print("active_number: ", self.ids.active_number.text)
+        else:
+            self.board[index] = 0
+            instance.text = ""
+
+        # print("instance:", instance)
+        # print("instance.text:", instance.text)
+        # print(index)
+        # print(self.board[index])
         # print(self.ids.block11)
         # block11 = self.ids.block11
         # block11.add_widget(BoardButton(text='xx'))
@@ -213,19 +180,26 @@ class RootWidget(GridLayout):
         # self.ids['s05'].text = "99"
         # print(type(self))
 
-    # def root_do_update(self, text):
-        # Set the text of the Label:
-        #                   <BoxLayoyt>
-        #                   |      <AnchorLayoyt>
-        #                   |      |
-        # self.r00t= self.parent.parent
-        # if text in string.digits:
-        #     self.r00t.children[2].children[0].text = text
-        # else:
-        #    self.r00t.children[2].children[0].text = ""
-        # print("root_do_update")
+
+    # def populate_board(self):
+    #    for k in range(9):
+    #        for l in range(9):
+    #            id = f"s{k}{l}"
+    #            if self.board[k, l]:
+    #                # self.ids["s" + str(k) + str(l)].text = str(self.board[k,l])
+    #                # self.ids[id].text = str(self.board[k,l])
+    #                # self.ids[id].disabled = True
+    #                print(f"{self.board[k, l]} ", end="")
+    #            else:
+    #                # self.ids["s" + str(k) + str(l)].text = ""
+    #                # self.ids[id].text = ""
+    #                print("0 ", end="")
+    #        print()
 
 
+    def do_quit(self, *args):
+        print("See ya!", file=sys.stderr)
+        raise SystemExit(0)
 
 
 class SudokuApp(App):
