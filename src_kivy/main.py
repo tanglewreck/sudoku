@@ -47,6 +47,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 
+import functools
 import numpy as np
 import string
 import sys
@@ -66,7 +67,7 @@ Config.set('kivy', 'window_icon', "mier_347x437.jpg")
 Config.set('graphics', 'fullscreen', 0)
 Config.set('graphics', 'height', 600)
 Config.set('graphics', 'width', 1000)
-Config.set('graphics', 'resizable', 0)
+Config.set('graphics', 'resizable', 1)
 Config.set('graphics', 'position', 'auto')
 Config.set('graphics', 'left', 500)         # ignored when 'position' == 'auto'
 Config.set('graphics', 'top', 100)          # ignored when 'position' == 'auto'
@@ -90,38 +91,11 @@ Config.write()
 
 
 class NumberPadButton(Button):
-
-    def __init__(self, **kwargs):
-        super(NumberPadButton, self).__init__(**kwargs)
-
-    def do_update(self, text):
-        # Set the text of the Label:
-        #                   <BoxLayoyt>
-        #                   |      <AnchorLayoyt>
-        #                   |      |
-        self.r00t= self.parent.parent
-        if text in string.digits:
-            self.r00t.children[2].children[0].text = text
-        else:
-            self.r00t.children[2].children[0].text = ""
+    pass
 
 
-
-class BoardButton(NumberPadButton):
-
-    def __init__(self, **kwargs):
-        super(BoardButton, self).__init__(**kwargs)
-
-    def do_update(self, text):
-        # Set the text to the text of the Label:
-        #           <SudokuBlock>
-        #                |      <GridLayout>
-        #                |      |      <RootWidget>
-        #                |      |      |      <BoxLayout>
-        #                |      |      |      |           <Label>
-        #                |      |      |      |           |
-        self.r00t= self.parent.parent.parent.children
-        self.text = self.r00t[0].children[2].children[0].text
+class BoardButton(Button):
+    pass
 
 
 class SudokuBlock(GridLayout):
@@ -138,36 +112,97 @@ class SudokuBlockLight(SudokuBlock):
 #             with a numerical keypad on the right
 class RootWidget(GridLayout):
     # note = False
-    def __init__(self, board=None, debug=None, **kwargs):
-        super(RootWidget, self).__init__(**kwargs)
+    the_board = ListProperty()
+
+    def __init__(self, board:np.ndarray=None, debug:bool=None) -> None:
+        super(RootWidget, self).__init__()
 
         self.board = board
+
+        # Add a 3 by 3 GridLayout widget 
+        self.sudokuboard = GridLayout(cols=3, rows=3,
+                                       orientation="lr-tb",
+                                       size_hint_x=3/8)
+        
+        # Add board buttons with text set to the corresponding
+        # self.board[index] value. Also bind each button to the
+        # 'update_boardbutton' function.
+        self.blocks = list()
+        self.board_buttons = list()
+
+
+        # Add board buttons and match indices...
+        for n in range(3):
+            row_blocks = list()
+            button_list = list()
+            for m in range(3):
+                block = SudokuBlock(orientation='lr-tb')
+                row_blocks.append(block)
+                self.sudokuboard.add_widget(block)
+                print(f"(n, m) = ({n}, {m})")
+                # Add buttons to the SudokuBlock.
+                # Each button should have an index matching the (numpy) index
+                # of self.board...
+                for i in range(3):
+                    for j in range(3):
+                        index = (n * 3 + i, m * 3 + j)
+                        button = BoardButton()
+                        button_list.append(button)
+                        # debug_msg(str(self.board[index]))
+                        button.bind(on_release=functools.partial(self.update_boardbutton, index=index))
+                        if self.board[index]:
+                            button.text = str(self.board[index])
+                        block.add_widget(button)
+                    self.board_buttons.append(button_list)
+            self.blocks.append(row_blocks)
+
+        self.add_widget(self.sudokuboard)
+        # print(self.blocks[0][0].children[0].text)
+        print(len(self.board_buttons))
+                
+
         if not self.board.all():
-            print(self.board)
-            self.populate_board()
+            pass
+            # print(self.board)
+            # self.populate_board()
+            # self.the_board.append = list(self.board[0])
+            # for r in self.board:
+            #    self.the_board.append(list(r))
+            # print(self.the_board[4][3])
             
     def populate_board(self):
         for k in range(9):
             for l in range(9):
                 id = f"s{k}{l}"
-                if self.board[k,l]:
+                if self.board[k, l]:
                     # self.ids["s" + str(k) + str(l)].text = str(self.board[k,l])
-                    self.ids[id].text = str(self.board[k,l])
-                    self.ids[id].disabled = True
+                    # self.ids[id].text = str(self.board[k,l])
+                    # self.ids[id].disabled = True
+                    print(f"{self.board[k, l]} ", end="")
                 else:
                     # self.ids["s" + str(k) + str(l)].text = ""
-                    self.ids[id].text = ""
+                    # self.ids[id].text = ""
+                    print("0 ", end="")
+            print()
 
     def do_quit(self, *args):
         print("See ya!", file=sys.stderr)
         raise SystemExit(0)
 
-    def foo(self, id=None, index=None):
+    def update_boardbutton(self, id=None, index=None):
         print("fubar")
         if self.ids['active_number'].text:
+            print("active_number: ", self.ids['active_number'].text)
             self.board[index] = int(self.ids['active_number'].text)
         print(index)
         print(self.board[index])
+        # print(self.ids.block11)
+        # block11 = self.ids.block11
+        # block11.add_widget(BoardButton(text='xx'))
+        # block11.add_widget(BoardButton(text='xy'))
+        # block11.add_widget(BoardButton(text='yy'))
+        # block41 = SudokuBlock()
+        # print(block41)
         # print(self.board[index])
         # self.ids['s05'].text = "99"
         # print(type(self))
