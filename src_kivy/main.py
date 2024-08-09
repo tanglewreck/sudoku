@@ -63,7 +63,7 @@ from utils import WINDOW_SIZE
 Config.read(f"{HOME}/Proj/sudoku/src_kivy/.kivy/config.ini")
 Config.set('kivy', 'exit_on_escape', 1)
 Config.set('kivy', 'log_enable', 1)
-Config.set('kivy', 'window_icon', "mier_347x437.jpg")
+Config.set('kivy', 'window_icon', "data/mier_347x437.jpg")
 Config.set('graphics', 'fullscreen', 0)
 Config.set('graphics', 'height', 600)
 Config.set('graphics', 'width', 1000)
@@ -114,15 +114,15 @@ class RootWidget(GridLayout):
     # note = False
     the_board = ListProperty()
 
-    def __init__(self, board:np.ndarray=None, debug:bool=None) -> None:
+    def __init__(self, board: np.ndarray = None, debug: bool = None) -> None:
         super(RootWidget, self).__init__()
 
         self.board = board
 
-        # Add a 3 by 3 GridLayout widget 
+        # Add a 3 by 3 GridLayout widget
         self.sudokuboard = GridLayout(cols=3, rows=3,
-                                       orientation="lr-tb",
-                                       size_hint_x=3/8)
+                                      orientation="lr-tb",
+                                      size_hint_x=3 / 8)
         # Add board buttons with text set to the corresponding
         # self.board[index] value. Also bind each button to the
         # 'update_boardbutton' function.
@@ -136,8 +136,8 @@ class RootWidget(GridLayout):
                     for j in range(3):
                         index = (n * 3 + i, m * 3 + j)
                         board_button = BoardButton(disabled=False)
-                        board_button.bind(on_release=functools.partial(self.update_boardbutton, index=index))
-                        if self.board[index] in range(1,10):
+                        board_button.bind(on_release=functools.partial(self.update_board_button, index=index))
+                        if self.board[index] in range(1, 10):
                             board_button.text = str(self.board[index])
                             board_button.disabled = True
                         else:
@@ -146,17 +146,10 @@ class RootWidget(GridLayout):
 
         self.add_widget(self.sudokuboard)
 
-
         if not self.board.all():
             print(self.board)
-            # self.populate_board()
-            # self.the_board.append = list(self.board[0])
-            # for r in self.board:
-            #    self.the_board.append(list(r))
-            # print(self.the_board[4][3])
-            
 
-    def update_boardbutton(self, instance, index):
+    def update_board_button(self, instance, index):
         if self.ids.active_number.text:
             self.board[index] = int(self.ids.active_number.text)
             instance.text = str(self.ids.active_number.text)
@@ -180,23 +173,6 @@ class RootWidget(GridLayout):
         # self.ids['s05'].text = "99"
         # print(type(self))
 
-
-    # def populate_board(self):
-    #    for k in range(9):
-    #        for l in range(9):
-    #            id = f"s{k}{l}"
-    #            if self.board[k, l]:
-    #                # self.ids["s" + str(k) + str(l)].text = str(self.board[k,l])
-    #                # self.ids[id].text = str(self.board[k,l])
-    #                # self.ids[id].disabled = True
-    #                print(f"{self.board[k, l]} ", end="")
-    #            else:
-    #                # self.ids["s" + str(k) + str(l)].text = ""
-    #                # self.ids[id].text = ""
-    #                print("0 ", end="")
-    #        print()
-
-
     def do_quit(self, *args):
         print("See ya!", file=sys.stderr)
         raise SystemExit(0)
@@ -206,8 +182,8 @@ class SudokuApp(App):
 
     def __init__(self, board=np.zeros((9, 9), dtype=int), debug=None, **kwargs):
         super(SudokuApp, self).__init__(**kwargs)
-        self.debug = debug # gets passed on to RootWidget in self.build() below
-        self.board = board # gets passed on to RootWidget in self.build() below
+        self.debug = debug  # gets passed on to RootWidget in self.build() below
+        self.board = board  # gets passed on to RootWidget in self.build() below
         self.kv_file = "kv/sudoku.kv"
 
     def build(self):
