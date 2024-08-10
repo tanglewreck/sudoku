@@ -13,12 +13,12 @@ import os
 # NOTE: KIVY_HOME must be set *before* kivy is imported,
 # thereby breaking the PEP8 recommendation to put
 # module level imports at the top (E402):
-os.environ['KIVY_HOME'] = "./.kivy"
-HOME = os.environ['HOME']  # Needed for the path to the kivy config file
+### os.environ['KIVY_HOME'] = "./.kivy"
+### HOME = os.environ['HOME']  # Needed for the path to the kivy config file
 
 # Make kivy ignore command-line arguments so that we don't have to put '--'
 # before our own options/arguments
-os.environ['KIVY_NO_ARGS'] = 'yes'
+### os.environ['KIVY_NO_ARGS'] = 'yes'
 
 # os.environ['KIVY_WINDOW'] = 'x11'
 # os.environ['KIVY_WINDOW'] = 'egl_rpi'
@@ -63,21 +63,21 @@ from utils import WINDOW_SIZE
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # Read the (local) configuration files and change stuff to our liking.
 # NOTE: Changes require a restart to take effect
-Config.read(f"{HOME}/Proj/sudoku/src_kivy/.kivy/config.ini")
-Config.set('kivy', 'exit_on_escape', 1)
-Config.set('kivy', 'log_enable', 1)
-Config.set('kivy', 'window_icon', "data/mier_347x437.jpg")
-Config.set('graphics', 'fullscreen', 0)
-# Config.set('graphics', 'height', 600)
-# Config.set('graphics', 'width', 1000)
-Config.set('graphics', 'height', 480)
-Config.set('graphics', 'width', 800)
-Config.set('graphics', 'resizable', 1)
-Config.set('graphics', 'position', 'custom')  # auto|custom
-Config.set('graphics', 'left', 100)         # ignored when 'position' == 'auto'
-Config.set('graphics', 'top', 100)          # ignored when 'position' == 'auto'
-Config.set('kivy', 'log_level', "warning")  # debug|info|warning|error|critical
-Config.write()
+### Config.read(f"{HOME}/Proj/sudoku/src_kivy/.kivy/config.ini")
+### Config.set('kivy', 'exit_on_escape', 1)
+### Config.set('kivy', 'log_enable', 1)
+### Config.set('kivy', 'window_icon', "data/mier_347x437.jpg")
+### Config.set('graphics', 'fullscreen', 0)
+### # Config.set('graphics', 'height', 600)
+### # Config.set('graphics', 'width', 1000)
+### Config.set('graphics', 'height', 480)
+### Config.set('graphics', 'width', 800)
+### Config.set('graphics', 'resizable', 1)
+### Config.set('graphics', 'position', 'custom')  # auto|custom
+### Config.set('graphics', 'left', 100)         # ignored when 'position' == 'auto'
+### Config.set('graphics', 'top', 100)          # ignored when 'position' == 'auto'
+### Config.set('kivy', 'log_level', "warning")  # debug|info|warning|error|critical
+### Config.write()
 
 # Config.set('modules', 'monitor', '')
 # Config.set('modules', 'touchring', '')
@@ -235,7 +235,7 @@ class SudokuApp(App):
         super(SudokuApp, self).__init__()
         self.debug = debug  # gets passed on to RootWidget
         self.board = board  # gets passed on to RootWidget
-        self.kv_file = "kv/sudoku.kv"  # the kv file is in a separate directory
+        # self.kv_file = "kv/sudoku.kv"  # the kv file is in a separate directory
 
     def build(self):
         self.root = RootWidget(self.board, self.debug)
