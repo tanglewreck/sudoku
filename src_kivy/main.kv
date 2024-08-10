@@ -1,0 +1,362 @@
+#:kivy 2.0.3
+
+#:import random random
+#:import string string
+#:import sudoku sudoku
+#:import np numpy
+
+<BGColour@Widget>:
+    background_color: 1, .5, 0, 0.7
+    canvas.before:
+        Color:
+            rgba: root.background_color
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+#<GridButton>:
+<GridButton@ButtonBehavior+GridLayout+BGColour>:
+    rows: 3
+    cols: 3
+
+
+<ButtonBackground@Widget>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    canvas:
+        Color:
+            rgba: 1, 1 ,1 ,0.3
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    background_color: 1, 1, 1, 1
+            
+
+<SudokuButton@Button>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    canvas:
+        Color:
+            rgba: 1, 1 ,1 ,0.3
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    background_color: 1, 1, 1, 1
+    background_disabled_normal: "atlas://data/images/defaulttheme/button"
+    bold: True
+    disabled_color: 0.85, 0.852, 0.85, 1
+    font_size: '16sp'
+    markup: False
+    opacity: 1
+
+
+# <NumberPadButton@Button+ButtonBackground>:
+<NumberPadButton>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    canvas:
+        Color:
+            rgba: 1, 1 ,1 ,0.3
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    background_color: 1, 1, 1, 1
+    background_disabled_normal: "atlas://data/images/defaulttheme/button"
+    bold: True
+    disabled_color: 0.85, 0.852, 0.85, 1
+    font_size: '14sp'
+    markup: False
+    opacity: 1
+
+
+# <BoardButton@Button+ButtonBackground>:
+<BoardButton>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    canvas:
+        Color:
+            rgba: 1, 1 ,1 ,0.3
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    background_color: 1, 1, 1, 1
+    background_disabled_normal: "atlas://data/images/defaulttheme/button"
+    bold: True
+    disabled_color: 0.85, 0.852, 0.85, 1
+    font_size: '18sp'
+    markup: False
+    opacity: 1
+    on_release: pass
+
+
+<SudokuBlock>: # inherits GridLayout
+    canvas.before:
+        Color:
+            # rgba: 1, 1, 1, 1
+            rgba: 0, 0, 0, 1
+        Line:
+            width: 4
+            rectangle: self.x, self.y, self.width, self.height
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 1
+    cols: 3
+    rows: 3
+    background_color: 1, 1, 1, 1
+    # opacity: 0.85
+    padding: 0
+    spacing: 0
+
+
+<SudokuBlockLight>: # Inherits SudokuBlock
+    opacity: 0.85
+
+
+# RootWidget inherits GridLayout
+<RootWidget>:
+    id: main_window
+    canvas:
+        Color:
+            rgba: 0.9, 0.9, 0.9, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    rows: 2
+    cols: 2
+    orientation: 'rl-tb'  # Orientation is right-to-left, top-to-bottom
+    opacity: 1.0
+    spacing: 100
+    padding: '70sp', '50sp', '70sp', '50sp'
+
+    # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+    #  Right-hand side panel, stacked vertically. Includes numberpad, status
+    #  label, and quit-button
+    # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+    # The hierarchy looks like this:
+    #     RootWidget (a 2 by 2 GridLayout)
+    #         BoxLayout
+    #               GridLayout
+    #                   NumberPadButton #1
+    #                   ...
+    #                   NumberPadButton #9
+    #               AnchorLayout
+    #                   Label (active number)
+    #               AnchorLayout
+    #                   Button (Load from file)
+    #               AnchorLayout
+    #                   GridLayout
+    #                       Button (f00)
+    #                       Button (Quit)
+    #       GridLayout (3 by 3)
+    #           SudokuBlock #1 (3 by 3 GridLayout)
+    #           ...
+    #           SudokuBlock #9 (3 by 3 GridLayout)
+    BoxLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 0
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        canvas:
+            Color:
+                rgba: 1, 1, 1, 0
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        opacity: 1
+        orientation: 'vertical'
+        size_hint: 0.25, 1 # 1/4 of root widget width, 1/1 of root widget height
+        padding: 50, 200, 0, 0
+        # padding: 0
+        align: 'center'
+        valign: 'bottom'
+
+        # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+        # Numpad: A 3x4 grid (last row containing two placeholder   #
+        #         buttons (disabled) surrounding the 'X' button     #
+        # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+        GridLayout:
+            canvas.before:
+                Color:
+                    rgba: 0, 0, 0, 0.1
+                Line: # draws a rectangle around the GridLayout as a whole
+                    width: 2
+                    rectangle: self.x, self.y, self.width, self.height
+            canvas:
+                Color:
+                    # rgba: 255/255, 255/255, 255/255, 80/100  
+                    rgba: 0, 0, 0, .3
+                Line: # draws a rectangle around the GridLayout as a whole
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
+            cols: 3
+            rows: 4
+            size_hint: 0.9, 0.9
+            # size_hint: 0.8, 0.8
+            spacing: '0sp'
+    
+            NumberPadButton:
+                id: b1
+                text: "1"
+                on_release: active_number.text = "1"
+            NumberPadButton:
+                id: b2
+                text: "2"
+                on_release: active_number.text = "2"
+            NumberPadButton:
+                id: b3
+                text: "3"
+                on_release: active_number.text = "3"
+            NumberPadButton:
+                id: b4
+                text: "4"
+                on_release: active_number.text = "4"
+            NumberPadButton:
+                id: b5
+                text: "5"
+                on_release: active_number.text = "5"
+            NumberPadButton:
+                id: b6
+                text: "6"
+                on_release: active_number.text = "6"
+            NumberPadButton:
+                id: b7
+                text: "7"
+                on_release: active_number.text = "7"
+            NumberPadButton:
+                id: b8
+                text: "8"
+                on_release: active_number.text = "8"
+            NumberPadButton:
+                id: b9
+                text: "9"
+                on_release: active_number.text = "9"
+            NumberPadButton: # placeholder
+                text: "Note"
+                on_press: root.note = True
+                on_release: active_number.text = ""
+            NumberPadButton:
+                id:bx
+                text: "X"
+                on_release: active_number.text = ""
+            NumberPadButton: # placeholder
+                text: ""
+                disabled: True
+    
+        #
+        # AnchorLayout with a Label showing selected number:
+        #
+        AnchorLayout:
+            anchor_x: 'center'
+            anchor_y: 'center'
+            size_hint_y: 0.75
+            padding: 0, 0, 0, 30
+            Label:
+                id: active_number
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                color: 0, 0, 0, .5
+                font_size: '16sp'
+                bold: True
+                markup: False
+                font_size: '18sp'
+                size_hint_x: 0.25
+                size_hint_y: 0.5
+
+        #
+        # Load button
+        #
+        AnchorLayout:
+            size_hint_y: 0.15
+            size_hint_x: 1
+            anchor_x: 'center'
+            anchor_y: 'bottom'
+            NumberPadButton:
+                size_hint: 0.5, None
+                height: '30sp'
+                font_size: '12sp'
+                markup: True
+                bold: False
+                text: "Load game file"
+                on_release: print("Load button: implement me")
+                # on_press: root.foo()
+
+        #
+        # Quit button (and more...)
+        #
+        AnchorLayout:
+            size_hint: 1, .25
+            anchor_x: 'right'
+            anchor_y: 'bottom'
+            GridLayout:
+                rows: 1
+                cols: 2
+                padding: 50
+                spacing: 20
+                # A f00 button:
+                #SudokuButton:
+                #    height: '80sp'
+                #    size_hint: 0.5, None
+                #    # text: 'f00'
+                #    on_release: print("implement or get rid of me")
+                # The quit button:
+                NumberPadButton:
+                    # pos_hint: {'center_x': 100}
+                    size_hint: 0.5, None
+                    height: '30sp'
+                    markup: True
+                    bold: False
+                    text: "[color=ff4040]Q[/color][sup][size=24][color=ffffff]u[/color][/size][/sup][sub][size=32][color=bbbb10]i[/color][/size][/sub][i][sup][size=36][color=ffff00]t[/color][/size][/i]"
+                    # text: "Quit"
+                    on_release: root.do_quit()
+                    # on_release: raise SystemExit(0)
+    
+
+    ##GridButton:
+    ##    size_hint: 0.5, 0.25
+    ##    text: "A GridButton"
+    ##    on_press: print("plip plop")
+    ##    Label:
+    ##        text: "L1"
+#        Label:
+#            text: "L1"
+#        Label:
+#            text: "L1"
+#        Label:
+#            text: "L1"
+#        Label:
+#            text: "L1"
+#        Label:
+#            text: "L1"
+#        Label:
+#            text: "L1"
+#        Label:
+#            text: "L1"
+#        Label:
+#            text: "L1"
+#    
