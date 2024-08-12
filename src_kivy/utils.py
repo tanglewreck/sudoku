@@ -33,6 +33,8 @@ def debug_msg(*args):
     """Utility function. Prints debugging info on stderr"""
     msg = ' '.join(args)
     caller = inspect.stack()[1].function
+    if caller == "<module>":
+        caller = "main"
     print(f"({caller}) {msg}", file=sys.stderr)
 
 
@@ -40,6 +42,8 @@ def err_msg(*args):
     """Utility function. Prints a message on stderr"""
     msg = ' '.join(args)
     caller = inspect.stack()[1].function
+    if caller == "<module>":
+        caller = "main"
     print(f"({caller}) {msg}", file=sys.stderr)
 
 
@@ -47,6 +51,8 @@ def sys_msg(*args):
     """Utility function. Prints a message on stdout"""
     msg = ' '.join(args)
     caller = inspect.stack()[1].function
+    if caller == "<module>":
+        caller = "main"
     print(f"({caller}) {msg}", file=sys.stdout)
 
 
