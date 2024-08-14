@@ -2,9 +2,9 @@
 """Sudoku backtracking solver"""
 __version__ = "2024-08-14"
 
-# Code contributed by sudhanshgupta2019a
+# Code by sudhanshgupta2019a
 # (https://www.geeksforgeeks.org/sudoku-backtracking-7/#)
-# Modified by mier
+# Modified by mier to use numpy arrays and more.
 
 import numpy as np
 
