@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import numpy as np
+import random
 from utils import debug_msg, err_msg, sys_msg
 from utils import parse_arguments
 
@@ -37,12 +38,14 @@ def is_valid(array: np.ndarray) -> bool:
             # return False
             return_status = False
         else:
-            print(f"row and/or column {k} is valid: {array[k]}")
+            # print(f"row and/or column {k} is valid: {array[k]}")
+            pass
     
     # Check blocks
     for row in range(0, 9, 3):
         for col in range(0, 9, 3):
             # print(array[row:row + 3, col:col +3].flatten())
+            print(f"checking block [{row}:{row + 3}, {col}:{col + 3}]")
             if not check_row(array[row:row + 3, col:col +3].flatten()):
                 # print("block not valid")
                 return False
@@ -60,27 +63,53 @@ def generate() -> np.ndarray:
 
 def gen():
     A = np.zeros((9, 9), dtype=int)
+    # Randomise the first line
     A[0] = np.random.choice(range(1,10), size=9, replace=False)
-    for k in range(1,9):
-        for c in range(9):
-            s = set(A[0:k, c])
+
+    for r in range(1,9):    # rows
+        for c in range(9):  # cols
+            col_nums = A[:, c]    # numbers in this column
+            row_nums = A[r, :]    # numbers on this row
+            # row_col_nums = set(col_nums + row_nums)
+            row_col_nums = set(list(col_nums) + list(row_nums))
+            row_col_nums.discard(0)
+            possibles = list(set(range(1, 10)).difference(row_col_nums))
+            ## print(r, c, "possibles:", possibles)
+            if len(possibles) > 0:
+                random_int = np.random.choice(possibles)
+            else:
+                return A, False
+                # random_int = 0
+            ## print("np.random.choice: ", random_int) 
+            # print("np.random.choice: ", np.random.choice(possibles, size=1))
             # print(k, c, s)
-            A[k, c] = np.random.choice(list(set(range(1, 10)).difference(s)))
-    return A
+            # A[r, c] = np.random.choice(list(possibles))
+            A[r, c] = random_int
+            # print(A[r, c])
+            #
+    # print(is_valid(A))
+    return A, is_valid(A)
 
 
 def main():
     k = 0
-    #while True:
-    #    k = k + 1 
+    valid = False
+    while not valid:
+        k = k + 1 
+        print(k)
+        (A, valid) = gen()
+        if valid:
+            print("valid")
+            print(A)
+        else:
+            print(k)
     #    a = generate()
     #    # if valid := is_valid(a):
     #    if is_valid(a):
     #        print(f"Iteration #{k} valid")
     #        print(a)
     #break
-    A = gen()
-    print(A)
+
     if debug:
         if valid:
             debug_msg("Grid is valid")
