@@ -9,23 +9,39 @@ from utils import parse_arguments
 args = parse_arguments()
 debug = args.debug
 
-a = np.array([[1, 2, 3, 4, 5, 6, 7, 8, 9],
-              [2, 3, 4, 5, 6, 7, 8, 9, 1],
-              [3, 4, 5, 6, 7, 8, 9, 1, 2],
-              [4, 5, 6, 7, 8, 9, 1, 2, 3],
-              [5, 6, 7, 8, 9, 1, 2, 3, 4],
-              [6, 7, 8, 9, 1, 2, 3, 4, 5],
-              [7, 8, 9, 1, 2, 3, 4, 5, 6],
-              [8, 9, 1, 2, 3, 4, 5, 6, 7],
-              [9, 1, 2, 3, 4, 5, 6, 7, 8]])
+grid_1: np.ndarray = np.array([[1, 2, 3, 4, 5, 6, 7, 8, 9],
+                               [2, 3, 4, 5, 6, 7, 8, 9, 1],
+                               [3, 4, 5, 6, 7, 8, 9, 1, 2],
+                               [4, 5, 6, 7, 8, 9, 1, 2, 3],
+                               [5, 6, 7, 8, 9, 1, 2, 3, 4],
+                               [6, 7, 8, 9, 1, 2, 3, 4, 5],
+                               [7, 8, 9, 1, 2, 3, 4, 5, 6],
+                               [8, 9, 1, 2, 3, 4, 5, 6, 7],
+                               [9, 1, 2, 3, 4, 5, 6, 7, 8]])
+
+grid_2: np.ndarray = np.array([[0, 0, 0, 5, 1, 0, 0, 0, 8],
+                               [5, 0, 0, 8, 0, 0, 0, 6, 7],
+                               [0, 0, 0, 0, 0, 6, 3, 0, 9],
+                               [3, 0, 8, 0, 7, 0, 0, 0, 0],
+                               [0, 5, 0, 0, 0, 0, 4, 0, 0],
+                               [0, 0, 0, 0, 4, 8, 0, 0, 0],
+                               [0, 1, 0, 0, 8, 0, 0, 7, 0],
+                               [0, 0, 7, 6, 9, 1, 0, 0, 0],
+                               [0, 9, 0, 0, 0, 0, 0, 2, 0]])
+
+a = grid_1
 
 def check_row(row: np.ndarray) -> bool:
     return len(set(row.flatten())) == len(row.flatten())
 
 
 def is_unique(array: np.ndarray) -> bool:
-    elements = [n for n in array if n != 0]
-    return len(elements) == len(set(elements))
+    try:
+        elements = [n for n in array.flatten() if n != 0]
+        return len(elements) == len(set(elements))
+    except (AttributeError, ValueError) as e:
+        err_msg(f"Got a ValueError")
+        return None
 
 
 def is_valid(array: np.ndarray) -> bool:
