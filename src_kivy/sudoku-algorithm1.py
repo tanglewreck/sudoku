@@ -14,29 +14,15 @@ N = 9
 # Check whether num can be assigned to the given row, col
 def is_safe(grid, row, col, num):
   
-    # If num is in the same row, return False 
-    if num in grid[row]:
-        return False
-
-    # If num is in the same col, return False 
-    if num in grid[:, col]:
-        return False
-
-    # If num is in the same subgrid, return False 
+    # Return False if num is in the same row, column, or subgrid
     startRow = row - row % 3
     startCol = col - col % 3
-    if num in grid[startRow:startRow + 3, startCol:startCol + 3]:
-        return False
-#     for i in range(3):
-#         for j in range(3):
-#             if grid[i + startRow][j + startCol] == num:
-#                 return False
-
-    # All the above checks are go, so return True:
-    return True
+    return not num in grid[row, :] and \
+           not num in grid[:, col] and \
+           not num in grid[startRow:startRow + 3, startCol:startCol + 3]
 
 
-# solve_sudolu:
+# solve_sudoku:
 #   Takes a partially filled-in grid and attempts
 #   (recursiveley) to assign values to all unassigned
 #   locations in such a way to meet the requirements for
@@ -62,7 +48,8 @@ def solve_sudoku(grid, row, col):
 
     for num in range(1, N + 1):
         # Check if we can safely place the num (1-9) in the
-        # given row/ col. If it is, move on to the next column
+        # given row/col. If we can, assign it to the current
+        # row/col and move on to the next column
         if is_safe(grid, row, col, num):
             # Assign the num at the current row/col,
             # assuming the assigned num is correct
@@ -72,15 +59,39 @@ def solve_sudoku(grid, row, col):
             if solve_sudoku(grid, row, col + 1):
                 return True
 
+        ### else:
         # Our assumption was incorrect, so remove the assigned num
         # and go for next assumption with a different num value
+        # print(f"not safe [{row}, {col}]: {num}") 
         grid[row][col] = 0
 
     return False
 
 
+def generate() -> np.ndarray:
+    # Initialise an empty grid (all zeros)
+    grid: np.ndarray = np.zeros((9,9), dtype=int)
+    
+    # Randomise the first row
+    grid[0] = np.random.choice(np.arange(1, 10), size=9, replace=False)
+    return grid
+
+###     # grid: np.ndarray = np.zeros((81), dtype=int)
+###     # Randomise 9 positions in a 1 x 81 array
+###     random_positions: np.ndarray = np.random.choice(range(81), size=9, replace=False)
+### 
+###     # Randomise the order of the numbers 1-9
+###     numbers = np.random.choice(np.arange(1, 10, dtype=int), size=9, replace=False)
+### 
+###     # Insert the numbers in the grid at the randomised positions
+###     grid[random_positions] = numbers
+###     return grid.reshape(9, 9)
+
+
+
 # Driver Code
 def main():
+
 
     # 0 means unassigned cells
     grid_1 = [[3, 0, 6, 5, 0, 8, 4, 0, 0],
@@ -116,26 +127,35 @@ def main():
                                    [0, 8, 0, 0, 0, 4, 9, 5, 0],
                                    [0, 0, 0, 0, 0, 0, 7, 0, 0]])
 
-    positions = np.random.choice(range(81), size=9, replace=False)
-    nums = np.random.choice(range(1, 10), size=9, replace=False)
-    for k, pos in enumerate(positions):
-        grid_3_flat[pos] = nums[k]
-        # print(grid_3_flat[int(pos)])
-        # grid_3.flat[pos] = np.random.choice(1,10)
-    grid_3 = grid_3_flat.reshape(9, 9)
+    # positions = np.random.choice(range(81), size=9, replace=False)
+    # nums = np.random.choice(range(1, 10), size=9, replace=False)
+    # for k, pos in enumerate(positions):
+    #    grid_3_flat[pos] = nums[k]
+    #    # print(grid_3_flat[int(pos)])
+    #    # grid_3.flat[pos] = np.random.choice(1,10)
+    # grid_3 = grid_3_flat.reshape(9, 9)
     # print(grid_3)
     # index = {0: 0, 1:0, 2: 0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}
     # index_x1 = np.random.choice(range(9))
     # print(index.keys())
 
-    grid_array = np.array(grid_1)
-    grid_array = grid_3
-    grid_array = grid_4
-    print("Input array:",  grid_array, sep="\n", end="\n\n")
+    # grid_array = np.array(grid_1)
+    # grid_array = grid_3
+
+    # Initialise the array with all blanks (zeros)
+    grid_array = np.zeros([9, 9], dtype=int)
+
+    # Randomise the first row 
+    grid_array[0] = np.random.choice(np.arange(1, 10), size=9, replace=False)
+
+    # Generate a grid
+    grid_array = generate()
+    # grid_array = grid_4
+    print("In:",  grid_array, sep="\n", end="\n\n")
     # raise SystemExit(0, "ok")
     if (solve_sudoku(grid_array, 0, 0)):
         # printing(grid_array)
-        print("Output array:", grid_array, sep="\n")
+        print("Out:", grid_array, sep="\n")
     else:
         print("no solution  exists ")
     
