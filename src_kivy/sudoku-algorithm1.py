@@ -12,6 +12,7 @@ import numpy as np
 N = 9
 
 # Check whether num can be assigned to the given row, col
+# (without breaking the Rules)
 def is_safe(grid, row, col, num):
   
     # Return False if num is in the same row, column, or subgrid
@@ -23,15 +24,15 @@ def is_safe(grid, row, col, num):
 
 
 # solve_sudoku:
-#   Takes a partially filled-in grid and attempts
+#   Take a partially filled-in grid and attempt
 #   (recursiveley) to assign values to all unassigned
-#   locations in such a way to meet the requirements for
-#   a Sudoku solution (non-duplication across rows,
-#   columns, and subgrids)
+#   locations in such a way as to conform to 
+#   the Rules of Sudoku
 def solve_sudoku(grid, row, col):
   
-    # Check if we have reached index [8, 9] (0 indexed matrix)
-    # If we habe, return true to avoid further backtracking
+    # Check if we have reached index [8, 9] (the next
+    # to last row/last column). 
+    # If we have, return true to avoid further backtracking
     if (row == N - 1 and col == N):
         return True
       
@@ -47,12 +48,17 @@ def solve_sudoku(grid, row, col):
         return solve_sudoku(grid, row, col + 1)
 
     for num in range(1, N + 1):
-        # Check if we can safely place the num (1-9) in the
+        # Check if we can safely place the num (1 thru 9) in the
         # given row/col. If we can, assign it to the current
         # row/col and move on to the next column
         if is_safe(grid, row, col, num):
             # Assign the num at the current row/col,
-            # assuming the assigned num is correct
+            # **assuming** the assigned num is correct
+            # (if this assumption is wrong, we will end up with a
+            # 'contradiction', i.e. we will end up at a position where we 
+            # have unsuccessfully tried to assign all numbers from 1 to 9. 
+            # At that point, the recursion will rewind to a point in the grid
+            # where we are able to try with another number...
             grid[row][col] = num
 
             # Check for the next possible number in the next column
