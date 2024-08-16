@@ -105,6 +105,17 @@ def main():
 
     grid_3: np.ndarray = np.zeros((9, 9), dtype=int)
     grid_3_flat = grid_3.flatten()
+
+    grid_4: np.ndarray = np.array([[8, 4, 0, 6, 0, 0, 0, 0, 1],
+                                   [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                                   [0, 3, 0, 5, 4, 8, 0, 0, 0],
+                                   [0, 5, 9, 0, 1, 0, 0, 8, 0],
+                                   [7, 0, 0, 0, 0, 0, 2, 0, 0],
+                                   [2, 0, 4, 0, 0, 0, 0, 9, 0],
+                                   [0, 0, 0, 0, 6, 7, 0, 2, 0],
+                                   [0, 8, 0, 0, 0, 4, 9, 5, 0],
+                                   [0, 0, 0, 0, 0, 0, 7, 0, 0]])
+
     positions = np.random.choice(range(81), size=9, replace=False)
     nums = np.random.choice(range(1, 10), size=9, replace=False)
     for k, pos in enumerate(positions):
@@ -119,6 +130,7 @@ def main():
 
     grid_array = np.array(grid_1)
     grid_array = grid_3
+    grid_array = grid_4
     print("Input array:",  grid_array, sep="\n", end="\n\n")
     # raise SystemExit(0, "ok")
     if (solve_sudoku(grid_array, 0, 0)):
