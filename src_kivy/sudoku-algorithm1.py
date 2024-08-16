@@ -83,22 +83,47 @@ def solve_sudoku(grid, row, col):
 def main():
 
     # 0 means unassigned cells
-    grid = [[3, 0, 6, 5, 0, 8, 4, 0, 0],
-            [5, 2, 0, 0, 0, 0, 0, 0, 0],
-            [0, 8, 7, 0, 0, 0, 0, 3, 1],
-            [0, 0, 3, 0, 1, 0, 0, 8, 0],
-            [9, 0, 0, 8, 6, 3, 0, 0, 5],
-            [0, 5, 0, 0, 9, 0, 6, 0, 0],
-            [1, 3, 0, 0, 0, 0, 2, 5, 0],
-            [0, 0, 0, 0, 0, 0, 0, 7, 4],
-            [0, 0, 5, 2, 0, 6, 3, 0, 0]]
+    grid_1 = [[3, 0, 6, 5, 0, 8, 4, 0, 0],
+              [5, 2, 0, 0, 0, 0, 0, 0, 0],
+              [0, 8, 7, 0, 0, 0, 0, 3, 1],
+              [0, 0, 3, 0, 1, 0, 0, 8, 0],
+              [9, 0, 0, 8, 6, 3, 0, 0, 5],
+              [0, 5, 0, 0, 9, 0, 6, 0, 0],
+              [1, 3, 0, 0, 0, 0, 2, 5, 0],
+              [0, 0, 0, 0, 0, 0, 0, 7, 4],
+              [0, 0, 5, 2, 0, 6, 3, 0, 0]]
     
-    grid_array = np.array(grid)
-    #print(grid_array)
+    grid_2: np.ndarray = np.array([[0, 0, 0, 5, 1, 0, 0, 0, 8],
+                                   [5, 0, 0, 8, 0, 0, 0, 6, 7],
+                                   [0, 0, 0, 0, 0, 6, 3, 0, 9],
+                                   [3, 0, 8, 0, 7, 0, 0, 0, 0],
+                                   [0, 5, 0, 0, 0, 0, 4, 0, 0],
+                                   [0, 0, 0, 0, 4, 8, 0, 0, 0],
+                                   [0, 1, 0, 0, 8, 0, 0, 7, 0],
+                                   [0, 0, 7, 6, 9, 1, 0, 0, 0],
+                                   [0, 9, 0, 0, 0, 0, 0, 2, 0]])
+
+    grid_3: np.ndarray = np.zeros((9, 9), dtype=int)
+    grid_3_flat = grid_3.flatten()
+    positions = np.random.choice(range(81), size=9, replace=False)
+    nums = np.random.choice(range(1, 10), size=9, replace=False)
+    for k, pos in enumerate(positions):
+        grid_3_flat[pos] = nums[k]
+        # print(grid_3_flat[int(pos)])
+        # grid_3.flat[pos] = np.random.choice(1,10)
+    grid_3 = grid_3_flat.reshape(9, 9)
+    # print(grid_3)
+    # index = {0: 0, 1:0, 2: 0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}
+    # index_x1 = np.random.choice(range(9))
+    # print(index.keys())
+
+    grid_array = np.array(grid_1)
+    grid_array = grid_3
+    print("Input array:",  grid_array, sep="\n", end="\n\n")
     # raise SystemExit(0, "ok")
     if (solve_sudoku(grid_array, 0, 0)):
         # printing(grid_array)
-        print(grid_array)
+        print("Output array:", grid_array, sep="\n")
     else:
         print("no solution  exists ")
     
