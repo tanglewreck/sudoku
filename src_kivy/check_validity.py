@@ -36,33 +36,35 @@ def check_row(row: np.ndarray) -> bool:
 
 
 def is_unique(array: np.ndarray) -> bool:
+    """Check whether the numbers in an array are all 
+    unique, i.e. occur no more than one time. Zeros, 
+    representing blank slots, are ignored"""
     try:
+        # Extract non-zero numbers
         elements = [n for n in array.flatten() if n != 0]
+        # Return true if the numbers in the array 
+        # are all unique
         return len(elements) == len(set(elements))
     except (AttributeError, ValueError) as e:
-        err_msg(f"Got a ValueError")
+        err_msg(f"Got an exception: {e}")
         return None
 
 
 def is_valid(array: np.ndarray) -> bool:
-    # return_status = True
-    # status_rows = status_cols = status_blocks = list()
-
-    # Check rows and columns
+    """Check whether a 9 x 9 array conforms to the
+    rules of sudoku"""
+    
+    # Check validity of rows and columns
     for k in range(9):
         if not is_unique(array[k, :]) or not is_unique(array[:, k]):
-            # return False
-            return_status = False
-        else:
-            # print(f"row and/or column {k} is valid: {array[k]}")
-            pass
+            return False
     
-    # Check blocks
+    # Check validity of blocks
     for row in range(0, 9, 3):
         for col in range(0, 9, 3):
             # print(array[row:row + 3, col:col +3].flatten())
             print(f"checking block [{row}:{row + 3}, {col}:{col + 3}]")
-            if not check_row(array[row:row + 3, col:col +3].flatten()):
+            if not is_unique(array[row:row + 3, col:col +3].flatten()):
                 # print("block not valid")
                 return False
                 # return_status = False
@@ -70,11 +72,34 @@ def is_valid(array: np.ndarray) -> bool:
             #    print(f"block [{row}:{row + 3}, {col}:{col + 3}] is valid")
     return True
 
-def generate() -> np.ndarray:
-    # Generate a random 9x9 array
-    # array = np.random.choice(range(1, 10), size=(9,9), replace=True)
-    # print(f"array {array} is valid?", is_valid(array))
-    return np.random.choice(range(1, 10), size=(9,9), replace=True)
+
+
+def generate(n_initial_numbers: int = 9) -> np.ndarray:
+    """Generate a 9 x 9 grid randomly with the numbers 
+    1–9 are randomly placed"""
+
+
+    # Create a flat (1 x 81) array filled with zeros
+    grid: np.ndarray = np.zeros(81, dtype=int)
+    
+    # Randomise 9 positions where the
+    # numbers (1–9) will be placed
+    random_positions: np.ndarray = np.random.choice(np.arange(81, dtype=int), size=n_initial_numbers, replace=False)
+
+    # Randomise the order of the numbers 1-9
+    numbers: np.ndarrya = np.random.choice(np.arange(1, 10, dtype=int), size=n_initial_numbers, replace=False)
+
+    # Insert the numbers in the grid at the randomised positions
+    grid[random_positions] = numbers
+
+    return grid.reshape(9, 9)
+
+
+# def generate() -> np.ndarray:
+#    # Generate a random 9x9 array
+#    # array = np.random.choice(range(1, 10), size=(9,9), replace=True)
+#    # print(f"array {array} is valid?", is_valid(array))
+#    return np.random.choice(range(1, 10), size=(9,9), replace=True)
 
 
 def gen():
