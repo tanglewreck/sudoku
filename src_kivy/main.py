@@ -86,10 +86,6 @@ Config.write()
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
-# The size of the root window is now set in the config file:
-# Window.size = WINDOW_SIZE
-
-
 class ButtonBG(Widget):
     def __init__(self):
         super(ButtonBG, self).__init__()
@@ -102,51 +98,26 @@ class ButtonBG(Widget):
         self.background_color = (1, 1, 1, 1)
 
 
-# Number pad buttons
 class NumberPadButton(Button):
-    def __init__(self, **kwargs):
-        super(NumberPadButton, self).__init__(**kwargs)
-#    pass
-
-
-# Sudoku board buttons
-class BoardButton(Button):
+    """Number pad buttons"""
     pass
-#    def __init__(self, **kwargs):
-#        super(BoardButton, self).__init__(**kwargs)
-#        with self.canvas.before:
-#            Color(1, 1, 1, 0)
-#            Rectangle(pos=self.pos, size=self.size)
-#        with self.canvas.after:
-#            Color(1, 1, 1, 0)
-#            Rectangle(pos=self.pos, size=self.size)
-#        self.color = (1, 1, 1, 1)
-#        self.background_color = (1, 1, 1, 1)
-#        self.disabled_color = (0.85, 0.85, 0.85, 1)
-#        self.font_size = '18sp'
-#        self.opacity = 1
-#        self.background_disabled_normal = "atlas://data/images/defaulttheme/button"
-#        self.bold = True
+    #def __init__(self, **kwargs):
+    #    super(NumberPadButton, self).__init__(**kwargs)
 
 
+class BoardButton(Button):
+    """Sudoku board buttons"""
+    pass
 
-# The sudoku board buttons are wrapped within 3 x 3 GridLayouts
+
 class SudokuBlock(GridLayout):
+    """The sudoku board buttons are wrapped within 3 x 3 GridLayouts"""
     def __init__(self, **kwargs):
         super(SudokuBlock, self).__init__(**kwargs)
 
 
-## Test class to learn how to give a GridLayout button behaviours:
-# class GridButton(GridLayout, ButtonBehavior):
-#class GridButton(ButtonBehavior, GridLayout):
-#    pass
-
-    #def on_release(self):
-    #    print("plop")
-
-
-# RootWidget: Sudoku board with a numerical keypad on the right
 class RootWidget(GridLayout):
+    """RootWidget: Sudoku board with a numerical keypad on the right"""
     # note = False
     the_board = ListProperty()
     active_number = NumericProperty()
@@ -163,19 +134,8 @@ class RootWidget(GridLayout):
         if self.debug:
             print(self.board)
 
-    #def add_gridbutton(self):
-    #    gb = GridButton(cols=3, rows=3, size_hint=(0.1, 0.1))
-    #    with gb.canvas.before:
-    #        Color(1, 0.8, 0, 1)
-    #        self.rect = Rectangle(pos=gb.pos, size=gb.size)
-    #    gb.bind(on_release=functools.partial(print, "plip"))
-    #    gb.add_widget(Label(text="plop"))
-    #    self.add_widget(gb)
-
-
-
-    # Build the board widget tree:
     def build_the_board(self):
+        """Build the board widget tree"""
         # Add a 3 by 3 GridLayout widget
         self.sudokuboard = GridLayout(cols=3, rows=3,
                                       orientation="lr-tb",
@@ -215,6 +175,7 @@ class RootWidget(GridLayout):
         if self.ids.active_number.text:
             self.board[index] = int(self.ids.active_number.text)
             instance.text = str(self.ids.active_number.text)
+            print(self.board)
             # print("active_number: ", self.ids.active_number.text)
         else:
             self.board[index] = 0
