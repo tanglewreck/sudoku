@@ -163,6 +163,8 @@ def main():
             grid = np.loadtxt(args.filename.name, delimiter=",", dtype=int)
         except OSError as e:
             print(e)
+    else:
+        grid = generate()
 
     # grid = GRID_2
     # grid = grid_3 = generate()
