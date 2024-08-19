@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Sudoku backtracking solver"""
-__version__ = "2024-08-14"
+__version__ = "2024-08-19"
 
 # Code by sudhanshgupta2019a
 # (https://www.geeksforgeeks.org/sudoku-backtracking-7/#)
@@ -45,30 +45,15 @@ GRID_2_1: np.ndarray = np.array([[9, 3, 6, 5, 1, 7, 2, 4, 8],
 
 # Check whether num can be assigned to the given row, col
 def is_safe(grid, row, col, num):
-  
-    # If num is in the same row, return False 
-    if num in grid[row]:
-        return False
-
-    # If num is in the same col, return False 
-    if num in grid[:, col]:
-        return False
-
-    # If num is in the same subgrid, return False 
-    startRow = row - row % 3
-    startCol = col - col % 3
-    if num in grid[startRow:startRow + 3, startCol:startCol + 3]:
-        return False
-#     for i in range(3):
-#         for j in range(3):
-#             if grid[i + startRow][j + startCol] == num:
-#                 return False
-
-    # All the above checks are go, so return True:
-    return True
+    """ Return False if num is in the same row, column, or subgrid"""
+    start_row = row - row % 3
+    start_col = col - col % 3
+    return not num in grid[row, :] and \
+           not num in grid[:, col] and \
+           not num in grid[start_row:start_row + 3, start_col:start_col + 3]
 
 
-# solve_sudolu:
+# solve_sudoku:
 #   Takes a partially filled-in grid and attempts
 #   (recursiveley) to assign values to all unassigned
 #   locations in such a way to meet the requirements for
@@ -82,8 +67,7 @@ def solve_sudoku(grid, row, col):
         if row == N - 1:
             return True
         else:
-            row = row + 1
-            col = 0
+            row, col = (row + 1, 0)
 
     # Check if the current position of the grid already contains
     # a value > 0, and if it does, iterate for the next column
