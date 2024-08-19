@@ -7,7 +7,9 @@ __version__ = "2024-08-19"
 # (https://www.geeksforgeeks.org/sudoku-backtracking-7/#)
 # Modified by mier to use numpy arrays and more.
 
+import datetime
 import numpy as np
+import random
 from utils import parse_arguments
 
 # N is the size of the N x N matrix
@@ -73,8 +75,8 @@ def is_safe(grid, row, col, num):
            not num in grid[start_row:start_row + 3, start_col:start_col + 3]
 
 
-def solve_sudoku(grid, row, col):
-    """ solve_sudoku:
+def solve(grid, row, col):
+    """ solve:
         Take a partially filled-in grid and attempt
         (recursiveley) to assign values to all unassigned
         locations in such a way as to conform to 
@@ -91,7 +93,7 @@ def solve_sudoku(grid, row, col):
     # Check if the current position of the grid already contains
     # a value > 0, and if it does, move on to the next column
     if grid[row, col] > 0:
-        return solve_sudoku(grid, row, col + 1)
+        return solve(grid, row, col + 1)
 
     for num in range(1, N + 1):
         # Check if we can safely place a number at [row, col].
@@ -108,7 +110,7 @@ def solve_sudoku(grid, row, col):
             grid[row][col] = num
 
             # Check for the next possible number in the next column
-            if solve_sudoku(grid, row, col + 1):
+            if solve(grid, row, col + 1):
                 return True
 
         # Our assumption was incorrect, so remove the assigned num
@@ -177,13 +179,24 @@ def main():
         for col in range(9):
             print(f"\tcol: {col}\t", " ".join(map(str, possibles(grid, row, col))))
 
+    print("Input grid:",  input_grid, sep="\n", end="\n\n")
     # Solve it
-    if (solve_sudoku(grid, 0, 0)):
-        # printing(grid_array)
-        print("Input grid:",  input_grid, sep="\n", end="\n\n")
-        print(f"Solution:", grid, sep="\n")
+    if (solve(grid, 0, 0)):
+        solution = grid
+        print(f"Solution:", solution, sep="\n")
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S")
+        filename = f"data/{timestamp}.sudoku"
+
+        n_remove = 81 - 30
+        remove_index = np.random.randint(0, 80, n_remove)
+        #print(remove_index)
+        g = grid.flatten()
+        g[remove_index] = 0
+        #for k in range(n_remove):
+        #    g[remove_index[k]] = 0
+        #print(g.reshape([9, 9]))
+        np.savetxt(filename, g.reshape([9, 9]), fmt="%d", delimiter=",")
     else:
-        print("Input grid:",  input_grid, sep="\n", end="\n\n")
         print("no solution  exists ")
     
 
