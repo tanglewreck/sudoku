@@ -172,10 +172,10 @@ class RootWidget(GridLayout):
             print("instance.text (pre):", instance.text)
             print(f"self.board[{index}]:", self.board[index])
             print(f"self.ids.active_number.text:", self.ids.active_number.text)
+            print(self.board)
         if self.ids.active_number.text:
             self.board[index] = int(self.ids.active_number.text)
             instance.text = str(self.ids.active_number.text)
-            print(self.board)
             # print("active_number: ", self.ids.active_number.text)
         else:
             self.board[index] = 0
