@@ -14,28 +14,31 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +1 main.py
-badd +1 utils.py
-badd +1 check_validity.py
+badd +5 main.py
+badd +0 solver.py
+badd +0 utils.py
+badd +1 kv/sudoku.kv
 argglobal
 %argdel
 $argadd main.py
+$argadd solver.py
 $argadd utils.py
-$argadd check_validity.py
-edit check_validity.py
+$argadd kv/sudoku.kv
+edit main.py
 let s:save_splitbelow = &splitbelow
 let s:save_splitright = &splitright
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
 1wincmd h
+wincmd _ | wincmd |
+split
+1wincmd k
+wincmd w
 wincmd w
 wincmd _ | wincmd |
 split
-wincmd _ | wincmd |
-split
-2wincmd k
-wincmd w
+1wincmd k
 wincmd w
 let &splitbelow = s:save_splitbelow
 let &splitright = s:save_splitright
@@ -46,16 +49,15 @@ set winminheight=0
 set winheight=1
 set winminwidth=0
 set winwidth=1
-exe 'vert 1resize ' . ((&columns * 159 + 159) / 318)
-exe '2resize ' . ((&lines * 25 + 40) / 80)
-exe 'vert 2resize ' . ((&columns * 158 + 159) / 318)
-exe '3resize ' . ((&lines * 25 + 40) / 80)
-exe 'vert 3resize ' . ((&columns * 158 + 159) / 318)
-exe '4resize ' . ((&lines * 26 + 40) / 80)
-exe 'vert 4resize ' . ((&columns * 158 + 159) / 318)
+exe '1resize ' . ((&lines * 39 + 40) / 80)
+exe 'vert 1resize ' . ((&columns * 149 + 149) / 298)
+exe '2resize ' . ((&lines * 38 + 40) / 80)
+exe 'vert 2resize ' . ((&columns * 149 + 149) / 298)
+exe '3resize ' . ((&lines * 9 + 40) / 80)
+exe 'vert 3resize ' . ((&columns * 148 + 149) / 298)
+exe '4resize ' . ((&lines * 68 + 40) / 80)
+exe 'vert 4resize ' . ((&columns * 148 + 149) / 298)
 argglobal
-if bufexists(fnamemodify("check_validity.py", ":p")) | buffer check_validity.py | else | edit check_validity.py | endif
-balt utils.py
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -66,16 +68,16 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 58 - ((57 * winheight(0) + 39) / 78)
+let s:l = 110 - ((19 * winheight(0) + 19) / 39)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 58
-normal! 08|
+keepjumps 110
+normal! 0
 wincmd w
 argglobal
-if bufexists(fnamemodify("check_validity.py", ":p")) | buffer check_validity.py | else | edit check_validity.py | endif
-balt utils.py
+if bufexists(fnamemodify("kv/sudoku.kv", ":p")) | buffer kv/sudoku.kv | else | edit kv/sudoku.kv | endif
+balt main.py
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -86,26 +88,7 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 58 - ((18 * winheight(0) + 12) / 25)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 58
-normal! 08|
-wincmd w
-argglobal
-terminal ++curwin ++cols=158 ++rows=25 
-let s:term_buf_5 = bufnr()
-balt check_validity.py
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-let s:l = 1 - ((0 * winheight(0) + 12) / 25)
+let s:l = 1 - ((0 * winheight(0) + 19) / 38)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
@@ -113,7 +96,7 @@ keepjumps 1
 normal! 0
 wincmd w
 argglobal
-terminal ++curwin ++cols=158 ++rows=26 
+terminal ++curwin ++cols=148 ++rows=9 
 let s:term_buf_6 = bufnr()
 balt \!/bin/bash
 setlocal fdm=manual
@@ -124,20 +107,40 @@ setlocal fdl=0
 setlocal fml=1
 setlocal fdn=20
 setlocal fen
-let s:l = 1 - ((0 * winheight(0) + 13) / 26)
+let s:l = 1 - ((0 * winheight(0) + 4) / 9)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
 keepjumps 1
 normal! 0
 wincmd w
-exe 'vert 1resize ' . ((&columns * 159 + 159) / 318)
-exe '2resize ' . ((&lines * 25 + 40) / 80)
-exe 'vert 2resize ' . ((&columns * 158 + 159) / 318)
-exe '3resize ' . ((&lines * 25 + 40) / 80)
-exe 'vert 3resize ' . ((&columns * 158 + 159) / 318)
-exe '4resize ' . ((&lines * 26 + 40) / 80)
-exe 'vert 4resize ' . ((&columns * 158 + 159) / 318)
+argglobal
+terminal ++curwin ++cols=148 ++rows=68 
+let s:term_buf_5 = bufnr()
+balt main.py
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+let s:l = 1 - ((0 * winheight(0) + 34) / 68)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 1
+normal! 0
+wincmd w
+exe '1resize ' . ((&lines * 39 + 40) / 80)
+exe 'vert 1resize ' . ((&columns * 149 + 149) / 298)
+exe '2resize ' . ((&lines * 38 + 40) / 80)
+exe 'vert 2resize ' . ((&columns * 149 + 149) / 298)
+exe '3resize ' . ((&lines * 9 + 40) / 80)
+exe 'vert 3resize ' . ((&columns * 148 + 149) / 298)
+exe '4resize ' . ((&lines * 68 + 40) / 80)
+exe 'vert 4resize ' . ((&columns * 148 + 149) / 298)
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
