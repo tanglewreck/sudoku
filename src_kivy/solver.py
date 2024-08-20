@@ -65,7 +65,7 @@ GRID_3: np.ndarray = np.array(
 )
 
 
-def is_safe(grid, row, col, num):
+def valid(grid, row, col, num):
     """Check whether num can be assigned to the given row, col
        Return False if num is in the same row, column, or subgrid"""
     start_row = row - row % 3
@@ -99,7 +99,7 @@ def solve(grid, row, col):
         # Check if we can safely place a number at [row, col].
         # If we can, assign the number tentatively, and move on to the next column.
         # This is where the recursion takes place.
-        if is_safe(grid, row, col, num):
+        if valid(grid, row, col, num):
             # Assign the num at the current row/col,
             # **assuming** the assigned num is correct
             # (if this assumption is wrong, we will end up with a
@@ -126,7 +126,7 @@ def possibles(array: np.ndarray, row: int, col:int) -> list:
     """Return a list of possible numbers at array[row, col]"""
     possible_numbers = list()
     for num in range(1, 10):
-        if is_safe(array, row, col, num):
+        if valid(array, row, col, num):
             possible_numbers.append(num)
     return possible_numbers
 
