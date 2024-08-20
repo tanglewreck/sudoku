@@ -1,9 +1,17 @@
 #!/usr/bin/env python3
+
+#----------------------------------------
+# sudoku.py –
+#----------------------------------------
 '''
-Run 'pycodestyle --ignore=E501,E402 --show-source main.py' to
-check for PEP8 compliancy (ignoring E501 because it's stupid
-and E402 because we have to; see NOTE below).
+sudoku.py – sudoku implemented in kivy
 '''
+
+# Run 'pycodestyle --ignore=E501,E402 --show-source main.py' to
+# check PEP8 compliancy (ignoring E501 because it's stupid
+# and E402 because we have to; see NOTE below).
+
+__version__ = "2024-08-20"
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # <ENVIRONMENT VARIABLES>
@@ -58,7 +66,8 @@ from utils import debug_msg, err_msg, sys_msg
 from utils import parse_arguments
 from utils import WINDOW_SIZE
 
-from solver import generate, possibles, solve
+# from solver import generate, print_possibles, solver
+import solver
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # <KIVY CONFIG>
@@ -221,9 +230,16 @@ if __name__ == "__main__":
         if debug:
             debug_msg("args.filename:", args.filename.name)
         try:
-            grid = np.loadtxt(args.filename.name, delimiter=",", dtype=int)
+            puzzle = np.loadtxt(args.filename.name, delimiter=",", dtype=int)
+            solution = np.copy(puzzle)
+            if not solver.solver(solution):
+                err_msg(f"Unable to solve this puzzle: \n{puzzle}")
         except OSError as e:
             print(e)
-        SudokuApp(grid, debug=debug).run()
     else:
-        SudokuApp(debug=debug).run()
+        puzzle, solution = solver.generate(args.nremove)
+        if args.save:
+            solver.save_to_disk(puzzle)
+
+    # Start the app
+    SudokuApp(puzzle, debug=debug).run()
