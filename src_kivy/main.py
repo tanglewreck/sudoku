@@ -58,6 +58,8 @@ from utils import debug_msg, err_msg, sys_msg
 from utils import parse_arguments
 from utils import WINDOW_SIZE
 
+from solver import generate, possibles, solve
+
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # <KIVY CONFIG>
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -105,80 +107,80 @@ class NumberPadButton(Button):
     #    super(NumberPadButton, self).__init__(**kwargs)
 
 
-class BoardButton(Button):
-    """Sudoku board buttons"""
+class GridButton(Button):
+    """Sudoku grid buttons"""
     pass
 
 
 class SudokuBlock(GridLayout):
-    """The sudoku board buttons are wrapped within 3 x 3 GridLayouts"""
+    """The sudoku grid buttons are wrapped within 3 x 3 GridLayouts"""
     def __init__(self, **kwargs):
         super(SudokuBlock, self).__init__(**kwargs)
 
 
 class RootWidget(GridLayout):
-    """RootWidget: Sudoku board with a numerical keypad on the right"""
+    """RootWidget: Sudoku grid with a numerical keypad on the right"""
     # note = False
-    the_board = ListProperty()
+    the_grid = ListProperty()
     active_number = NumericProperty()
     active_number_string = StringProperty()
 
-    def __init__(self, board: np.ndarray = None, debug: bool = None) -> None:
+    def __init__(self, grid: np.ndarray = None, debug: bool = None) -> None:
         super(RootWidget, self).__init__()
 
         self.debug = debug
-        self.board = board
-        self.build_the_board()
+        self.grid = grid
+        self.build_the_grid()
         # self.add_gridbutton()
 
         if self.debug:
-            print(self.board)
+            print(self.grid)
 
-    def build_the_board(self):
-        """Build the board widget tree"""
+    def build_the_grid(self):
+        """Build the grid widget tree"""
         # Add a 3 by 3 GridLayout widget
-        self.sudokuboard = GridLayout(cols=3, rows=3,
+        self.sudokugrid = GridLayout(cols=3, rows=3,
                                       orientation="lr-tb",
                                       size_hint_x=3 / 8)
-        # Add board buttons with text set to the corresponding
-        # self.board[index] value. Also bind each button to the
-        # 'update_boardbutton' function.
+        # Add grid buttons with text set to the corresponding
+        # self.grid[index] value. Also bind each button to the
+        # 'update_gridbutton' function.
         for n in range(3):
             for m in range(3):
                 sudoku_block = SudokuBlock(orientation='lr-tb')  # SudokuBlocks
-                self.sudokuboard.add_widget(sudoku_block)
+                self.sudokugrid.add_widget(sudoku_block)
                 for i in range(3):
                     for j in range(3):
                         index = (n * 3 + i, m * 3 + j)  # Index in the grand total GridLayout
-                        board_button = BoardButton(disabled=False)  # BoardButton
-                        # Bind the BoardButton to a function which updates the
+                        grid_button = GridButton(disabled=False)  # GridButton
+                        # Bind the GridButton to a function which updates the
                         # label text to the active number:
-                        board_button.bind(on_release=functools.partial(self.update_board_button, index=index))
+                        grid_button.bind(on_release=functools.partial(self.update_grid_button, index=index))
 
                         # If the number at position 'index' is set (i.e. is not zero),
-                        # update the text of the corresponding BoardButton and disable it:
-                        if self.board[index]:
-                            board_button.text = str(self.board[index])
-                            board_button.disabled = True
-                        # Add the BoardButton to the SudokuBlock
-                        sudoku_block.add_widget(board_button)
-        # Add the finalised sudoku board (GridLayout) to the RootWidget
-        self.add_widget(self.sudokuboard)
+                        # update the text of the corresponding GridButton and disable it:
+                        if self.grid[index]:
+                            grid_button.text = str(self.grid[index])
+                            grid_button.disabled = True
+                        # Add the GridButton to the SudokuBlock
+                        sudoku_block.add_widget(grid_button)
+        # Add the finalised sudoku grid (GridLayout) to the RootWidget
+        self.add_widget(self.sudokugrid)
 
-    # Update the BoardButton text with the active number
-    def update_board_button(self, instance: BoardButton, index: tuple) -> None:
+    # Update the GridButton text with the active number
+    def update_grid_button(self, instance: GridButton, index: tuple) -> None:
         if self.debug:
             print("index: ", index)
             print("instance.text (pre):", instance.text)
-            print(f"self.board[{index}]:", self.board[index])
+            print(f"self.grid[{index}]:", self.grid[index])
             print(f"self.ids.active_number.text:", self.ids.active_number.text)
-            print(self.board)
+            print(self.grid)
         if self.ids.active_number.text:
-            self.board[index] = int(self.ids.active_number.text)
+            self.grid[index] = int(self.ids.active_number.text)
             instance.text = str(self.ids.active_number.text)
             # print("active_number: ", self.ids.active_number.text)
         else:
-            self.board[index] = 0
+            self.grid[index] = 0
             instance.text = ""
 
         if self.debug:
@@ -192,14 +194,14 @@ class RootWidget(GridLayout):
 
 class SudokuApp(App):
 
-    def __init__(self, board: np.ndarray = np.zeros((9, 9), dtype=int), debug: bool = None) -> None:
+    def __init__(self, grid: np.ndarray = np.zeros((9, 9), dtype=int), debug: bool = None) -> None:
         super(SudokuApp, self).__init__()
         self.debug = debug  # gets passed on to RootWidget
-        self.board = board  # gets passed on to RootWidget
+        self.grid = grid  # gets passed on to RootWidget
         self.kv_file = "kv/sudoku.kv"  # the kv file is in a separate directory
 
     def build(self):
-        self.root = RootWidget(self.board, self.debug)
+        self.root = RootWidget(self.grid, self.debug)
         return self.root
 
     def on_start(self):
@@ -214,14 +216,14 @@ if __name__ == "__main__":
     args = parse_arguments()
     debug = args.debug
 
-    # Load the sudoku board file, if provided on the command line
+    # Load the sudoku grid file, if provided on the command line
     if args.filename:
         if debug:
             debug_msg("args.filename:", args.filename.name)
         try:
-            board = np.loadtxt(args.filename.name, delimiter=",", dtype=int)
+            grid = np.loadtxt(args.filename.name, delimiter=",", dtype=int)
         except OSError as e:
             print(e)
-        SudokuApp(board, debug=debug).run()
+        SudokuApp(grid, debug=debug).run()
     else:
         SudokuApp(debug=debug).run()
