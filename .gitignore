@@ -1,3 +1,6 @@
+# Generated sudokus:
+src_kivy/data/202*
+
 # Apple stuff
 .DS*
 ._.DS_Store
