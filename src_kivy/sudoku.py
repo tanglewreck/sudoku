@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
-#----------------------------------------
+# ----------------------------------------
 # sudoku.py –
-#----------------------------------------
+# ----------------------------------------
 '''
 sudoku.py – sudoku implemented in kivy
 
 Sudoku puzzles are either loaded from file (using option '-f' or '--filename')
 or generated from scratch.
 
-    Usage: sudoku [-h] [-d] [-n NREMOVE] [-s] [-v] [-f path] [--solution] [--winsize WINSIZE]
+    Usage: sudoku [-h] [-d] [-n NREMOVE] [-s] [-v] [-f path] [--solution]
 
     Command line options:
 
@@ -18,13 +18,13 @@ or generated from scratch.
     -s, --save            Save the generated grid to disk
     -v, --verbose         Enable verbose output
     -n NREMOVE, --nremove NREMOVE
-                          Number of squares to remove from the completed grid (roughly: level of difficulty)
+                          Number of squares to remove from the
+                          completed grid (roughly: level of difficulty)
     -f path, --filename path
                         Name of file containing a sudoku grid – nine rows and
                         nine columns, each row containing a comma-separated,
                         list of integers (0-9, where 0 means an empty square
   --solution            Reveal the solution
-  --winsize WINSIZE     Window size (default=1000x600)
 
 '''
 
@@ -34,27 +34,15 @@ or generated from scratch.
 
 __version__ = "2024-08-21"
 
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# <ENVIRONMENT VARIABLES>
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-import os
+import functools
+# import string
+import sys
+import numpy as np
 
-# NOTE: KIVY_HOME must be set *before* kivy is imported,
-# thereby breaking PEP8 (E402) 
-os.environ['KIVY_HOME'] = "./.kivy"
-HOME = os.environ['HOME']  # Needed for the path to the kivy config file
+from utils import debug_msg, err_msg  #, sys_msg
+from utils import parse_arguments
 
-# Make kivy ignore command-line arguments so that we don't have to put '--'
-# before our own options/arguments
-os.environ['KIVY_NO_ARGS'] = 'yes'
-
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# </ENVIRONMENT VARIABLES>
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-import kivy
-kivy.require("2.0.0")
-
+# from typing import
 from kivy.app import App
 from kivy.config import Config
 from kivy.core.window import Window
@@ -72,17 +60,29 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 
-import functools
-import numpy as np
-import string
-import sys
-
-from utils import debug_msg, err_msg, sys_msg
-from utils import parse_arguments
-from utils import WINDOW_SIZE
 
 # from solver import generate, print_possibles, solver
 import solver
+
+import kivy
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# <ENVIRONMENT VARIABLES>
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+import os
+
+# NOTE: KIVY_HOME must be set *before* kivy is imported,
+# thereby breaking PEP8 (E402)
+os.environ['KIVY_HOME'] = "./.kivy"
+HOME = os.environ['HOME']  # Needed for the path to the kivy config file
+
+# Make kivy ignore command-line arguments so that we don't have to put '--'
+# before our own options/arguments
+os.environ['KIVY_NO_ARGS'] = 'yes'
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# </ENVIRONMENT VARIABLES>
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # <KIVY CONFIG>
@@ -107,12 +107,14 @@ Config.write()
 
 # Config.set('modules', 'monitor', '')
 # Config.set('modules', 'touchring', '')
+kivy.require("2.0.0")
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # </KIVY CONFIG>
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
 class ButtonBG(Widget):
+    """Button background"""
     def __init__(self):
         super(ButtonBG, self).__init__()
         with self.canvas.before:
@@ -127,7 +129,7 @@ class ButtonBG(Widget):
 class NumberPadButton(Button):
     """Number pad buttons"""
     pass
-    #def __init__(self, **kwargs):
+    # def __init__(self, **kwargs):
     #    super(NumberPadButton, self).__init__(**kwargs)
 
 
@@ -163,9 +165,12 @@ class RootWidget(GridLayout):
     def build_the_grid(self):
         """Build the grid widget tree"""
         # Add a 3 by 3 GridLayout widget
-        self.sudokugrid = GridLayout(cols=3, rows=3,
-                                      orientation="lr-tb",
-                                      size_hint_x=3 / 8)
+        self.sudokugrid = GridLayout(
+            cols=3,
+            rows=3,
+            orientation="lr-tb",
+            size_hint_x=3 / 8
+        )
         # Add grid buttons with text set to the corresponding
         # self.grid[index] value. Also bind each button to the
         # 'update_gridbutton' function.
@@ -175,14 +180,21 @@ class RootWidget(GridLayout):
                 self.sudokugrid.add_widget(sudoku_block)
                 for i in range(3):
                     for j in range(3):
-                        index = (n * 3 + i, m * 3 + j)  # Index in the grand total GridLayout
-                        grid_button = GridButton(disabled=False)  # GridButton
+                        # Index in the grand total GridLayout
+                        index = (n * 3 + i, m * 3 + j)
+                        grid_button = GridButton(disabled=False)
                         # Bind the GridButton to a function which updates the
                         # label text to the active number:
-                        grid_button.bind(on_release=functools.partial(self.update_grid_button, index=index))
+                        grid_button.bind(
+                            on_release=functools.partial(
+                                self.update_grid_button,
+                                index=index
+                            )
+                        )
 
-                        # If the number at position 'index' is set (i.e. is not zero),
-                        # update the text of the corresponding GridButton and disable it:
+                        # If the number at position 'index' is set
+                        # (i.e. is not zero), update the text of the
+                        # corresponding GridButton and disable it:
                         if self.grid[index]:
                             grid_button.text = str(self.grid[index])
                             grid_button.disabled = True
@@ -219,7 +231,8 @@ class RootWidget(GridLayout):
 class SudokuApp(App):
     """SudokuApp"""
 
-    def __init__(self, grid: np.ndarray = np.zeros((9, 9), dtype=int), debug: bool = None) -> None:
+    def __init__(self, grid: np.ndarray = np.zeros((9, 9), dtype=int),
+                 debug: bool = None) -> None:
         super(SudokuApp, self).__init__()
         self.debug = debug  # gets passed on to RootWidget
         self.grid = grid  # gets passed on to RootWidget
