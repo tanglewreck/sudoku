@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Sudoku backtracking solver"""
 
-__version__ = "2024-08-20"
+__version__ = "2024-08-21"
 __all__ = ['generate', 'print_possibles', 'save_to_disk', 'solver']
 
 import datetime
+from typing import Tuple
 import numpy as np
-from typing import Optional
-from utils import parse_arguments, debug_msg, err_msg, sys_msg
+from utils import parse_arguments, debug_msg, err_msg  # , sys_msg
 
 
 # GRID_SIZE is the number of rows and columns of the grid
@@ -137,7 +137,7 @@ def _remove_squares(grid: np.ndarray, n_remove: int = 30) -> np.ndarray:
     return g.reshape([GRID_SIZE, GRID_SIZE])
 
 
-def generate(n_remove: int = 50) -> (np.ndarray, np.ndarray):
+def generate(n_remove: int = 50) -> Tuple[np.ndarray, np.ndarray]:
     """Generate a sudoku puzzle"""
     while True:
         # Create an "empty" (i.e. filled with zeros) 9 x 9 grid
@@ -150,8 +150,7 @@ def generate(n_remove: int = 50) -> (np.ndarray, np.ndarray):
             # Remove squares to make the grid a sudoku puzzle
             puzzle = _remove_squares(solution, n_remove)
             break
-        else:
-            err_msg(f"WARNING: Cannot solve this grid: {g}. Trying again...")
+        err_msg(f"WARNING: Cannot solve this grid: {g}. Trying again...")
     return puzzle, solution
 
 # ALTERNATE implementation:
@@ -174,7 +173,7 @@ def generate(n_remove: int = 50) -> (np.ndarray, np.ndarray):
 #     return grid.reshape(9, 9)
 
 
-def save_to_disk(grid: np.ndarray, path: str = None) -> None:
+def save_to_disk(grid: np.ndarray, path: str | None = None) -> None:
     """Save a grid to disk. If no path is provided, the
        grid is saved to 'data/<timestamp>', where
        timestamp = '<year>-<month>-<day>.<hour>.<minute>.<second>'"""
