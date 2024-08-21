@@ -4,86 +4,56 @@
 __version__ = "2024-08-20"
 __all__ = ['generate', 'print_possibles', 'save_to_disk', 'solver']
 
-# Code by sudhanshgupta2019a
-# (https://www.geeksforgeeks.org/sudoku-backtracking-7/#)
-# Modified by mier to use numpy arrays and more.
-
 import datetime
 import numpy as np
+from typing import Optional
 from utils import parse_arguments, debug_msg, err_msg, sys_msg
-
-GRID_1: np.ndarray = np.array(
-    [[3, 0, 6, 5, 0, 8, 4, 0, 0],
-     [5, 2, 0, 0, 0, 0, 0, 0, 0],
-     [0, 8, 7, 0, 0, 0, 0, 3, 1],
-     [0, 0, 3, 0, 1, 0, 0, 8, 0],
-     [9, 0, 0, 8, 6, 3, 0, 0, 5],
-     [0, 5, 0, 0, 9, 0, 6, 0, 0],
-     [1, 3, 0, 0, 0, 0, 2, 5, 0],
-     [0, 0, 0, 0, 0, 0, 0, 7, 4],
-     [0, 0, 5, 2, 0, 6, 3, 0, 0]]
-)
-
-GRID_2: np.ndarray = np.array(
-    [[0, 0, 0, 5, 1, 0, 0, 0, 8],
-     [5, 0, 0, 8, 0, 0, 0, 6, 7],
-     [0, 0, 0, 0, 0, 6, 3, 0, 9],
-     [3, 0, 8, 0, 7, 0, 0, 0, 0],
-     [0, 5, 0, 0, 0, 0, 4, 0, 0],
-     [0, 0, 0, 0, 4, 8, 0, 0, 0],
-     [0, 1, 0, 0, 8, 0, 0, 7, 0],
-     [0, 0, 7, 6, 9, 1, 0, 0, 0],
-     [0, 9, 0, 0, 0, 0, 0, 2, 0]]
-)
-
-GRID_2_1: np.ndarray = np.array(
-    [[9, 3, 6, 5, 1, 7, 2, 4, 8],
-     [5, 2, 4, 8, 3, 9, 1, 6, 7],
-     [8, 7, 1, 4, 2, 6, 3, 5, 9],
-     [3, 4, 8, 9, 7, 5, 6, 1, 2],
-     [7, 5, 9, 1, 6, 2, 4, 8, 3],
-     [1, 6, 2, 3, 4, 8, 7, 9, 5],
-     [4, 1, 5, 2, 8, 3, 9, 7, 6],
-     [2, 8, 7, 6, 9, 1, 5, 3, 4],
-     [6, 9, 3, 7, 5, 4, 8, 2, 1]]
-)
-
-
-GRID_3: np.ndarray = np.array(
-    [[8, 4, 0, 6, 0, 0, 0, 0, 1],
-     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-     [0, 3, 0, 5, 4, 8, 0, 0, 0],
-     [0, 5, 9, 0, 1, 0, 0, 8, 0],
-     [7, 0, 0, 0, 0, 0, 2, 0, 0],
-     [2, 0, 4, 0, 0, 0, 0, 9, 0],
-     [0, 0, 0, 0, 6, 7, 0, 2, 0],
-     [0, 8, 0, 0, 0, 4, 9, 5, 0],
-     [0, 0, 0, 0, 0, 0, 7, 0, 0]]
-)
 
 
 # GRID_SIZE is the number of rows and columns of the grid
 # GRID_ROWS and GRID_COLUMNS are the number of rows and columns in each subgrid
-GRID_SIZE = 9
-GRID_ROWS = GRID_COLS = 3
+GRID_SIZE: int = 9
+GRID_ROWS: int = 3
+GRID_COLS: int = GRID_ROWS
 
 
-def _valid(grid: np.ndarray=None, row: int=0, col: int=0, num: int=0):
+def _valid(grid: np.ndarray, row: int = 0, col: int = 0, num: int = 0) -> bool:
     """Check whether num can be assigned to the given row, col
        Returns False if num is in the same row, column, or subgrid"""
-    start_row = row - row % GRID_ROWS
-    start_col = col - col % GRID_COLS
-    return not num in grid[row, :] and \
-           not num in grid[:, col] and \
-           not num in grid[start_row:start_row + 3, start_col:start_col + 3]
+    start_row: int = row - row % GRID_ROWS
+    start_col: int = col - col % GRID_COLS
+    return num not in grid[row, :] and \
+        num not in grid[:, col] and \
+        num not in grid[start_row:start_row + 3, start_col:start_col + 3]
 
 
 def _solver(grid: np.ndarray, row: int, col: int) -> bool:
+    # Code originally by sudhanshgupta2019a
+    # (source: https://www.geeksforgeeks.org/sudoku-backtracking-7/#)
+    # Heavily edited by me (using numpy arrays instead of lists, and more).
+
     """ solver:
         Take a partially filled-in grid and attempt
         (recursiveley) to assign values to all unassigned
-        locations in such a way as to conform to 
-        the Rules of Sudoku """
+        locations in such a way as to conform to
+        the Rules of Sudoku
+
+        NOTE to SELF: Is it possible to rewrite this
+                      function so that, while still
+                      doing recursive backtracking,
+                      there's only on return statement?
+                      With several returns, the code looks
+                      messy : (
+
+                      What's more is that the contents of the
+                      grid variable is changed by the function,
+                      so therefore it would be cleaner/clearer/better
+                      if the grid was returned (so that the calling
+                      code could make this explicit, e.g. something
+                      like:
+                            solved_grid: np.ndarray = solver(input_grid, 0, 0)
+
+    """
 
     # If we have reached (more specifically, if we have *gone beyond*)
     # the last column, move on to the first column of the next row.
@@ -91,8 +61,7 @@ def _solver(grid: np.ndarray, row: int, col: int) -> bool:
         # If we're on the last row, end the recursion
         if row == GRID_SIZE - 1:
             return True
-        else:
-            row, col = (row + 1, 0)
+        row, col = (row + 1, 0)
 
     # Check if the current position of the grid already contains
     # a value > 0, and if it does, move on to the next column
@@ -101,8 +70,8 @@ def _solver(grid: np.ndarray, row: int, col: int) -> bool:
 
     for num in range(1, 10):
         # Check if we can safely place a number at [row, col].
-        # If we can, assign the number tentatively, and move on to the next column.
-        # This is where the recursion takes place.
+        # If we can, assign the number tentatively, and move
+        # on to the next column.
         if _valid(grid, row, col, num):
             # Assign the num at the current row/col,
             # **assuming** the assigned num is correct
@@ -111,10 +80,10 @@ def _solver(grid: np.ndarray, row: int, col: int) -> bool:
             # have unsuccessfully tried to assign all numbers from 1 to 9.
             # At that point, the recursion will rewind to a point in the grid
             # where we are able to try with another number...
-            ### grid[row][col] = num
             grid[row, col] = num
 
             # Check for the next possible number in the next column
+            # This is where the recursion takes place.
             if _solver(grid, row, col + 1):
                 return True
 
@@ -134,7 +103,7 @@ def solver(grid: np.ndarray) -> bool:
     return _solver(grid, 0, 0)
 
 
-def _possibles(grid: np.ndarray, row: int, col:int) -> list:
+def _possibles(grid: np.ndarray, row: int, col: int) -> list:
     """Return a list of possible numbers at grid[row, col]"""
     possible_numbers = []
     if grid[row, col] == 0:
@@ -146,17 +115,19 @@ def _possibles(grid: np.ndarray, row: int, col:int) -> list:
 
 
 def print_possibles(grid: np.ndarray) -> None:
-    """For each square in the grid, print what numbers
-       can possibly be placed there"""
+    """Print all possibilities of the grid"""
     for row in range(GRID_SIZE):
         print(f"row: {row + 1}")
         for col in range(GRID_SIZE):
-            print(f"\tcol: {col + 1}\t", " ".join(map(str, _possibles(grid, row, col))))
+            print(f"\tcol: {col + 1}\t",
+                  " ".join(map(str, _possibles(grid, row, col))))
 
 
-def _remove_squares(grid: np.ndarray, n_remove: int=30) -> np.ndarray:
+def _remove_squares(grid: np.ndarray, n_remove: int = 30) -> np.ndarray:
     # Generate random positions to remove from the grid
-    remove_index = np.random.choice(np.arange(81), size=n_remove, replace=False)
+    remove_index = np.random.choice(np.arange(81),
+                                    size=n_remove,
+                                    replace=False)
     # Flatten the grid so that we can easily remove (i.e. set to zero)
     # the desired number of squares
     g = grid.flatten()
@@ -166,11 +137,11 @@ def _remove_squares(grid: np.ndarray, n_remove: int=30) -> np.ndarray:
     return g.reshape([GRID_SIZE, GRID_SIZE])
 
 
-def generate(n_remove: int=50) -> np.ndarray:
+def generate(n_remove: int = 50) -> (np.ndarray, np.ndarray):
     """Generate a sudoku puzzle"""
     while True:
         # Create an "empty" (i.e. filled with zeros) 9 x 9 grid
-        g: np.ndarray = np.zeros((9,9), dtype=int)
+        g: np.ndarray = np.zeros((9, 9), dtype=int)
         # Randomise the first row
         g[0] = np.random.choice(np.arange(1, 10), size=9, replace=False)
         # Solve the grid
@@ -183,20 +154,27 @@ def generate(n_remove: int=50) -> np.ndarray:
             err_msg(f"WARNING: Cannot solve this grid: {g}. Trying again...")
     return puzzle, solution
 
-### # ALTERNATE implementation:
-### def generate() -> np.ndarray:
-###     # grid: np.ndarray = np.zeros((81), dtype=int)
-###     # Randomise 9 positions in a 1 x 81 array
-###     random_positions: np.ndarray = np.random.choice(range(81), size=9, replace=False)
-###
-###     # Randomise the order of the numbers 1-9
-###     numbers = np.random.choice(np.arange(1, 10, dtype=int), size=9, replace=False)
-###
-###     # Insert the numbers in the grid at the randomised positions
-###     grid[random_positions] = numbers
-###     return grid.reshape(9, 9)
+# ALTERNATE implementation:
+# def generate() -> np.ndarray:
+#     # grid: np.ndarray = np.zeros((81), dtype=int)
+#     # Randomise 9 positions in a 1 x 81 array
+#     random_positions: np.ndarray = np.random.choice(
+#           range(81),
+#           size=9,
+#           replace=False)
+#
+#     # Randomise the order of the numbers 1-9
+#       numbers = np.random.choice(
+#           np.arange(1, 10, dtype=int),
+#           size=9,
+#           replace=False)
+#
+#     # Insert the numbers in the grid at the randomised positions
+#     grid[random_positions] = numbers
+#     return grid.reshape(9, 9)
 
-def save_to_disk(grid: np.ndarray, path: str = None) -> bool:
+
+def save_to_disk(grid: np.ndarray, path: str = None) -> None:
     """Save a grid to disk. If no path is provided, the
        grid is saved to 'data/<timestamp>', where
        timestamp = '<year>-<month>-<day>.<hour>.<minute>.<second>'"""
