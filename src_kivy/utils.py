@@ -4,8 +4,7 @@ __version__ = "0.1"
 __all__ = ["debug_msg",
            "err_msg",
            "sys_msg",
-           "parse_arguments", 
-           "WINDOW_SIZE"]
+           "parse_arguments"]
 
 import argparse
 import inspect
@@ -20,12 +19,6 @@ import sys
 # import pathlib
 # import shlex
 # import shutil
-
-
-# Root window geometry
-HEIGHT = 600
-WIDTH = 1000
-WINDOW_SIZE = f"{WIDTH}x{HEIGHT}"
 
 
 def debug_msg(*args):
@@ -70,8 +63,7 @@ def parse_arguments():
                    "(roughly: level of difficulty)",
         'save': "Save the generated grid to disk",
         'solution': "Reveal the solution", 
-        'verbose': "Enable verbose output",
-        'winsize': f"Window size; default={WINDOW_SIZE}"
+        'verbose': "Enable verbose output"
     }
 
     parser.add_argument('-d', '--debug',
@@ -100,9 +92,6 @@ def parse_arguments():
                         default=False,
                         action='store_true',
                         help=help_dict['solution'])
-    parser.add_argument('--winsize',
-                        default=WINDOW_SIZE,
-                        help=help_dict['winsize'])
     try:
         args = parser.parse_args()
         # Return arguments as an argparse.Namespace object
