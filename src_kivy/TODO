@@ -1,0 +1,22 @@
+----------
+sudoku.py:
+----------
+– Implement the 'Notes' functionality
+– Implement the 'Load from disk' button
+
+
+
+----------
+solver.py:
+----------
+–   Rewrite, if possible, the _solver() function 
+        * There should be only one return statement (is this possible,
+          considering that the function implements a backtracking, recursive
+          algorithm?)
+
+–   Implement a puzzle creation algorithm that creates 'better' (symmetric
+    etc.) puzzles
+
+–   Implement a difficulty command-line option with alternatives (using
+    argparse) such as 'trivial', 'easy', 'medium', 'hard' etc.
+

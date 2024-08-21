@@ -25,8 +25,7 @@ import sys
 # Root window geometry
 HEIGHT = 600
 WIDTH = 1000
-WINDOW_SIZE = f"WIDTHxHEIGHT"
-
+WINDOW_SIZE = f"{WIDTH}x{HEIGHT}"
 
 
 def debug_msg(*args):
@@ -58,13 +57,52 @@ def sys_msg(*args):
 
 def parse_arguments():
     """Parse command line options and positional arguments"""
-    parser = argparse.ArgumentParser(
-                                      add_help=True,
-                                      description="sudoku ftw utility"
+    parser = argparse.ArgumentParser(add_help=True,
+                                     description="sudoku game",
+                                     prog="sudoku"
     )
-    parser.add_argument('--winsize', default=WINDOW_SIZE)
-    parser.add_argument('-d', '--debug', default=False, action='store_true')
-    parser.add_argument('-f', '--filename', type=argparse.FileType('r'), default=None, required=False)
+    help_dict = {
+        'debug': 'Print debug info',
+        'filename': """Name of file containing a sudoku grid – nine rows and
+                       nine columns, each containing a comma-separated,
+                       list of integers (0-9, where 0 means an empty square""",
+        'nremove': "Number of squares to remove from the completed grid "
+                   "(roughly: level of difficulty)",
+        'save': "Save the generated grid to disk",
+        'solution': "Reveal the solution", 
+        'verbose': "Enable verbose output",
+        'winsize': f"Window size; default={WINDOW_SIZE}"
+    }
+
+    parser.add_argument('-d', '--debug',
+                        default=False,
+                        action='store_true',
+                        help=help_dict['debug'])
+    parser.add_argument('-n', '--nremove',
+                        default=50,
+                        type=int,
+                        help=help_dict['nremove'])
+    parser.add_argument('-s', '--save',
+                        default=False,
+                        action='store_true',
+                        help=help_dict['save'])
+    parser.add_argument('-v', '--verbose',
+                        default=False,
+                        action='store_true',
+                        help=help_dict['verbose'])
+    parser.add_argument('-f', '--filename',
+                        type=argparse.FileType('r'),
+                        default=None,
+                        required=False,
+                        help=help_dict['filename'],
+                        metavar="path")
+    parser.add_argument('--solution',
+                        default=False,
+                        action='store_true',
+                        help=help_dict['solution'])
+    parser.add_argument('--winsize',
+                        default=WINDOW_SIZE,
+                        help=help_dict['winsize'])
     try:
         args = parser.parse_args()
         # Return arguments as an argparse.Namespace object

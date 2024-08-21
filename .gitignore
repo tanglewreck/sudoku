@@ -1,5 +1,9 @@
+# Generated sudokus:
+src_kivy/data/202*
+
 # Apple stuff
 .DS*
+._.DS_Store
 # Kivy config dirs
 .kivy
 # vim tmp-files
