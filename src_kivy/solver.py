@@ -114,13 +114,19 @@ def _possibles(grid: np.ndarray, row: int, col: int) -> list:
     return possible_numbers
 
 
-def print_possibles(grid: np.ndarray) -> None:
+def print_possibles(grid: np.ndarray) -> list:
     """Print all possibilities of the grid"""
+    possibles_list = []
     for row in range(GRID_SIZE):
-        print(f"row: {row + 1}")
+        possibles_row = []
+        ## print(f"row: {row + 1}")
         for col in range(GRID_SIZE):
-            print(f"\tcol: {col + 1}\t",
-                  " ".join(map(str, _possibles(grid, row, col))))
+            possibles_row.append(" ".join(map(str, _possibles(grid, row, col))))
+        possibles_list.append(possibles_row)
+            #print(f"\tcol: {col + 1}\t",
+            #      " ".join(map(str, _possibles(grid, row, col))))
+    # print("possibles:", possibles_list)
+    return possibles_list
 
 
 def _remove_squares(grid: np.ndarray, n_remove: int = 30) -> np.ndarray:

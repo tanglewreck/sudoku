@@ -97,7 +97,7 @@ Config.set('kivy', 'log_enable', 1)
 Config.set('kivy', 'window_icon', "data/mier_347x437.jpg")
 Config.set('graphics', 'fullscreen', 0)
 Config.set('graphics', 'height', 600)
-Config.set('graphics', 'width', 1000)
+Config.set('graphics', 'width', 1500)
 # Config.set('graphics', 'height', 480)
 # Config.set('graphics', 'width', 800)
 Config.set('graphics', 'resizable', 1)
@@ -130,9 +130,9 @@ class SudokuBlock(GridLayout):
 class RootWidget(GridLayout):
     """RootWidget: Sudoku grid with a numerical keypad on the right"""
     # note = False
-    the_grid = ListProperty()
-    active_number = NumericProperty()
-    active_number_string = StringProperty()
+    # the_grid = ListProperty()
+    # active_number = NumericProperty()
+    # active_number_string = StringProperty()
 
     def __init__(self, grid: np.ndarray = np.zeros([9, 9])) -> None:
         super().__init__()
@@ -140,15 +140,31 @@ class RootWidget(GridLayout):
         self.grid: np.ndarray = grid
         self.build_the_grid()
         # self.add_gridbutton()
+        #
+        if self.ids.possibles:
+            possibles_list = solver.print_possibles(self.grid)  
+            print(len(possibles_list))
+            possibles_str = ""
+            for row, possibles_row in enumerate(possibles_list):
+                possibles_str += f"Row {row}:\n"
+                #print(f"Row {row}:")
+                for col, possibles in enumerate(possibles_row):
+                    possibles_str += f"    col {col}: {possibles}\n"
+                    #print(f"\tcol {col}: {possibles}")
+            print(possibles_str)
+            self.ids.possibles.text = possibles_str
+            # print(possibles)
 
     def build_the_grid(self):
-        """Build the grid widget tree"""
-        # Add a 3 by 3 GridLayout widget
+        """Build the grid widget tree
+        
+           Adds a 3 by 3 GridLayout widget. Each layout 'square'
+           contains a SudokuBlock widget (inherits BoxLayout)"""
         self.sudokugrid = GridLayout(
             cols=3,
             rows=3,
-            orientation="lr-tb",
-            size_hint_x=3 / 8
+            orientation = "lr-tb",
+            size_hint_x = 25 / 100
         )
         # Add grid buttons with text set to the corresponding
         # self.grid[index] value. Also bind each button to the

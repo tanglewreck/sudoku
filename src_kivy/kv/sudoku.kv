@@ -140,15 +140,59 @@
             pos: self.pos
             size: self.size
     rows: 2
-    cols: 2
+    cols: 3
     orientation: 'rl-tb'  # Orientation is right-to-left, top-to-bottom
     opacity: 1.0
     spacing: 100
     padding: '70sp', '50sp', '70sp', '50sp'
 
     # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
-    #  Right-hand side panel, stacked vertically. Includes numberpad, status
-    #  label, and quit-button
+    # A BoxLayout containing a text field where possibles are displayed
+    # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+    BoxLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 0
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        canvas:
+            Color:
+                rgba: 1, 1, 1, 0
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        opacity: 1
+        orientation: 'vertical'
+        size_hint: 1/5, 1 # 1/4 of root widget width, 1/1 of root widget height
+        padding: 50, 0, 0, 0
+        # padding: 0
+
+        Label:
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            id: possibles
+            # text: ""
+            size_hint_x: 1
+            size_hint_y: 1
+            color: 0, 0, 0, .5
+            font_size: '8sp'
+            bold: False
+            markup: False
+            text_size: self.size
+            halign: 'left'
+            valign: 'top'
+            padding: '30sp', '20sp', '20sp', '10sp'
+
+        
+
+    # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+    #  A BoxLayout, stacked vertically, containing the numberpad, the status
+    #  label, and some buttons (e.g. a Quit-button)
     # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
     # The hierarchy looks like this:
     #     RootWidget (a 2 by 2 GridLayout)
@@ -184,7 +228,7 @@
                 size: self.size
         opacity: 1
         orientation: 'vertical'
-        size_hint: 0.25, 1 # 1/4 of root widget width, 1/1 of root widget height
+        size_hint: 1 / 7, 1 # 1/4 of root widget width, 1/1 of root widget height
         padding: 50, 200, 0, 0
         # padding: 0
         align: 'center'
@@ -271,7 +315,11 @@
             anchor_y: 'center'
             size_hint_y: 0.75
             padding: 0, 0, 0, 30
+
             Label:
+                # active_number is updated when a numberpad button is pressed
+                # and is read when a grid button is pressed (updating the
+                # grid buttons text)
                 id: active_number
                 canvas.before:
                     Color:
@@ -286,6 +334,9 @@
                 font_size: '18sp'
                 size_hint_x: 0.25
                 size_hint_y: 0.5
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
 
         #
         # Load button
