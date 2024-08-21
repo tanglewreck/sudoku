@@ -63,19 +63,17 @@ def parse_arguments():
     )
     help_dict = {
         'debug': 'Print debug info',
-        'filename': """Path to a file containing a sudoku grid – nine rows and
+        'filename': """Name of file containing a sudoku grid – nine rows and
                        nine columns, each containing a comma-separated,
                        list of integers (0-9, where 0 means an empty square""",
         'nremove': "Number of squares to remove from the completed grid "
                    "(roughly: level of difficulty)",
         'save': "Save the generated grid to disk",
+        'solution': "Reveal the solution", 
         'verbose': "Enable verbose output",
         'winsize': f"Window size; default={WINDOW_SIZE}"
     }
 
-    parser.add_argument('--winsize',
-                        default=WINDOW_SIZE,
-                        help=help_dict['winsize'])
     parser.add_argument('-d', '--debug',
                         default=False,
                         action='store_true',
@@ -98,6 +96,13 @@ def parse_arguments():
                         required=False,
                         help=help_dict['filename'],
                         metavar="path")
+    parser.add_argument('--solution',
+                        default=False,
+                        action='store_true',
+                        help=help_dict['solution'])
+    parser.add_argument('--winsize',
+                        default=WINDOW_SIZE,
+                        help=help_dict['winsize'])
     try:
         args = parser.parse_args()
         # Return arguments as an argparse.Namespace object
