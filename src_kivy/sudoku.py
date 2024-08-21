@@ -138,22 +138,20 @@ class RootWidget(GridLayout):
         super().__init__()
 
         self.grid: np.ndarray = grid
+        # Create the sudoku grid containing 9 x 9 kivy Buttons
+        # whose text is updated with the text of the current_number
+        # (set by the numbuttons) Label.
         self.build_the_grid()
-        # self.add_gridbutton()
-        #
+
+        # Create a string of possibles
         if self.ids.possibles:
             possibles_list = solver.print_possibles(self.grid)  
-            print(len(possibles_list))
             possibles_str = ""
             for row, possibles_row in enumerate(possibles_list):
                 possibles_str += f"[b]Row {row}:[/b]\n"
-                #print(f"Row {row}:")
                 for col, possibles in enumerate(possibles_row):
                     possibles_str += f"    col {col}: {possibles}\n"
-                    #print(f"\tcol {col}: {possibles}")
-            # print(possibles_str)
             self.ids.possibles.text = possibles_str
-            # print(possibles)
 
     def build_the_grid(self):
         """Build the grid widget tree
