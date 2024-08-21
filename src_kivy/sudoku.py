@@ -146,12 +146,12 @@ class RootWidget(GridLayout):
             print(len(possibles_list))
             possibles_str = ""
             for row, possibles_row in enumerate(possibles_list):
-                possibles_str += f"Row {row}:\n"
+                possibles_str += f"[b]Row {row}:[/b]\n"
                 #print(f"Row {row}:")
                 for col, possibles in enumerate(possibles_row):
                     possibles_str += f"    col {col}: {possibles}\n"
                     #print(f"\tcol {col}: {possibles}")
-            print(possibles_str)
+            # print(possibles_str)
             self.ids.possibles.text = possibles_str
             # print(possibles)
 

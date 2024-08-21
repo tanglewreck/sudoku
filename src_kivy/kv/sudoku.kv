@@ -167,26 +167,31 @@
         size_hint: 1/5, 1 # 1/4 of root widget width, 1/1 of root widget height
         padding: 50, 0, 0, 0
         # padding: 0
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
 
-        Label:
-            canvas.before:
-                Color:
-                    rgba: 1, 1, 1, 0.5
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
-            id: possibles
-            # text: ""
-            size_hint_x: 1
-            size_hint_y: 1
-            color: 0, 0, 0, .5
-            font_size: '8sp'
-            bold: False
-            markup: False
-            text_size: self.size
-            halign: 'left'
-            valign: 'top'
-            padding: '30sp', '20sp', '20sp', '10sp'
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                id: possibles
+                text: " " * 100000
+                size_hint_x: 1
+                size_hint_y: 10
+                # size_hint_min: (1, None)
+                # height: self.height
+                color: 0, 0, 0, .5
+                font_size: '14sp'
+                bold: False
+                markup: True
+                text_size: self.size
+                halign: 'left'
+                valign: 'top'
+                padding: '50sp', '20sp', '20sp', '10sp'
 
         
 
