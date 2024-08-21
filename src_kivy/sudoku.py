@@ -32,7 +32,7 @@ or generated from scratch.
 # check PEP8 compliancy (ignoring E501 because it's stupid
 # and E402 because we have to; see NOTE below).
 
-__version__ = "2024-08-20"
+__version__ = "2024-08-21"
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # <ENVIRONMENT VARIABLES>
