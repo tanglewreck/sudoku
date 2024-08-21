@@ -35,12 +35,10 @@ or generated from scratch.
 __version__ = "2024-08-21"
 
 import functools
-# import string
 import sys
+# import string
+import kivy
 import numpy as np
-
-from utils import debug_msg, err_msg  #, sys_msg
-from utils import parse_arguments
 
 # from typing import
 from kivy.app import App
@@ -64,7 +62,9 @@ from kivy.uix.widget import Widget
 # from solver import generate, print_possibles, solver
 import solver
 
-import kivy
+from utils import debug_msg, err_msg  #, sys_msg
+from utils import parse_arguments
+
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # <ENVIRONMENT VARIABLES>
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -113,22 +113,8 @@ kivy.require("2.0.0")
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
-class ButtonBG(Widget):
-    """Button background"""
-    def __init__(self):
-        super(ButtonBG, self).__init__()
-        with self.canvas.before:
-            Color(1, 1, 1, 1)
-            Rectangle(pos=self.pos, size=self.size)
-        with self.canvas:
-            Color(1, 1, 1, 0.3)
-            Rectangle(pos=self.pos, size=self.size)
-        self.background_color = (1, 1, 1, 1)
-
-
 class NumberPadButton(Button):
     """Number pad buttons"""
-    pass
     # def __init__(self, **kwargs):
     #    super(NumberPadButton, self).__init__(**kwargs)
 
@@ -151,11 +137,11 @@ class RootWidget(GridLayout):
     active_number = NumericProperty()
     active_number_string = StringProperty()
 
-    def __init__(self, grid: np.ndarray = None, debug: bool = None) -> None:
+    def __init__(self, grid: np.ndarray = np.zeros([9, 9]), debug: bool = False) -> None:
         super(RootWidget, self).__init__()
 
         self.debug = debug
-        self.grid = grid
+        self.grid: np.ndarray = grid
         self.build_the_grid()
         # self.add_gridbutton()
 
@@ -182,13 +168,16 @@ class RootWidget(GridLayout):
                     for j in range(3):
                         # Index in the grand total GridLayout
                         index = (n * 3 + i, m * 3 + j)
+                        row = n * 3 + i
+                        col = m * 3 + j
                         grid_button = GridButton(disabled=False)
                         # Bind the GridButton to a function which updates the
                         # label text to the active number:
                         grid_button.bind(
                             on_release=functools.partial(
                                 self.update_grid_button,
-                                index=index
+                                row=row,
+                                col=col
                             )
                         )
 
@@ -204,19 +193,19 @@ class RootWidget(GridLayout):
         self.add_widget(self.sudokugrid)
 
     # Update the GridButton text with the active number
-    def update_grid_button(self, instance: GridButton, index: tuple) -> None:
+    def update_grid_button(self, instance: GridButton, row: int, col: int) -> None:
         if self.debug:
-            print("index: ", index)
+            print(f"index: [{row}, {col}]")
             print("instance.text (pre):", instance.text)
-            print(f"self.grid[{index}]:", self.grid[index])
+            print(f"self.grid[{row}, {col}]:", self.grid[row, col])
             print(f"self.ids.active_number.text:", self.ids.active_number.text)
             print(self.grid)
         if self.ids.active_number.text:
-            self.grid[index] = int(self.ids.active_number.text)
+            self.grid[row, col] = np.int64(self.ids.active_number.text)
             instance.text = str(self.ids.active_number.text)
             # print("active_number: ", self.ids.active_number.text)
         else:
-            self.grid[index] = 0
+            self.grid[row, col] = 0
             instance.text = ""
 
         if self.debug:
@@ -232,7 +221,7 @@ class SudokuApp(App):
     """SudokuApp"""
 
     def __init__(self, grid: np.ndarray = np.zeros((9, 9), dtype=int),
-                 debug: bool = None) -> None:
+                 debug: bool = False) -> None:
         super(SudokuApp, self).__init__()
         self.debug = debug  # gets passed on to RootWidget
         self.grid = grid  # gets passed on to RootWidget
