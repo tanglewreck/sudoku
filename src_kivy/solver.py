@@ -115,17 +115,13 @@ def _possibles(grid: np.ndarray, row: int, col: int) -> list:
 
 
 def print_possibles(grid: np.ndarray) -> list:
-    """Print all possibilities of the grid"""
+    """Returns a list of all possibilities of the grid"""
     possibles_list = []
     for row in range(GRID_SIZE):
         possibles_row = []
-        ## print(f"row: {row + 1}")
         for col in range(GRID_SIZE):
             possibles_row.append(" ".join(map(str, _possibles(grid, row, col))))
         possibles_list.append(possibles_row)
-            #print(f"\tcol: {col + 1}\t",
-            #      " ".join(map(str, _possibles(grid, row, col))))
-    # print("possibles:", possibles_list)
     return possibles_list
 
 
@@ -215,8 +211,17 @@ def main():
         if args.save:
             save_to_disk(puzzle)
 
+    # Get the list of possibles from print_possibles() and build
+    # a string with added row and column labels:
     if args.verbose:
-        print_possibles(puzzle)
+        possibles_list = print_possibles(puzzle)
+        possibles_str = ""
+        for row, possibles_row in enumerate(possibles_list):
+            possibles_str += f"Row {row}:\n"
+            for col, possibles in enumerate(possibles_row):
+                possibles_str += f"    col {col}: {possibles}\n"
+        print(possibles_str)
+
     if args.solution:
         print("Puzzle:", puzzle, sep="\n")
         print("Solution:", solution, sep="\n")
