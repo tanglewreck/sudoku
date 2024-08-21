@@ -5,6 +5,27 @@
 #----------------------------------------
 '''
 sudoku.py – sudoku implemented in kivy
+
+Sudoku puzzles are either loaded from file (using option '-f' or '--filename')
+or generated from scratch.
+
+    Usage: sudoku [-h] [-d] [-n NREMOVE] [-s] [-v] [-f path] [--solution] [--winsize WINSIZE]
+
+    Command line options:
+
+    -h, --help            Show this help message and exit
+    -d, --debug           Print debug info
+    -s, --save            Save the generated grid to disk
+    -v, --verbose         Enable verbose output
+    -n NREMOVE, --nremove NREMOVE
+                          Number of squares to remove from the completed grid (roughly: level of difficulty)
+    -f path, --filename path
+                        Name of file containing a sudoku grid – nine rows and
+                        nine columns, each row containing a comma-separated,
+                        list of integers (0-9, where 0 means an empty square
+  --solution            Reveal the solution
+  --winsize WINSIZE     Window size (default=1000x600)
+
 '''
 
 # Run 'pycodestyle --ignore=E501,E402 --show-source main.py' to
@@ -19,8 +40,7 @@ __version__ = "2024-08-20"
 import os
 
 # NOTE: KIVY_HOME must be set *before* kivy is imported,
-# thereby breaking the PEP8 recommendation to put
-# module level imports at the top (E402):
+# thereby breaking PEP8 (E402) 
 os.environ['KIVY_HOME'] = "./.kivy"
 HOME = os.environ['HOME']  # Needed for the path to the kivy config file
 
@@ -28,11 +48,6 @@ HOME = os.environ['HOME']  # Needed for the path to the kivy config file
 # before our own options/arguments
 os.environ['KIVY_NO_ARGS'] = 'yes'
 
-# os.environ['KIVY_WINDOW'] = 'x11'
-# os.environ['KIVY_WINDOW'] = 'egl_rpi'
-# import pygame
-# os.environ['KIVY_WINDOW'] = 'pygame'
-# os.environ['KIVY_WINDOW'] = 'sdl2'
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # </ENVIRONMENT VARIABLES>
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -202,6 +217,7 @@ class RootWidget(GridLayout):
 
 
 class SudokuApp(App):
+    """SudokuApp"""
 
     def __init__(self, grid: np.ndarray = np.zeros((9, 9), dtype=int), debug: bool = None) -> None:
         super(SudokuApp, self).__init__()
@@ -240,6 +256,15 @@ if __name__ == "__main__":
         puzzle, solution = solver.generate(args.nremove)
         if args.save:
             solver.save_to_disk(puzzle)
+
+    # Print possible values
+    if args.verbose:
+        solver.print_possibles(puzzle)
+
+    # Reveal the solution
+    if args.solution:
+        print("Puzzle:", puzzle, sep="\n")
+        print("Solution:", solution, sep="\n")
 
     # Start the app
     SudokuApp(puzzle, debug=debug).run()
