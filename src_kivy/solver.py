@@ -234,9 +234,9 @@ def main():
 
     if args.verbose:
         print_possibles(puzzle)
-
-    print("Puzzle:", puzzle, sep="\n")
-    print("Solution:", solution, sep="\n")
+    if args.solution:
+        print("Puzzle:", puzzle, sep="\n")
+        print("Solution:", solution, sep="\n")
 
 
 if __name__ == "__main__":
