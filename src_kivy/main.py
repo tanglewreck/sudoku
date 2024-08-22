@@ -83,6 +83,7 @@ if __name__ == "__main__":
     debug = args.debug
 
     # Load the sudoku grid file, if provided on the command line
+    # otherwise generate a random puzzle
     if args.filename:
         if debug:
             debug_msg("args.filename:", args.filename.name)
@@ -108,4 +109,4 @@ if __name__ == "__main__":
         print("Solution:", solution, sep="\n")
 
     # Start the app
-    SudokuApp(puzzle).run()
+    SudokuApp(puzzle, solution).run()
