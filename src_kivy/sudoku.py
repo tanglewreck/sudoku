@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-
-# ----------------------------------------
-# sudoku.py –
-# ----------------------------------------
 '''
 sudoku.py – sudoku implemented in kivy
 
@@ -31,40 +27,36 @@ or generated from scratch.
 # Run 'pycodestyle --ignore=E501,E402 --show-source main.py' to
 # check PEP8 compliancy (ignoring E501 because it's stupid
 # and E402 because we have to; see NOTE below).
-
+__all__ = ['SudokuApp']
 __version__ = "2024-08-21"
 
 import functools
 import os
 import sys
-# import string
 import kivy
 import numpy as np
 
-# from typing import
 from kivy.app import App
 from kivy.config import Config
+from kivy.properties import ListProperty
+from kivy.properties import NumericProperty
+from kivy.properties import StringProperty
+from kivy.uix.button import Button
+from kivy.uix.gridlayout import GridLayout
+
 # from kivy.core.window import Window
 # from kivy.graphics import Color, Rectangle
 # from kivy.properties import ColorProperty
-from kivy.properties import ListProperty
-from kivy.properties import NumericProperty
 # from kivy.properties import ObjectProperty
-from kivy.properties import StringProperty
 # from kivy.uix.behaviors import ButtonBehavior
-from kivy.uix.button import Button
 # from kivy.uix.anchorlayout import AnchorLayout
 # from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.gridlayout import GridLayout
 # from kivy.uix.label import Label
 # from kivy.uix.widget import Widget
 
 
-# from solver import generate, print_possibles, solver
 import solver
-
-from utils import debug_msg, err_msg  #, sys_msg
-from utils import parse_arguments
+from utils import debug_msg, err_msg, sys_msg, parse_arguments
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # <ENVIRONMENT VARIABLES>
@@ -235,34 +227,4 @@ class SudokuApp(App):
 
 
 if __name__ == "__main__":
-    # Parse and get command line arguments
-    args = parse_arguments()
-    debug = args.debug
-
-    # Load the sudoku grid file, if provided on the command line
-    if args.filename:
-        if debug:
-            debug_msg("args.filename:", args.filename.name)
-        try:
-            puzzle = np.loadtxt(args.filename.name, delimiter=",", dtype=int)
-            solution = np.copy(puzzle)
-            if not solver.solver(solution):
-                err_msg(f"Unable to solve this puzzle: \n{puzzle}")
-        except OSError as e:
-            print(e)
-    else:
-        puzzle, solution = solver.generate(args.nremove)
-        if args.save:
-            solver.save_to_disk(puzzle)
-
-    # Print possible values
-    if args.verbose:
-        solver.print_possibles(puzzle)
-
-    # Reveal the solution
-    if args.solution:
-        print("Puzzle:", puzzle, sep="\n")
-        print("Solution:", solution, sep="\n")
-
-    # Start the app
-    SudokuApp(puzzle).run()
+    pass
