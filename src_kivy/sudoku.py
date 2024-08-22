@@ -32,9 +32,11 @@ __version__ = "2024-08-21"
 
 import functools
 import os
-import sys
 import kivy
 import numpy as np
+
+import solver
+from utils import debug_msg, err_msg, sys_msg, parse_arguments
 
 from kivy.app import App
 from kivy.config import Config
@@ -54,57 +56,7 @@ from kivy.uix.gridlayout import GridLayout
 # from kivy.uix.label import Label
 # from kivy.uix.widget import Widget
 
-
-import solver
-from utils import debug_msg, err_msg, sys_msg, parse_arguments
-
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# <ENVIRONMENT VARIABLES>
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-# NOTE: KIVY_HOME must be set *before* kivy is imported,
-# thereby breaking PEP8 (E402)
-os.environ['KIVY_HOME'] = "./.kivy"
-HOME = os.environ['HOME']  # Needed for the path to the kivy config file
-
-# Make kivy ignore command-line arguments so that we don't have to put '--'
-# before our own options/arguments
-os.environ['KIVY_NO_ARGS'] = 'yes'
-
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# </ENVIRONMENT VARIABLES>
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# <KIVY CONFIG>
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# Read the (local) configuration files and change stuff to our liking.
-# NOTE: Changes require a restart to take effect
-# NOTE: This code might probaly better be moved to its own file,
-#     which can be run when needed (+TODO-list)
-Config.read(f"{HOME}/Proj/sudoku/src_kivy/.kivy/config.ini")
-Config.set('kivy', 'exit_on_escape', 1)
-Config.set('kivy', 'log_enable', 1)
-Config.set('kivy', 'window_icon', "data/mier_347x437.jpg")
-Config.set('graphics', 'fullscreen', 0)
-Config.set('graphics', 'height', 600)
-Config.set('graphics', 'width', 1500)
-# Config.set('graphics', 'height', 480)
-# Config.set('graphics', 'width', 800)
-Config.set('graphics', 'resizable', 1)
-Config.set('graphics', 'position', 'custom')  # auto|custom
-Config.set('graphics', 'left', 100)         # ignored when 'position' == 'auto'
-Config.set('graphics', 'top', 100)          # ignored when 'position' == 'auto'
-Config.set('kivy', 'log_level', "warning")  # debug|info|warning|error|critical
-Config.write()
-
-# Config.set('modules', 'monitor', '')
-# Config.set('modules', 'touchring', '')
 kivy.require("2.0.0")
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# </KIVY CONFIG>
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
 class NumberPadButton(Button):
@@ -126,10 +78,12 @@ class RootWidget(GridLayout):
     # active_number = NumericProperty()
     # active_number_string = StringProperty()
 
-    def __init__(self, grid: np.ndarray = np.zeros([9, 9])) -> None:
+    def __init__(self, puzzle: np.ndarray, solution: np.ndarray) -> None:
         super().__init__()
 
-        self.grid: np.ndarray = grid
+        self.puzzle: np.ndarray = puzzle
+        self.solution: np.ndarray = solution
+
         # Create the sudoku grid containing 9 x 9 kivy Buttons
         # whose text is updated with the text of the current_number
         # (set by the numbuttons) Label.
@@ -137,7 +91,7 @@ class RootWidget(GridLayout):
 
         # Create a string of possibles
         if self.ids.possibles:
-            possibles_list = solver.print_possibles(self.grid)  
+            possibles_list = solver.print_possibles(self.puzzle)  
             possibles_str = ""
             for row, possibles_row in enumerate(possibles_list):
                 possibles_str += f"[b]Row {row}:[/b]\n"
@@ -156,9 +110,8 @@ class RootWidget(GridLayout):
             orientation = "lr-tb",
             size_hint_x = 25 / 100
         )
-        # Add grid buttons with text set to the corresponding
-        # self.grid[index] value. Also bind each button to the
-        # 'update_gridbutton' function.
+        # Add grid buttons with text set to value of self.puzzle[index].
+        # Also bind each button to 'self.update_gridbutton()'.
         for n in range(3):
             for m in range(3):
                 sudoku_block = SudokuBlock(orientation='lr-tb')  # SudokuBlocks
@@ -182,8 +135,8 @@ class RootWidget(GridLayout):
                         # If the number at position 'index' is set
                         # (i.e. is not zero), update the text of the
                         # corresponding GridButton and disable it:
-                        if self.grid[row, col]:
-                            grid_button.text = str(self.grid[row, col])
+                        if self.puzzle[row, col]:
+                            grid_button.text = str(self.puzzle[row, col])
                             grid_button.disabled = True
                         # Add the GridButton to the SudokuBlock
                         sudoku_block.add_widget(grid_button)
@@ -191,31 +144,41 @@ class RootWidget(GridLayout):
         self.add_widget(self.sudokugrid)
 
     def update_grid_button(self, instance: GridButton, row: int, col: int) -> None:
-        """Update the GridButton text with the active number"""
+        """Update the GridButton text with the active number
+           Also update the puzzle array at that location"""
         if self.ids.active_number.text:
-            self.grid[row, col] = np.int64(self.ids.active_number.text)
-            instance.text = str(self.ids.active_number.text)
-            # print("active_number: ", self.ids.active_number.text)
+            self.puzzle[row, col] = np.int64(self.ids.active_number.text)
+            instance.text = self.ids.active_number.text
         else:
-            self.grid[row, col] = 0
+            self.puzzle[row, col] = 0
             instance.text = ""
+
+        # Is the puzzle completed?
+        # if self.puzzle.all() == self.solution.all():
+        if np.array_equal(self.puzzle, self.solution):
+            print(self.puzzle)
+            print()
+            print(self.solution)
+            print("You got it!")
 
     def do_quit(self):  # , *args):
         """Quit the application (triggered by the Quit button)"""
-        print("See ya!", file=sys.stderr)
+        sys_msg("See ya!")
         raise SystemExit(0)
 
 
 class SudokuApp(App):
     """SudokuApp inherits kivy.app.App"""
-    def __init__(self, grid: np.ndarray = np.zeros((9, 9), dtype=int)) -> None:
+    def __init__(self, puzzle: np.ndarray = np.zeros((9, 9), dtype=int),
+                 solution: np.ndarray = np.zeros((9, 9), dtype=int)) -> None:
         super().__init__()
-        self.grid = grid  # gets passed on to RootWidget
+        self.puzzle = puzzle        # passed on to RootWidget
+        self.solution = solution    # passed on to RootWidget
         self.kv_file = "kv/sudoku.kv"  # the kv file is in a separate directory
 
     def build(self):
         """Build the widget tree"""
-        self.root = RootWidget(self.grid)
+        self.root = RootWidget(self.puzzle, self.solution)
         return self.root
 
     def on_start(self):
