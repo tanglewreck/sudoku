@@ -83,5 +83,9 @@ if __name__ == "__main__":
         print("Puzzle:", puzzle, sep="\n")
         print("Solution:", solution, sep="\n")
 
+    # Save the puzzle to disk
+    if args.save:
+        solver.save_to_disk(puzzle)
+
     # Start the app
     SudokuApp(puzzle, solution).run()
