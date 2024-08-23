@@ -31,7 +31,6 @@ __all__ = ['SudokuApp']
 __version__ = "2024-08-21"
 
 import functools
-import os
 import kivy
 import numpy as np
 
