@@ -1,0 +1,2 @@
+declare -x KIVY_HOME=$(pwd)
+declare -x KIVY_NO_ARGS='yes'
