@@ -32,7 +32,7 @@ or generated from scratch.
 # check PEP8 compliancy (ignoring E501 because it's stupid
 # and E402 because we have to; see NOTE below).
 
-__version__ = "2024-08-22"
+__version__ = "2024-08-23"
 
 import os
 # NOTE: KIVY_HOME must be set *before* kivy is imported
