@@ -189,4 +189,5 @@ class SudokuApp(App):
 
 
 if __name__ == "__main__":
+    print("(You'd be better off running main.py...")
     pass
