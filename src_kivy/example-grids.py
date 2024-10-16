@@ -55,3 +55,6 @@ GRID_3: np.ndarray = np.array(
 )
 
 
+if __name__ == "__main__":
+    print(GRID_1)
+
