@@ -1,46 +1,14 @@
 #!/usr/bin/env python3
 
-# ----------------------------------------
-# sudoku.py –
-# ----------------------------------------
-'''
-sudoku.py – sudoku implemented in kivy
-
-Sudoku puzzles are either loaded from file (using option '-f' or '--filename')
-or generated from scratch.
-
-    Usage: sudoku [-h] [-d] [-n NREMOVE] [-s] [-v] [-f path] [--solution]
-
-    Command line options:
-
-    -h, --help            Show this help message and exit
-    -d, --debug           Print debug info
-    -s, --save            Save the generated grid to disk
-    -v, --verbose         Enable verbose output
-    -n NREMOVE, --nremove NREMOVE
-                          Number of squares to remove from the
-                          completed grid (roughly: level of difficulty)
-    -f path, --filename path
-                        Name of file containing a sudoku grid – nine rows and
-                        nine columns, each row containing a comma-separated,
-                        list of integers (0-9, where 0 means an empty square
-  --solution            Reveal the solution
-
-'''
-
-# Run 'pycodestyle --ignore=E501,E402 --show-source main.py' to
-# check PEP8 compliancy (ignoring E501 because it's stupid
-# and E402 because we have to; see NOTE below).
-
 __version__ = "2024-08-23"
 
+import numpy as np
 import os
-# NOTE: KIVY_HOME must be set *before* kivy is imported
+# NOTE: KIVY_HOME must be set *before* kivy is imported.
+#       This is not PEP8 compliant.
 os.environ['KIVY_HOME'] = f"{os.getcwd()}/.kivy"
 # Make kivy ignore command-line arguments 
 os.environ['KIVY_NO_ARGS'] = 'yes'
-
-import numpy as np
 
 import kivy
 from kivy.config import Config
@@ -86,6 +54,10 @@ if __name__ == "__main__":
     # Save the puzzle to disk
     if args.save:
         solver.save_to_disk(puzzle)
+
+    # Read the local kivy config
+    # Config.read(f"{os.environ['HOME']}/Proj/sudoku/src_kivy/.kivy/config.ini")
+    Config.read(f"{os.environ['PWD']}/.kivy/config.ini")
 
     # Start the app
     SudokuApp(puzzle, solution).run()
