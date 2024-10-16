@@ -78,6 +78,7 @@
 
 
 # RootWidget inherits GridLayout
+# (see sudoku.py)
 <RootWidget>:
     id: main_window
     canvas:
@@ -90,55 +91,8 @@
     cols: 3
     orientation: 'rl-tb'  # Orientation is right-to-left, top-to-bottom
     opacity: 1.0
-    spacing: 100
-    padding: '70sp', '50sp', '70sp', '50sp'
-
-    # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
-    # A BoxLayout containing a text field where possibles are displayed
-    # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
-    BoxLayout:
-        canvas.before:
-            Color:
-                rgba: 1, 1, 1, 0
-            Rectangle:
-                pos: self.pos
-                size: self.size
-        canvas:
-            Color:
-                rgba: 1, 1, 1, 0
-            Rectangle:
-                pos: self.pos
-                size: self.size
-        opacity: 1
-        orientation: 'vertical'
-        size_hint: 1/5, 1 # 1/4 of root widget width, 1/1 of root widget height
-        padding: 50, 0, 0, 0
-        # padding: 0
-        ScrollView:
-            do_scroll_x: False
-            do_scroll_y: True
-
-            Label:
-                canvas.before:
-                    Color:
-                        rgba: 1, 1, 1, 0.5
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-                id: possibles
-                text: " " * 100000
-                size_hint_x: 1
-                size_hint_y: 10
-                # size_hint_min: (1, None)
-                # height: self.height
-                color: 0, 0, 0, .5
-                font_size: '14sp'
-                bold: False
-                markup: True
-                text_size: self.size
-                halign: 'left'
-                valign: 'top'
-                padding: '50sp', '20sp', '20sp', '10sp'
+    spacing: 50
+    padding: '20sp', '50sp', '20sp', '50sp'
 
         
 
@@ -180,12 +134,34 @@
                 size: self.size
         opacity: 1
         orientation: 'vertical'
-        size_hint: 1 / 7, 1 # 1/4 of root widget width, 1/1 of root widget height
-        padding: 50, 200, 0, 0
+        size_hint: 1 / 5, 1 # 1/5 of root widget width, 1/1 of root widget height
+        padding: 100, 20, 100, 20
         # padding: 0
         align: 'center'
         valign: 'bottom'
 
+        GridLayout:
+            padding: 0, 0, 0, 0
+            # size_hint: 0.9, 0.25
+            rows: 3
+            cols: 1
+            padding: 100, 20, 100, 100
+            spacing: '50sp'
+            valign: 'top'
+            Label:
+                text: "INSTRUKTIONER"
+                size: self.texture_size
+                text_size: 300, 100
+                valign: 'top'
+                halign: 'center'
+            Label:
+                size: self.texture_size
+                # size: 100, 100
+                # text_size: cm(6), cm(10)
+                text_size: 300, None
+                text: "Välj siffra från det numeriska \"tangentbordet\"\n och klicka sedan på önskade ruta för att placera siffran. \n\n För att radera, välj först 'X' och klicka sedan på rutan du vill radera.\n"
+                halign: 'center'
+                valign: 'top'
         # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
         # Numpad: A 3x4 grid (last row containing two placeholder   #
         #         buttons (disabled) surrounding the 'X' button     #
@@ -206,7 +182,7 @@
                     rectangle: self.x, self.y, self.width, self.height
             cols: 3
             rows: 4
-            size_hint: 0.9, 0.9
+            size_hint: 0.9, 0.7
             # size_hint: 0.8, 0.8
             spacing: '0sp'
     
@@ -247,17 +223,19 @@
                 text: "9"
                 on_release: active_number.text = "9"
             NumberPadButton: # placeholder
-                text: "Note"
+                text: ""
                 on_press: root.note = True
-                on_release: active_number.text = ""
+                on_release: pass
+                # on_release: active_number.text = ""
             NumberPadButton:
                 id:bx
                 text: "X"
                 on_release: active_number.text = ""
             NumberPadButton: # placeholder
-                text: "Possibles"
+                text: ""
                 disabled: False
-                on_release: solver.print_possibles(np.zeros([9, 9]))
+                # on_release: solver.print_possibles(np.zeros([9, 9]))
+                on_release: pass
     
         #
         # AnchorLayout with a Label showing selected number:
@@ -293,20 +271,20 @@
         #
         # Load button
         #
-        AnchorLayout:
-            size_hint_y: 0.15
-            size_hint_x: 1
-            anchor_x: 'center'
-            anchor_y: 'bottom'
-            NumberPadButton:
-                size_hint: 0.5, None
-                height: '30sp'
-                font_size: '12sp'
-                markup: True
-                bold: False
-                text: "Load game file"
-                on_release: print("Load button: implement me")
-                # on_press: root.foo()
+#        AnchorLayout:
+#            size_hint_y: 0.15
+#            size_hint_x: 1
+#            anchor_x: 'center'
+#            anchor_y: 'bottom'
+#            NumberPadButton:
+#                size_hint: 0.5, None
+#                height: '30sp'
+#                font_size: '12sp'
+#                markup: True
+#                bold: False
+#                text: "Load game file"
+#                on_release: print("Load button: implement me")
+#                # on_press: root.foo()
 
         #
         # Quit button (and more...)
