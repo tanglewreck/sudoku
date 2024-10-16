@@ -3,28 +3,8 @@
 #:import np numpy
 #:import solver solver
 
-<SudokuButton@Button>:
-    canvas.before:
-        Color:
-            rgba: 1, 1, 1, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    canvas:
-        Color:
-            rgba: 1, 1 ,1 ,0.3
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    background_color: 1, 1, 1, 1
-    background_disabled_normal: "atlas://data/images/defaulttheme/button"
-    bold: True
-    disabled_color: 0.85, 0.852, 0.85, 1
-    font_size: '16sp'
-    markup: False
-    opacity: 1
 
-
+# Number pad buttons
 <NumberPadButton>:
     canvas.before:
         Color:
@@ -47,6 +27,7 @@
     opacity: 1
 
 
+# Sudoku grid buttons
 <GridButton>:
     canvas.before:
         Color:
