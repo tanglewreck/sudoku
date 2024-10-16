@@ -71,7 +71,7 @@ def parse_arguments():
                         action='store_true',
                         help=help_dict['debug'])
     parser.add_argument('-n', '--nremove',
-                        default=50,
+                        default=20,
                         type=int,
                         help=help_dict['nremove'])
     parser.add_argument('-s', '--save',
