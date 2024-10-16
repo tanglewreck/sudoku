@@ -3,32 +3,6 @@
 #:import np numpy
 #:import solver solver
 
-<BGColour@Widget>:
-    background_color: 1, .5, 0, 0.7
-    canvas.before:
-        Color:
-            rgba: root.background_color
-        Rectangle:
-            pos: self.pos
-            size: self.size
-
-
-<ButtonBackground@Widget>:
-    canvas.before:
-        Color:
-            rgba: 1, 1, 1, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    canvas:
-        Color:
-            rgba: 1, 1 ,1 ,0.3
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    background_color: 1, 1, 1, 1
-            
-
 <SudokuButton@Button>:
     canvas.before:
         Color:
