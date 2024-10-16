@@ -89,6 +89,7 @@ class RootWidget(GridLayout):
         self.build_the_grid()
 
         # Create a string of possibles
+        # 
         if self.ids.possibles:
             possibles_list = solver.print_possibles(self.puzzle)  
             possibles_str = ""
@@ -99,9 +100,7 @@ class RootWidget(GridLayout):
             self.ids.possibles.text = possibles_str
 
     def build_the_grid(self):
-        """Build the grid widget tree
-        
-           Adds a 3 by 3 GridLayout widget. Each layout 'square'
+        """Creates a 3 by 3 grid of 3 by 3 GridLayout widgets. Each layout 'square'
            contains a SudokuBlock widget (inherits BoxLayout)"""
         self.sudokugrid = GridLayout(
             cols=3,
@@ -174,6 +173,7 @@ class SudokuApp(App):
         self.puzzle = puzzle        # passed on to RootWidget
         self.solution = solution    # passed on to RootWidget
         self.kv_file = "kv/sudoku.kv"  # the kv file is in a separate directory
+        self.actions = []           # stack for undo functionality
 
     def build(self):
         """Build the widget tree"""
