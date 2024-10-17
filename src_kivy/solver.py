@@ -7,7 +7,7 @@ __all__ = ['generate', 'print_possibles', 'save_to_disk', 'solver']
 import datetime
 from typing import Tuple
 import numpy as np
-from utils import parse_arguments, debug_msg, err_msg  # , sys_msg
+from utils import parse_arguments, debug_msg, err_msg, sys_msg
 
 
 # GRID_SIZE is the number of rows and columns of the grid
@@ -220,11 +220,15 @@ def main():
             possibles_str += f"Row {row}:\n"
             for col, possibles in enumerate(possibles_row):
                 possibles_str += f"    col {col}: {possibles}\n"
-        print(possibles_str)
+        # sys_msg(possibles_str)
+        debug_msg(possibles_str)
+        debug_msg("")
 
     if args.solution:
-        print("Puzzle:", puzzle, sep="\n")
-        print("Solution:", solution, sep="\n")
+        # print("Puzzle:", puzzle, sep="\n")
+        # print("Puzzle:", puzzle, sep="\n")
+        sys_msg("Puzzle:", puzzle, "\n")
+        sys_msg("Solution:", solution, "\n")
 
 
 if __name__ == "__main__":
