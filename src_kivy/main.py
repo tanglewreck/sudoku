@@ -4,6 +4,7 @@ __version__ = "2024-08-23"
 
 import numpy as np
 import os
+import pathlib
 # NOTE: KIVY_HOME must be set *before* kivy is imported.
 #       This is not PEP8 compliant.
 os.environ['KIVY_HOME'] = f"{os.getcwd()}/.kivy"
@@ -48,16 +49,27 @@ if __name__ == "__main__":
 
     # Reveal the solution
     if args.solution:
-        print("Puzzle:", puzzle, sep="\n")
-        print("Solution:", solution, sep="\n")
+        # print("Puzzle:", puzzle, sep="\n")
+        # print("Solution:", solution, sep="\n")
+        sys_msg("Puzzle:", puzzle, sep="\n")
+        sys_msg("Solution:", solution, sep="\n")
 
     # Save the puzzle to disk
     if args.save:
         solver.save_to_disk(puzzle)
 
     # Read the local kivy config
-    # Config.read(f"{os.environ['HOME']}/Proj/sudoku/src_kivy/.kivy/config.ini")
-    Config.read(f"{os.environ['PWD']}/.kivy/config.ini")
+    try:
+        cur_path = pathlib.Path(".").absolute()
+        Config.read(f"{cur_path}/.kivy/config.ini")
+        if debug:
+            debug_msg("cwd = " + str(cur_path))
+    except OSError as e:
+        err_msg("Got an OSError trying to read kivy config.ini") 
+        raise SystemExit(127)
+    except Exception as e:
+        err_msg("Got an error trying to read kivy config.ini: error type: ", str(e.__class__.__name__))
+        raise SystemExit(127)
 
     # Start the app
     SudokuApp(puzzle, solution).run()

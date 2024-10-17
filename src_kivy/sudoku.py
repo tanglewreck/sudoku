@@ -88,16 +88,6 @@ class RootWidget(GridLayout):
         # (set by the numbuttons) Label.
         self.build_the_grid()
 
-        # Create a string of possibles
-        # 
-        if self.ids.possibles:
-            possibles_list = solver.print_possibles(self.puzzle)  
-            possibles_str = ""
-            for row, possibles_row in enumerate(possibles_list):
-                possibles_str += f"[b]Row {row}:[/b]\n"
-                for col, possibles in enumerate(possibles_row):
-                    possibles_str += f"    col {col}: {possibles}\n"
-            self.ids.possibles.text = possibles_str
 
     def build_the_grid(self):
         """Creates a 3 by 3 grid of 3 by 3 GridLayout widgets. Each layout 'square'
