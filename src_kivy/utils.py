@@ -21,31 +21,37 @@ import sys
 # import shutil
 
 
-def debug_msg(*args):
+def debug_msg(*args, **kwargs):
     """Utility function. Prints debugging info on stderr"""
-    msg = ' '.join(args)
+    args_str = [str(x) for x in args]
+    msg = ' '.join(args_str)
     caller = inspect.stack()[1].function
     if caller == "<module>":
         caller = "main"
     print(f"({caller}) {msg}", file=sys.stderr)
 
 
-def err_msg(*args):
+def err_msg(*args, **kwargs):
     """Utility function. Prints a message on stderr"""
-    msg = ' '.join(args)
+    args_str = [str(x) for x in args]
+    msg = ' '.join(args_str)
     caller = inspect.stack()[1].function
     if caller == "<module>":
         caller = "main"
     print(f"({caller}) {msg}", file=sys.stderr)
 
 
-def sys_msg(*args):
+def sys_msg(*args, **kwargs):
     """Utility function. Prints a message on stdout"""
-    msg = ' '.join(args)
+    args_str = [str(x) for x in args]
+    msg = ' '.join(args_str)
     caller = inspect.stack()[1].function
     if caller == "<module>":
         caller = "main"
-    print(f"({caller}) {msg}", file=sys.stdout)
+    # print(f"({caller}) {msg}", file=sys.stdout)
+    sys.stdout.write(f"({caller}) {msg}\n")
+    # print(f"({caller}) {msg}", file=sys.stderr)
+    # sys.stderr.write(f"({caller}) {msg}\n")
 
 
 def parse_arguments():
