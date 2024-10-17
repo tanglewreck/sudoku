@@ -2,6 +2,7 @@
 
 #:import np numpy
 #:import solver solver
+#:import subprocess subprocess
 
 
 # Number pad buttons
@@ -87,7 +88,7 @@
         Rectangle:
             pos: self.pos
             size: self.size
-    rows: 2
+    rows: 3
     cols: 3
     orientation: 'rl-tb'  # Orientation is right-to-left, top-to-bottom
     opacity: 1.0
@@ -143,26 +144,28 @@
         GridLayout:
             padding: 0, 0, 0, 0
             # size_hint: 0.9, 0.25
-            rows: 3
+            rows: 2
             cols: 1
-            padding: 100, 20, 100, 100
+            padding: 140, 20, 100, 100
             spacing: '50sp'
             valign: 'top'
             Label:
-                text: "INSTRUKTIONER"
+                id: instructions_header
                 color: 0, 0, 0, .5
+                halign: 'left'
+                markup: True
                 size: self.texture_size
+                text: "INSTRUKTIONER"
                 text_size: 300, 100
                 valign: 'top'
-                halign: 'center'
             Label:
                 color: 0, 0, 0, .5
+                halign: 'left'
+                id: instructions_body
+                markup: True
                 size: self.texture_size
-                # size: 100, 100
-                # text_size: cm(6), cm(10)
                 text_size: 300, None
-                text: "Välj siffra från det numeriska \"tangentbordet\"\n och klicka sedan på önskad ruta för att placera siffran. \n\n För att radera, välj först 'X' och klicka sedan på rutan du vill radera.\n"
-                halign: 'center'
+                text: "1. Välj siffra\n2. Klicka på önskad ruta för att placera.\n3.För att radera, välj först 'X' och klicka sedan på rutan du vill radera.\n"
                 valign: 'top'
         # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
         # Numpad: A 3x4 grid (last row containing two placeholder   #
@@ -291,15 +294,19 @@
         #
         # Quit button (and more...)
         #
-        AnchorLayout:
-            size_hint: 1, .25
-            anchor_x: 'right'
-            anchor_y: 'bottom'
-            GridLayout:
-                rows: 1
-                cols: 2
-                padding: 50
-                spacing: 20
+        # AnchorLayout:
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 1, .35
+            #anchor_x: 'center'
+            #anchor_y: 'bottom'
+            padding: 10
+            spacing: 10
+            #GridLayout:
+            #    rows: 1
+            #    cols: 2
+            #    padding: 10
+            #    spacing: 20
                 # A f00 button:
                 #SudokuButton:
                 #    height: '80sp'
@@ -307,16 +314,31 @@
                 #    # text: 'f00'
                 #    on_release: print("implement or get rid of me")
                 # The quit button:
-                NumberPadButton:
-                    # pos_hint: {'center_x': 100}
-                    size_hint: 0.5, None
-                    height: '30sp'
-                    markup: True
-                    bold: False
-                    text: "[color=ff4040]Q[/color][sup][size=24][color=ffffff]u[/color][/size][/sup][sub][size=32][color=bbbb10]i[/color][/size][/sub][i][sup][size=36][color=ffff00]t[/color][/size][/i]"
-                    # text: "Quit"
-                    on_release: root.do_quit()
-                    # on_release: raise SystemExit(0)
+#            NumberPadButton:
+#                # pos_hint: {'center_x': 100}
+#                size_hint: None, None
+#                height: '30sp'
+#                width: '150sp'
+#                # size: self.texture_size
+#                markup: True
+#                bold: False
+#                text: "Nytt spel"
+#                valign: 'top'
+#                halign: 'center'
+#                on_release: root.do_restart() 
+            NumberPadButton:
+                # pos_hint: {'center_x': 100}
+                size_hint: None, None
+                height: '30sp'
+                width: '150sp'
+                # size: self.texture_size
+                markup: True
+                bold: False
+                text: "Nytt spel"
+                valign: 'bottom'
+                halign: 'center'
+                on_release: root.do_quit()
+                
     
 
     ##GridButton:

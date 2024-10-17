@@ -144,15 +144,22 @@ class RootWidget(GridLayout):
         # Is the puzzle completed?
         # if self.puzzle.all() == self.solution.all():
         if np.array_equal(self.puzzle, self.solution):
-            print(self.puzzle)
+            sys_msg(self.puzzle)
             print()
-            print(self.solution)
-            print("You got it!")
+            sys_msg(self.solution)
+            sys_msg("You got it!")
+            self.ids.instructions_header.text = "[b][color=#ff2000][size=50]Grattis![/size][/color][/b]"
+            self.ids.instructions_body.text = "[b][color=#ff2000]Klicka på 'Nytt spel' för att spela igen[/color][/b]"
+
 
     def do_quit(self):  # , *args):
         """Quit the application (triggered by the Quit button)"""
         sys_msg("See ya!")
         raise SystemExit(0)
+
+    def do_restart(self):
+        sys_msg("New game coming up")
+        # subprocess.run("python main.py", shell=True)
 
 
 class SudokuApp(App):
