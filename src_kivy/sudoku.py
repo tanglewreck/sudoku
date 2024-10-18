@@ -39,6 +39,7 @@ from utils import debug_msg, err_msg, sys_msg, parse_arguments
 
 from kivy.app import App
 from kivy.config import Config
+from kivy.graphics import Color, Rectangle
 from kivy.properties import ListProperty
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty

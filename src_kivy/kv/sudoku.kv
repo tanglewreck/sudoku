@@ -32,21 +32,42 @@
 <GridButton>:
     canvas.before:
         Color:
-            rgba: 1, 1, 1, 1
+            rgba: 0, 0, 0, 0.1
+            #rgba: 1, 1, 1, 0.9
         Rectangle:
             pos: self.pos
             size: self.size
-    canvas:
-        Color:
-            rgba: 1, 1 ,1 ,0.3
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    background_color: 1, 1, 1, 1
-    background_disabled_normal: "atlas://data/images/defaulttheme/button"
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 1
+
+    #canvas:
+    #    Color:
+    #        # rgba: 0.7, 0.7 , 0.7 , 0.05
+    #        rgba: 1, 1 ,1 , 0.5
+    #        # rgba: .3, .3 ,.3 , 1
+    #    Rectangle:
+    #        pos: self.pos
+    #        size: self.size
+        #Line:
+        #    rectangle: self.x, self.y, self.width, self.height
+        #    width: 2
+    # background_color: 1, 1, 1, 1
+    background_color: 0, 0, 0, 0
+    # background_disabled_normal: "atlas://data/images/defaulttheme/button"
+    # background_disabled_normal: "[375, 291, 43, 32]"
+    # background_disabled_normal: "[.5, .5, .5, 1]"
     bold: True
-    disabled_color: 0.85, 0.852, 0.85, .8
-    font_size: '18sp'
+    # disabled_color: 0.85, 0.852, 0.85, .99
+    # disabled_color: 0.1, 0.1, 0.11, 1
+    # disabled_color: 0, 0, 1, 1
+    # disabled_color: 1, 1, 1, 1
+    # color: 1, 1, 1, 1
+    disabled_color: 0, 0, 0, 1
+    color: 0, 0, 1, 1
+    # color: 0.9, 0.9, 0.93, 0.95
+    # color: 0.9, 0.9, 0.9, 1
+    font_size: '16sp'
     markup: False
     opacity: 1
     on_release: pass
@@ -56,7 +77,9 @@
     canvas.before:
         Color:
             # rgba: 1, 1, 1, 1
-            rgba: 0, 0, 0, 1
+            rgba: 0, 0, 0, .9
+            ### rgba: 0, 0, 0, .5
+            # rgba: 1, 1, 1, .25
         Line:
             width: 4
             rectangle: self.x, self.y, self.width, self.height
@@ -66,10 +89,14 @@
     canvas:
         Color:
             rgba: 1, 1, 1, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
     cols: 3
     rows: 3
+    ## background_color: 0, 1, 1, 1
     background_color: 1, 1, 1, 1
-    # opacity: 0.85
+    opacity: 1
     padding: 0
     spacing: 0
 
@@ -84,7 +111,8 @@
     id: main_window
     canvas:
         Color:
-            rgba: 0.9, 0.9, 0.9, 1
+            rgba: 0.95, 0.95, 0.95, 0.99
+            # rgba: 0.9, 0.9, 0.9, 1
         Rectangle:
             pos: self.pos
             size: self.size
@@ -93,7 +121,8 @@
     orientation: 'rl-tb'  # Orientation is right-to-left, top-to-bottom
     opacity: 1.0
     spacing: 50
-    padding: '20sp', '50sp', '20sp', '50sp'
+    padding: '100sp'
+    # padding: '20sp', '50sp', '20sp', '50sp'
 
         
 
@@ -123,16 +152,16 @@
     BoxLayout:
         canvas.before:
             Color:
-                rgba: 1, 1, 1, 0
+                rgba: 1, 1, 1, 0.01
             Rectangle:
                 pos: self.pos
                 size: self.size
-        canvas:
-            Color:
-                rgba: 1, 1, 1, 0
-            Rectangle:
-                pos: self.pos
-                size: self.size
+#        canvas:
+#            Color:
+#                rgba: 1, 1, 1, 0
+#            Rectangle:
+#                pos: self.pos
+#                size: self.size
         opacity: 1
         orientation: 'vertical'
         size_hint: 1 / 5, 1 # 1/5 of root widget width, 1/1 of root widget height
@@ -152,20 +181,22 @@
             Label:
                 id: instructions_header
                 color: 0, 0, 0, .5
+                font_size: '12sp'
                 halign: 'left'
                 markup: True
                 size: self.texture_size
                 text: "INSTRUKTIONER"
-                text_size: 300, 100
+                text_size: 250, 100
                 valign: 'top'
             Label:
                 color: 0, 0, 0, .5
+                font_size: '10sp'
                 halign: 'left'
                 id: instructions_body
                 markup: True
                 size: self.texture_size
-                text_size: 300, None
-                text: "1. Välj siffra\n2. Klicka på önskad ruta för att placera.\n3.För att radera, välj först 'X' och klicka sedan på rutan du vill radera.\n"
+                text_size: 400, None
+                text: "1. Välj siffra\n\n2. Klicka på önskad ruta för att placera.\n\n3. Använd 'X' för att radera.\n"
                 valign: 'top'
         # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
         # Numpad: A 3x4 grid (last row containing two placeholder   #
@@ -248,7 +279,7 @@
         AnchorLayout:
             anchor_x: 'center'
             anchor_y: 'center'
-            size_hint_y: 0.75
+            size_hint: 0.9, 0.7
             padding: 0, 0, 0, 30
 
             Label:
@@ -263,10 +294,10 @@
                         pos: self.pos
                         size: self.size
                 color: 0, 0, 0, .5
-                font_size: '16sp'
                 bold: True
                 markup: False
-                font_size: '18sp'
+                #font_size: '18sp'
+                font_size: '16sp'
                 size_hint_x: 0.25
                 size_hint_y: 0.5
                 text_size: self.size
@@ -275,92 +306,43 @@
 
         #
         # Load button
-        #
-#        AnchorLayout:
-#            size_hint_y: 0.15
-#            size_hint_x: 1
-#            anchor_x: 'center'
-#            anchor_y: 'bottom'
-#            NumberPadButton:
-#                size_hint: 0.5, None
-#                height: '30sp'
-#                font_size: '12sp'
-#                markup: True
-#                bold: False
-#                text: "Load game file"
-#                on_release: print("Load button: implement me")
-#                # on_press: root.foo()
+        # (to be implemented)
+        # AnchorLayout:
+        #     size_hint_y: 0.15
+        #     size_hint_x: 1
+        #     anchor_x: 'center'
+        #     anchor_y: 'bottom'
+        #     NumberPadButton:
+        #         size_hint: 0.5, None
+        #         height: '30sp'
+        #         font_size: '12sp'
+        #         markup: True
+        #         bold: False
+        #         text: "Load game file"
+        #         on_release: print("Load button: implement me")
+        #         # on_press: root.foo()
 
         #
-        # Quit button (and more...)
+        # Quit button 
         #
-        # AnchorLayout:
-        BoxLayout:
+        AnchorLayout:
             orientation: 'vertical'
-            size_hint: 1, .35
-            #anchor_x: 'center'
-            #anchor_y: 'bottom'
+            size_hint: 0.9, 0.7
+            anchor_x: 'center'
+            anchor_y: 'bottom'
             padding: 10
             spacing: 10
-            #GridLayout:
-            #    rows: 1
-            #    cols: 2
-            #    padding: 10
-            #    spacing: 20
-                # A f00 button:
-                #SudokuButton:
-                #    height: '80sp'
-                #    size_hint: 0.5, None
-                #    # text: 'f00'
-                #    on_release: print("implement or get rid of me")
-                # The quit button:
-#            NumberPadButton:
-#                # pos_hint: {'center_x': 100}
-#                size_hint: None, None
-#                height: '30sp'
-#                width: '150sp'
-#                # size: self.texture_size
-#                markup: True
-#                bold: False
-#                text: "Nytt spel"
-#                valign: 'top'
-#                halign: 'center'
-#                on_release: root.do_restart() 
             NumberPadButton:
-                # pos_hint: {'center_x': 100}
-                size_hint: None, None
-                height: '30sp'
-                width: '150sp'
-                # size: self.texture_size
-                markup: True
                 bold: False
+                markup: True
+                size_hint: None, None
+                # size: self.texture_size
                 text: "Nytt spel"
                 valign: 'bottom'
                 halign: 'center'
+                height: '30sp'
+                width: '150sp'
                 on_release: root.do_quit()
+                # on_release: root.do_restart()
                 
     
-
-    ##GridButton:
-    ##    size_hint: 0.5, 0.25
-    ##    text: "A GridButton"
-    ##    on_press: print("plip plop")
-    ##    Label:
-    ##        text: "L1"
-#        Label:
-#            text: "L1"
-#        Label:
-#            text: "L1"
-#        Label:
-#            text: "L1"
-#        Label:
-#            text: "L1"
-#        Label:
-#            text: "L1"
-#        Label:
-#            text: "L1"
-#        Label:
-#            text: "L1"
-#        Label:
-#            text: "L1"
-#    
