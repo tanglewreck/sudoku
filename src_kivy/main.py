@@ -9,7 +9,7 @@ import pathlib
 #       This is not PEP8 compliant.
 os.environ['KIVY_HOME'] = f"{os.getcwd()}/.kivy"
 # Make kivy ignore command-line arguments 
-os.environ['KIVY_NO_ARGS'] = 'yes'
+# os.environ['KIVY_NO_ARGS'] = 'yes'
 
 import kivy
 from kivy.config import Config
