@@ -54,7 +54,7 @@ while True:
         output = subprocess.run(
             f"{python_binary} main.py "
             "-a -f --size=1080x1920 --dpi=175 "
-            "-- -n 1 --solution",
+            "-- -n 10 --solution",
             capture_output=True,
             check=True,
             cwd=run_dir,
