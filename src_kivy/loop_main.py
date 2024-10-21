@@ -1,17 +1,32 @@
 """
-From a Python shell (3.12.7), do:
-    1. import subprocess
-    2. import pathlib
-    3. python_binary = pathlib.Path("h:/python/3.12.7/python.exe")
-    4. run_dir = pathlib.Path("h:/Proj/sudoku/src_kivy")
-    5. loop_main = pathlib.Path(f"{run_dir}/loop_main.py")
-    6. subprocess.run(f"{python_binary} {loop_main}", shell=True, cwd=run_dir, capture_output=True, text=True)
+Author: Mikael Eriksson
+Date: 2024-10-21
+
+Run main.py as an infinite loop.
+
+After each game, there is a
+2 seconds pause so that the loop
+can be broken (CTRL-C)
+
+(Yes, this is an ugly way of implementing
+'quit the program' functionality, but
+that's life (i.e. ugly).
+
+
+For win32, Python 3.12.7 must be installed as
+h:/python/3.12.7/python.exe.
+
+For *nix, the python binary that's in
+the user's PATH is used (via the
+'which python' shell command).
+
 
 """
 
 import pathlib
 import subprocess
 import sys
+import time
 
 #if sys.platform != 'win32':
 #    print("This program works on win32 platforms only")
@@ -31,17 +46,19 @@ elif sys.platform == "darwin" or sys.platform == "linux":
 
 # for k in range(2):
 k = 0
-while k < 10:
+# while k < 10:
+while True:
     try:
         k += 1
         print(f"k = {k}")
-            # f"{python_binary} {main_prog} -a -f --size=1080x1920 --dpi=175 -- -n 1 --solution",
-            # f"python {main_prog} -a -f --size=1080x1920 --dpi=175 -- -n 1 --solution",
         output = subprocess.run(
-            f"python main.py -a -f --size=1080x1920 --dpi=175 -- -n 1 --solution",
-            shell=True,
-            cwd=run_dir,
+            f"{python_binary} main.py "
+            "-a -f --size=1080x1920 --dpi=175 "
+            "-- -n 1 --solution",
             capture_output=True,
+            check=True,
+            cwd=run_dir,
+            shell=True,
             text=True
         )
         print(output.stdout)
@@ -51,3 +68,4 @@ while k < 10:
     except OSError as e:
         print(f"Received subprocess.CalledProcessError:", str(e))
         raise SystemExit(126)
+    time.sleep(2)
