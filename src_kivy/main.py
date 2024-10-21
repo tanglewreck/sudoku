@@ -19,8 +19,6 @@ import solver
 from sudoku import SudokuApp
 from utils import debug_msg, err_msg, sys_msg, parse_arguments
 
-# Window.size = (1500, 600)
-
 if __name__ == "__main__":
     # Parse and get command line arguments
     args = parse_arguments()
