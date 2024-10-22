@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Author: Mikael Eriksson
 Date: 2024-10-21
