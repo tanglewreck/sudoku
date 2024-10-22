@@ -46,16 +46,6 @@ from kivy.properties import StringProperty
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 
-# from kivy.core.window import Window
-# from kivy.graphics import Color, Rectangle
-# from kivy.properties import ColorProperty
-# from kivy.properties import ObjectProperty
-# from kivy.uix.behaviors import ButtonBehavior
-# from kivy.uix.anchorlayout import AnchorLayout
-# from kivy.uix.boxlayout import BoxLayout
-# from kivy.uix.label import Label
-# from kivy.uix.widget import Widget
-
 kivy.require("2.0.0")
 
 
@@ -73,10 +63,6 @@ class SudokuBlock(GridLayout):
 
 class RootWidget(GridLayout):
     """RootWidget: Sudoku grid with a numerical keypad on the right"""
-    # note = False
-    # the_grid = ListProperty()
-    # active_number = NumericProperty()
-    # active_number_string = StringProperty()
 
     def __init__(self, puzzle: np.ndarray, solution: np.ndarray) -> None:
         super().__init__()
