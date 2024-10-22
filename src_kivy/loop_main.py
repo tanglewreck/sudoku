@@ -47,14 +47,16 @@ elif sys.platform == "darwin" or sys.platform == "linux":
 # for k in range(2):
 k = 0
 # while k < 10:
+#            "-a -f --size=1080x1920 --dpi=175 "
 while True:
     try:
         k += 1
         print(f"k = {k}")
         output = subprocess.run(
             f"{python_binary} main.py "
-            "-a -f --size=1080x1920 --dpi=175 "
-            "-- -n 1 --solution",
+            "--size=1500x1000 --dpi=175 "
+            "-c graphics:left:1000 "
+            "-- -n 10 --solution",
             capture_output=True,
             check=True,
             cwd=run_dir,
