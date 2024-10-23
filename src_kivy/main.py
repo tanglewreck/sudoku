@@ -5,6 +5,8 @@ __version__ = "2024-10-22"
 import numpy as np
 import os
 import pathlib
+import signal
+
 # NOTE: KIVY_HOME must be set *before* kivy is imported.
 #       This is not PEP8 compliant.
 os.environ['KIVY_HOME'] = f"{os.getcwd()}/.kivy"
@@ -20,7 +22,29 @@ from sudoku import SudokuApp
 from utils import debug_msg, err_msg, sys_msg, parse_arguments
 
 
+# This is executed at exit via the atexit module
+def do_global_quit():
+    try:
+        sys_msg("Terminating...")
+        # raise SystemExit(0)
+    except KeyboardInterrupt as e:
+        sys_msg("\n\n foo Caught a KeyboardInterrupt: " + str(e))
+#
+atexit.register(do_global_quit)
+
+# Catch SIGINT/KeyboardInterrupt:
+# Ref: https://stackoverflow.com/a/61806578
+#   Q: Does it work on win32?
+#   A: Yes, it does – at least partially (win32 is not POSIX)
+def catch_signal(signal, frame):
+    sys_msg(f"\nHello! Caught an interrupt of type {(signal)}")
+    raise SystemExit(0)
+
+
 def main():
+
+    #Assign Handler Function
+    signal.signal(signal.SIGINT, catch_signal)
 
     # Parse and get command line arguments
     args = parse_arguments()
@@ -76,7 +100,4 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        print("\nCaught a KeyboardInterrupt. Bye!")
+    main()
