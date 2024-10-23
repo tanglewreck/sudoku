@@ -39,21 +39,12 @@ from utils import debug_msg, err_msg, sys_msg, parse_arguments
 
 from kivy.app import App
 from kivy.config import Config
+from kivy.graphics import Color, Rectangle
 from kivy.properties import ListProperty
 from kivy.properties import NumericProperty
 from kivy.properties import StringProperty
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
-
-# from kivy.core.window import Window
-# from kivy.graphics import Color, Rectangle
-# from kivy.properties import ColorProperty
-# from kivy.properties import ObjectProperty
-# from kivy.uix.behaviors import ButtonBehavior
-# from kivy.uix.anchorlayout import AnchorLayout
-# from kivy.uix.boxlayout import BoxLayout
-# from kivy.uix.label import Label
-# from kivy.uix.widget import Widget
 
 kivy.require("2.0.0")
 
@@ -72,10 +63,6 @@ class SudokuBlock(GridLayout):
 
 class RootWidget(GridLayout):
     """RootWidget: Sudoku grid with a numerical keypad on the right"""
-    # note = False
-    # the_grid = ListProperty()
-    # active_number = NumericProperty()
-    # active_number_string = StringProperty()
 
     def __init__(self, puzzle: np.ndarray, solution: np.ndarray) -> None:
         super().__init__()
@@ -144,15 +131,25 @@ class RootWidget(GridLayout):
         # Is the puzzle completed?
         # if self.puzzle.all() == self.solution.all():
         if np.array_equal(self.puzzle, self.solution):
-            print(self.puzzle)
+            sys_msg(self.puzzle)
             print()
-            print(self.solution)
-            print("You got it!")
+            sys_msg(self.solution)
+            sys_msg("You got it!")
+            self.ids.instructions_header.text = "[b][color=#ff2000][size=18]Grattis![/size][/color][/b]\n\n[b][color=#ff2000][size=12]Klicka på 'Nytt spel' för att spela igen[/size][/color][/b]"
+            # self.ids.instructions_header.halign = "center"
+            # self.ids.instructions_header.text_size = (200,200)
+            self.ids.instructions_body.text = ""
+            # self.ids.instructions_body.text = "[b][color=#ff2000][size=12]Klicka på 'Nytt spel' för att spela igen[/size][/color][/b]"
+
 
     def do_quit(self):  # , *args):
         """Quit the application (triggered by the Quit button)"""
         sys_msg("See ya!")
         raise SystemExit(0)
+
+    def do_restart(self):
+        sys_msg("New game coming up")
+        # subprocess.run("python main.py", shell=True)
 
 
 class SudokuApp(App):

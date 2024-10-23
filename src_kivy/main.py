@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__version__ = "2024-08-23"
+__version__ = "2024-10-22"
 
 import numpy as np
 import os
@@ -9,7 +9,7 @@ import pathlib
 #       This is not PEP8 compliant.
 os.environ['KIVY_HOME'] = f"{os.getcwd()}/.kivy"
 # Make kivy ignore command-line arguments 
-os.environ['KIVY_NO_ARGS'] = 'yes'
+# os.environ['KIVY_NO_ARGS'] = 'yes'
 
 import kivy
 from kivy.config import Config
@@ -18,8 +18,6 @@ from kivy.core.window import Window
 import solver
 from sudoku import SudokuApp
 from utils import debug_msg, err_msg, sys_msg, parse_arguments
-
-# Window.size = (1500, 600)
 
 if __name__ == "__main__":
     # Parse and get command line arguments
@@ -51,8 +49,8 @@ if __name__ == "__main__":
     if args.solution:
         # print("Puzzle:", puzzle, sep="\n")
         # print("Solution:", solution, sep="\n")
-        sys_msg("Puzzle:", puzzle, sep="\n")
-        sys_msg("Solution:", solution, sep="\n")
+        sys_msg("Puzzle:\n", puzzle, sep="\n")
+        sys_msg("Solution:\n", solution, sep="\n")
 
     # Save the puzzle to disk
     if args.save:
