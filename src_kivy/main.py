@@ -2,7 +2,6 @@
 
 __version__ = "2024-10-22"
 
-import atexit
 import numpy as np
 import os
 import pathlib
@@ -20,15 +19,6 @@ import solver
 from sudoku import SudokuApp
 from utils import debug_msg, err_msg, sys_msg, parse_arguments
 
-
-def do_global_quit():
-    try:
-        print("Terminating...")
-        # raise SystemExit(0)
-    except KeyboardInterrupt as e:
-        print("Caught a KeyboardInterrupt: " + str(e))
-#
-#atexit.register(do_global_quit)
 
 def main():
 
