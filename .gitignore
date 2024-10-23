@@ -6,12 +6,17 @@
 # Apple stuff
 .DS*
 ._.DS_Store
+# xcode
+*/*xcode/
+*xcode/
+
 # Kivy config dir
 .kivy/logs/
-.kivy/logs/*
 .kivy/icon/
-.kivy/icon/*
-.kivy/mods/*
+.kivy/mods/
+*/.kivy/logs/
+*/.kivy/icon/
+*/.kivy/mods/
 # vim tmp-files
 .*swp
 
@@ -145,6 +150,7 @@ celerybeat.pid
 env/
 venv/
 venv*/
+venv_sudoku/
 ENV/
 env.bak/
 venv.bak/
