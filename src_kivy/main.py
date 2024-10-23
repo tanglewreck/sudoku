@@ -1,4 +1,4 @@
-#0!/usr/bin/env python3
+#!/usr/bin/env python3
 
 __version__ = "2024-10-22"
 
@@ -49,8 +49,8 @@ if __name__ == "__main__":
     if args.solution:
         # print("Puzzle:", puzzle, sep="\n")
         # print("Solution:", solution, sep="\n")
-        sys_msg("Puzzle:", puzzle, sep="\n")
-        sys_msg("Solution:", solution, sep="\n")
+        sys_msg("Puzzle:\n", puzzle, sep="\n")
+        sys_msg("Solution:\n", solution, sep="\n")
 
     # Save the puzzle to disk
     if args.save:
