@@ -2,6 +2,7 @@
 
 __version__ = "2024-10-22"
 
+import atexit
 import numpy as np
 import os
 import pathlib
@@ -19,7 +20,18 @@ import solver
 from sudoku import SudokuApp
 from utils import debug_msg, err_msg, sys_msg, parse_arguments
 
-if __name__ == "__main__":
+
+def do_global_quit():
+    try:
+        print("Terminating...")
+        # raise SystemExit(0)
+    except KeyboardInterrupt as e:
+        print("Caught a KeyboardInterrupt: " + str(e))
+#
+#atexit.register(do_global_quit)
+
+def main():
+
     # Parse and get command line arguments
     args = parse_arguments()
     debug = args.debug
@@ -71,3 +83,10 @@ if __name__ == "__main__":
 
     # Start the app
     SudokuApp(puzzle, solution).run()
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nCaught a KeyboardInterrupt. Bye!")
