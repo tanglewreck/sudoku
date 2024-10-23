@@ -35,7 +35,8 @@ atexit.register(do_global_quit)
 
 # Catch SIGINT/KeyboardInterrupt:
 # Ref: https://stackoverflow.com/a/61806578
-# Q: Does it work on win32?
+#   Q: Does it work on win32?
+#   A: Yes, it does – at least partially (win32 is not POSIX)
 def catch_signal(signal, frame):
     sys_msg(f"\nHello! Caught an interrupt of type {(signal)}")
     raise SystemExit(0)
@@ -100,7 +101,4 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        print("\nCaught a KeyboardInterrupt. Bye!")
+    main()
