@@ -171,13 +171,14 @@
         valign: 'bottom'
 
         GridLayout:
-            padding: 0, 0, 0, 0
-            # size_hint: 0.9, 0.25
+            size_hint: 0.9, 1.0
             rows: 2
             cols: 1
-            padding: 140, 20, 100, 100
+            padding: 150, 20, 100, 100
             spacing: '50sp'
             valign: 'top'
+            halign: 'center'
+
             Label:
                 id: instructions_header
                 color: 0, 0, 0, .5
@@ -186,7 +187,7 @@
                 markup: True
                 size: self.texture_size
                 text: "INSTRUKTIONER"
-                text_size: 250, 100
+                text_size: 300, 100
                 valign: 'top'
             Label:
                 color: 0, 0, 0, .5
@@ -195,7 +196,8 @@
                 id: instructions_body
                 markup: True
                 size: self.texture_size
-                text_size: 400, None
+                text_size: 300, None
+                # text_size: 400, None
                 text: "1. Välj siffra\n\n2. Klicka på önskad ruta för att placera.\n\n3. Använd 'X' för att radera.\n"
                 valign: 'top'
         # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
