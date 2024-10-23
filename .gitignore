@@ -1,13 +1,17 @@
 #
 #
 # Generated sudokus:
-src_kivy/data/202*
+# src_kivy/data/202*
 
 # Apple stuff
 .DS*
 ._.DS_Store
-# Kivy config dirs
-.kivy
+# Kivy config dir
+.kivy/logs/
+.kivy/logs/*
+.kivy/icon/
+.kivy/icon/*
+.kivy/mods/*
 # vim tmp-files
 .*swp
 
@@ -137,12 +141,13 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.venv*
 env/
 venv/
+venv*/
 ENV/
 env.bak/
 venv.bak/
-*_venv/
 
 # Spyder project settings
 .spyderproject
