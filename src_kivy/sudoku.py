@@ -149,8 +149,11 @@ class RootWidget(GridLayout):
             print()
             sys_msg(self.solution)
             sys_msg("You got it!")
-            self.ids.instructions_header.text = "[b][color=#ff2000][size=50]Grattis![/size][/color][/b]"
-            self.ids.instructions_body.text = "[b][color=#ff2000]Klicka på 'Nytt spel' för att spela igen[/color][/b]"
+            self.ids.instructions_header.text = "[b][color=#ff2000][size=18]Grattis![/size][/color][/b]\n\n[b][color=#ff2000][size=12]Klicka på 'Nytt spel' för att spela igen[/size][/color][/b]"
+            # self.ids.instructions_header.halign = "center"
+            # self.ids.instructions_header.text_size = (200,200)
+            self.ids.instructions_body.text = ""
+            # self.ids.instructions_body.text = "[b][color=#ff2000][size=12]Klicka på 'Nytt spel' för att spela igen[/size][/color][/b]"
 
 
     def do_quit(self):  # , *args):
