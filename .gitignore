@@ -7,11 +7,9 @@
 .DS*
 ._.DS_Store
 # Kivy config dir
-.kivy/logs/
-.kivy/logs/*
-.kivy/icon/
-.kivy/icon/*
-.kivy/mods/*
+*/.kivy/logs/
+*/.kivy/icon/
+*/.kivy/mods/
 # vim tmp-files
 .*swp
 
@@ -145,6 +143,7 @@ celerybeat.pid
 env/
 venv/
 venv*/
+venv_sudoku/
 ENV/
 env.bak/
 venv.bak/
