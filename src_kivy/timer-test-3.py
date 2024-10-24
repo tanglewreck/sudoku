@@ -33,15 +33,31 @@ class RootWidget(GridLayout):
 
 
 class TimeApp(App):
+    hours = NumericProperty(0)
+    minutes = NumericProperty(0)
+    seconds = NumericProperty(0)
+
     def my_callback(self, dt):
-        now = str(datetime.datetime.now())
-        self.l.text = now
+        now = str(datetime.datetime.now())[11:-7]
+        self.seconds += 1
+        if self.seconds >= 60:
+            self.seconds = 0
+            self.minutes += 1
+        if self.minutes >= 60:
+            self.minutes = 0
+            self.hours += 1
+
+        self.l.text = f"{self.hours:02d}:{self.minutes:02d}:{self.seconds:02d}"
+        # self.l.text = now
 
 
     def __init__(self, *args, **kwargs):
         super().__init__()
         # call my_callback every * seconds
-        Clock.schedule_interval(self.my_callback, 0.01)
+        Clock.schedule_interval(self.my_callback, 1.0)
+        self.seconds = 58
+        self.minutes = 58
+        self.hours = 0
 
     def build(self):
         """Build the widget tree"""
@@ -55,7 +71,7 @@ class TimeApp(App):
         # self.root.padding = 10, 0, 10, 0
         # self.root.height = 300
 
-        self.l = Label(text="foo text")
+        self.l = Label(text="")
         self.l.halign = 'center'
         self.l.valign = 'center'
         # self.l.size_hint = (None, 100.0)
