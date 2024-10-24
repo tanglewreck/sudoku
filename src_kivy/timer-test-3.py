@@ -35,15 +35,13 @@ class RootWidget(GridLayout):
 class TimeApp(App):
     def my_callback(self, dt):
         now = str(datetime.datetime.now())
-        # print(now)
         self.l.text = now
 
 
     def __init__(self, *args, **kwargs):
         super().__init__()
-        # call my_callback every 0.5 seconds
+        # call my_callback every * seconds
         Clock.schedule_interval(self.my_callback, 0.01)
-        self.this_time = time.time()
 
     def build(self):
         """Build the widget tree"""
